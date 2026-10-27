@@ -2049,7 +2049,7 @@ int player_speed(int scale, bool bulwark_affects)
 
     if (bulwark_affects && you.duration[DUR_TECTONIC_BULWARK])
     {
-        ps *= 13;
+        ps *= 15;
         ps /= 10;
     }
 
@@ -2507,7 +2507,7 @@ static int _tectonic_shield_value()
     if (!body_armour)
         return base;
 
-    return base - property(*body_armour, PARM_EVASION) / 4;
+    return base - property(*body_armour, PARM_EVASION) * 28 / 100;
 }
 
 /**
@@ -2563,11 +2563,11 @@ int player_shield_class(int scale, bool random, bool include_temp)
     if (include_temp && you.duration[DUR_TECTONIC_BULWARK])
     {
         int base = _tectonic_shield_value() * 100;
-        // one-third as effective for the part that "overlaps" another shield
+        // one-fourth as effective for the part that "overlaps" another shield
         if (shield > base)
-            shield += base / 3;
+            shield += base / 4;
         else
-            shield += (base - shield) + shield / 3;
+            shield += (base - shield) + shield / 4;
     }
 
     if (you.has_mutation(MUT_RECKLESS))
