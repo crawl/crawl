@@ -1492,7 +1492,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (drain_amount > 0)
             drain_player(drain_amount, true, true);
 
-        _maybe_get_vitrified(source);
+        if (death_type != KILLED_BY_MONSTER)
+            _maybe_get_vitrified(source);
     }
 
     if (you.hp <= 0)

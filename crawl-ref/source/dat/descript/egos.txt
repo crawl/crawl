@@ -205,9 +205,9 @@ It grants you flight.
 %%%%
 glass (Glass) armour ego
 
-It may vitrify enemies when you injure them, making them more vulnerable to
-further damage. Your Evocations skill increases the likelihood and duration of
-vitrification.
+It may vitrify enemies when you deal non-attack damage to them, making them more
+vulnerable to further damage. Your Evocations skill increases the likelihood
+and duration of vitrification.
 %%%%
 guile (Guile) armour ego
 

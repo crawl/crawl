@@ -4454,11 +4454,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             }
         }
 
-        if (agent && alive() && agent->wearing_ego(OBJ_ARMOUR, SPARM_GLASS))
+        if (!is_attack_damage && agent && alive()
+            && agent->wearing_ego(OBJ_ARMOUR, SPARM_GLASS))
         {
             if (agent->is_player())
             {
-                if (x_chance_in_y(20 + you.skill(SK_EVOCATIONS, 5), 500))
+                if (x_chance_in_y(20 + you.skill(SK_EVOCATIONS, 13), 1000))
                     this->vitrify(agent, 4 + random2(5 + you.skill(SK_EVOCATIONS)));
             }
             else if (const monster* mon = agent->as_monster())
