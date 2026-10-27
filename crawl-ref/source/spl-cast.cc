@@ -3345,37 +3345,37 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
     switch (spell)
     {
     case SPELL_PASSWALL:
-        return make_stringf("Channeling bonus: ~%d AC.", passwall_ac(pow, false));
+        return make_stringf("Bonus AC: ~%d AC.", passwall_ac(pow, false));
     case SPELL_OZOCUBUS_ARMOUR:
     {
         double ac_bonus = ice_armour_ac(pow) / 100.0;
-        return make_stringf("Icy armour bonus: %.1f AC.", ac_bonus);
+        return make_stringf("Bonus AC: %.1f AC.", ac_bonus);
     }
     case SPELL_CALL_IMP:
-        return make_stringf("Imp's weapon: %+d spear.",
+        return make_stringf("Weapon: %+d spear.",
                             imp_weapon_modifier(pow));
     case SPELL_PUTREFACTION:
     {
         int drain_amount = 1 + putrefaction_drain_amount(pow, false)
                              * get_real_hp(false, false) / 750;
-        return make_stringf("Self drain amount: ~%d HP.", drain_amount);
+        return make_stringf("Self drain: ~%d HP.", drain_amount);
     }
     case SPELL_BLINK:
-        return make_stringf("Blink cooldown: %s turns.",
+        return make_stringf("Cooldown: %s turns.",
                             blink_cooldown_description(pow).c_str());
     case SPELL_BORGNJORS_REVIVIFICATION:
-        return make_stringf("Reduction of max HP: %s HP.",
+        return make_stringf("Max HP loss: %s HP.",
                             revivification_loss_description(pow).c_str());
     case SPELL_SWIFTNESS:
-        return make_stringf("Swiftness duration: %s turns.",
+        return make_stringf("Duration: %s turns.",
                             swiftness_duration_description(pow).c_str());
     case SPELL_PHALANX_BEETLE:
     {
         double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;
-        return make_stringf("Bolster bonus: %.1f AC.", ac_bonus);
+        return make_stringf("Bonus AC: %.1f AC.", ac_bonus);
     }
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return make_stringf("Radiance duration: %s turns.",
+        return make_stringf("Duration: %s turns.",
                             toxic_radiance_duration_description(pow).c_str());
     default:
         return "";
