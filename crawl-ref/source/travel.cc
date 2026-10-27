@@ -998,7 +998,8 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
             // previously unseen monster but the same would happen by manual
             // movement, so I don't think we need to worry about this. (jpeg)
             if (!is_travelsafe_square(new_dest)
-                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
+                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat())
+                || _feat_is_blocking_door_strict(env.grid(new_dest)).first)
             {
                 new_dest = dest;
             }
