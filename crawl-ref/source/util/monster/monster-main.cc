@@ -604,7 +604,7 @@ static string canned_reports[][2] = {
 // Partial copy from monster::willpower(), not accounting for items
 static std::string _get_willpower_description(const monster & mon)
 {
-    const auto willpower = mon.willpower();
+    const auto willpower = mon.willpower(false);
     if (willpower == WILL_INVULN)
         return colour(LIGHTMAGENTA, "will(invuln)");
     if (willpower == 0)
