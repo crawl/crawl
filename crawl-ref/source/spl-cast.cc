@@ -3337,7 +3337,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
     return dam_str;
 }
 
-string spell_effect_string(spell_type spell, bool evoked, int pow)
+string effect_description_string(spell_type spell, bool evoked, int pow)
 {
     if (pow == -1)
         pow = evoked ? wand_power(spell) : calc_spell_power(spell);
