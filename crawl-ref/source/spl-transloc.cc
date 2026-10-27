@@ -935,7 +935,6 @@ spret controlled_blink(bool safe_cancel, dist *target)
  */
 string blink_cooldown_description(int pow)
 {
-    int duration = 0;
     int min_dur = 2 + (50 - pow) / 10;
     int max_dur = 4 + div_round_up(50 - pow, 10);
     return make_stringf("%d-%d", min_dur, max_dur);
