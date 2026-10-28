@@ -1005,7 +1005,7 @@ defences. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Elementalist ability
 
-Remembers your ancestor as a elementalist, a powerful but fragile mage capable
+Remembers your ancestor as an elementalist, a powerful but fragile mage capable
 of unleashing destructive spells from a safe distance. This choice is permanent
 and cannot be undone.
 %%%%
