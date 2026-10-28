@@ -11069,7 +11069,7 @@ ITEM:   parchment of Sphinx Sisters
 NSUBST: ~ = 2:1 / 2:2 / 1:d / *=~
 SUBST:  A+ = .
 TILE:   b = wall_depths_crystal
-: end   
+: end
 KFEAT:  m = iron_grate
 KFEAT:  F = cache_of_baked_goods
 SUBST:  ' = x. , - = m.

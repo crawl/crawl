@@ -1185,39 +1185,6 @@ xxx..x.x.x.x.x
  xxx+xxxxx+xxx
 ENDMAP
 
-NAME:   tekkud_tar_ventilation_maze
-TAGS:   transparent generate_awake patrolling
-DEPTH:  Tar:3-, !Tar:$
-ORIENT: centre
-: tar_dig_maze(_G, 21, 10)
-MONS:   undertaker
-NSUBST: - = 3:1 / *:.
-NSUBST: . = 4=1. / *:.
-KFEAT:  - = floor
-MAP
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx---xxxxxxxxx
-xxxxxxxxx->-xxxxxxxxx@
-xxxxxxxxx---xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
 # avg 9.4 shadow wraiths
 NAME:   tekkud_tar_wraith_trap
 TAGS:   transparent overwritable

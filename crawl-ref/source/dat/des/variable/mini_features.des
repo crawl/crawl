@@ -3584,9 +3584,9 @@ NAME:  tekkud_striation
 TAGS:  transparent decor extra
 DEPTH: D:4-, Depths
 : if crawl.coinflip() then
-CLEAR: y'
-: else
 SUBST: y=x, '=.
+: else
+CLEAR: y'
 : end
 MAP
 yyyyyxxyy'''
@@ -3601,6 +3601,38 @@ yyxxx.....''
 '''..xxxxyyy
 yyyy....''''
 ''''yxxyyyyy
+ENDMAP
+
+NAME:  tekkud_still_life_1
+TAGS:  buniq_still_life transparent decor extra
+DEPTH: D:3-, Depths
+MAP
+        .....
+        ..xx.
+        .x.x.
+        ...x.
+    .........
+    ..x..
+    ..xx.
+    .x.x.
+.........
+.xxx.
+...x.
+..x..
+.....
+ENDMAP
+
+NAME:  tekkud_still_life_2
+TAGS:  buniq_still_life transparent decor extra
+DEPTH: D:3-, Depths
+MAP
+  .....
+ ...x.......
+..x...x..xx.....
+.x......xx.xxxx.
+.x....x..xxxxxx.
+.xxxxx....xxxx..
+.......  ......
 ENDMAP
 
 #####################################################################
