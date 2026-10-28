@@ -2456,9 +2456,10 @@ static string _warlock_mirror_reflect_desc()
     const int reflect_chance_numer = (100 - (scaled_SH % 100)) * SH * omnireflect_chance_denom(SH+1) + (scaled_SH % 100) * (SH+1) * omnireflect_chance_denom(SH);
     const int reflect_chance_denom = omnireflect_chance_denom(SH) * omnireflect_chance_denom(SH+1);
     const int reflect_chance = reflect_chance_numer / reflect_chance_denom;
-    return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
-           "% chance to reflect attacks against your willpower and other "
-           "normally unblockable effects.";
+    return "\n\nWith your current SH, it has a " + to_string(reflect_chance * 2 / 5) +
+           "% chance to reflect explosive projectiles and a " + to_string(reflect_chance) +
+           "% chance to reflect attacks against your willpower and other normally "
+           "unblockable effects.";
 }
 
 static string _armour_ego_key(special_armour_type ego)

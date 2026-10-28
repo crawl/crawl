@@ -117,7 +117,10 @@ bool bolt::is_blockable() const
 /// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
 bool bolt::is_omnireflectable() const
 {
-    return !is_explosion
+    // Fireball-style explosions can be reflected *before* they explode, but by
+    // the time we're in the explosion phase, the blast has already happened,
+    // and even omnireflect can't do anything about that.
+    return !(is_explosion && in_explosion_phase)
             && origin_spell != SPELL_GLACIATE
             && flavour != BEAM_VAMPIRIC_DRAINING; // buggy :(
 }
@@ -3534,26 +3537,13 @@ int bolt::apply_to_hit_modifiers(int base_hit, const actor &targ) const
     return base_hit;
 }
 
-/* Determine whether the beam hit or missed the player, and tell them if it
- * missed.
+/* Determine whether the beam was blocked by the player, handling messaging and
+ * reflection, as appropriate.
  *
- * @return  true if the beam missed, false if the beam hit the player.
+ * @return  true if the beam was blocked.
  */
-bool bolt::misses_player()
+bool bolt::attempt_player_block()
 {
-    if ((is_explosion || aimed_at_feet)
-        && origin_spell != SPELL_CALL_DOWN_LIGHTNING
-        && origin_spell != SPELL_MOMENTUM_STRIKE)
-    {
-        return false;
-    }
-
-    int dodge = you.evasion();
-    int real_tohit  = hit;
-
-    if (real_tohit != AUTOMATIC_HIT)
-        real_tohit = apply_to_hit_modifiers(real_tohit, you);
-
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
@@ -3562,13 +3552,16 @@ bool bolt::misses_player()
         && (SH > 0 || you.duration[DUR_DIVINE_SHIELD]))
     {
         bool blocked = false;
-        if (hit == AUTOMATIC_HIT)
+        if (hit == AUTOMATIC_HIT || is_explosion)
         {
-            // 50% chance of blocking ench-type effects at 10 displayed sh
-            blocked = x_chance_in_y(SH, omnireflect_chance_denom(SH));
+            const int effective_SH = is_explosion ? SH * 2 / 5
+                                                  : SH;
+            // 50% chance of blocking ench-type effects at 10 displayed sh.
+            // 20% chance of blocking explosion-type effects at 10 displayed sh.
+            blocked = x_chance_in_y(effective_SH, omnireflect_chance_denom(SH));
 
             dprf(DIAG_BEAM, "%smnireflected: %d/%d chance",
-                 blocked ? "O" : "Not o", SH, omnireflect_chance_denom(SH));
+                 blocked ? "O" : "Not o", effective_SH, omnireflect_chance_denom(SH));
         }
         else
         {
@@ -3621,6 +3614,32 @@ bool bolt::misses_player()
         // Some training just for the "attempt".
         practise_shield_block(false);
     }
+
+    return false;
+}
+
+/* Determine whether the beam hit or missed the player, and tell them if it
+ * missed.
+ *
+ * @return  true if the beam missed, false if the beam hit the player.
+ */
+bool bolt::misses_player()
+{
+    if ((is_explosion || aimed_at_feet)
+        && origin_spell != SPELL_CALL_DOWN_LIGHTNING
+        && origin_spell != SPELL_MOMENTUM_STRIKE)
+    {
+        return false;
+    }
+
+    if (attempt_player_block())
+        return true;
+
+    int dodge = you.evasion();
+    int real_tohit  = hit;
+
+    if (real_tohit != AUTOMATIC_HIT)
+        real_tohit = apply_to_hit_modifiers(real_tohit, you);
 
     if (is_enchantment())
         return false;
@@ -4270,8 +4289,9 @@ void bolt::affect_player()
     // Special cases can be handled here.
     if (is_explosion && !in_explosion_phase)
     {
-        // Trigger the explosion.
-        finish_beam();
+        // Trigger the explosion (unless we omnireflect it)
+        if (is_tracer() || !attempt_player_block())
+            finish_beam();
         return;
     }
 

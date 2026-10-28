@@ -429,6 +429,7 @@ private:
     // for players
     void affect_player();
     bool misses_player();
+    bool attempt_player_block();
 public:
     void affect_player_enchantment(bool resistible = true);
 private:
