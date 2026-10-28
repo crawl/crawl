@@ -3350,6 +3350,8 @@ _yredelemnul_Donald_
 
 @The_monster@ says, "If you wanted the light to be dimmer, you could have said so."
 
+@The_monster@ says, "Why do you need to cast such a big shadow? Is it a competition?"
+
 @The_monster@ says, "What kind of torch can only be lit once per level?"
 
 @The_monster@ says, "How does that torch stay lit when you throw its fire all over?"
