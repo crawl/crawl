@@ -2575,7 +2575,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             const char* cumber_desc = evp < 100 ? "slightly " :
                                       evp > 100 ? "greatly " : "";
             description += make_stringf(
-                "It is cumbersome to wear, and %simpedes the evasion, "
+                "\n\nIt is cumbersome to wear, and %simpedes the evasion, "
                 "spellcasting ability, and attack speed of the wearer. "
                 "These penalties are reduced by the wearer's Shields skill "
                 "and Strength; mastering Shields eliminates penalties.",
