@@ -515,6 +515,34 @@ x..x.S1WxS.x..x
 x..xxxxxxxxx..x
 ENDMAP
 
+NAME:   tekkud_gulch_entry_sunken_jail
+TAGS:   vaults_orient_w vaults_orient_e
+: local d = you.depth()
+: kmons("1 = crawling flesh cage w:" .. 5 - d .. " / " ..
+:           "rusted inspector w:" .. d)
+: kmons("2 = slime creature w:" .. 5 - d .. " / alligator w:2 / " ..
+:           "formless jellyfish w:" .. d)
+KMONS:  3 = vault guard
+KMONS:  SP = stack of scrap
+KFEAT:  m = iron_grate
+SUBST:  - = mW
+NSUBST: ' = 1:M. / * = S...
+: subst("1 = 1:8 .:" .. 5 - d)
+: subst("2 = 2 W:" .. 6 - d)
+: decorative_floor(_G, 'M', "mop and bucket")
+: gulch_portal(_G, "2PW", "w")
+MAP
+    xxxxxxxxxxxxx
+    x'1x'.xW2x2Wx
+    x..x1.xWWxWWx
+    xmmSmmP--P--x
+........3.WWWWWWW
+xmmSmmSmmS--x
+x..x..z1.zWWx
+x1.x'1zO.z2Wx
+xxxxxxzzzzxxx
+ENDMAP
+
 ###############################################################################
 # <<3>> Gulch layout vaults and subvaults
 ###############################################################################

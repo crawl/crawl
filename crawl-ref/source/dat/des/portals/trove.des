@@ -729,6 +729,29 @@ cc..cc..ccc..cc..cc
     ccccccccccc
 ENDMAP
 
+NAME:    tekkud_trove_entry_lotus
+TAGS:    transparent no_descent
+DEPTH:   D:12-, Swamp, Snake, Shoals
+WEIGHT:  5 (Snake), 10
+KMONS:   0 = 0
+KMONS:   p = plant
+KMONS:   s = sacred lotus
+KFEAT:   0ps = W
+SUBST:   A : AW
+NSUBST:  p = 1:s / * = ppppWWW0
+: trove.portal(_G)
+MAP
+cc'''''cc
+cA'WWW'Ac
+'''WpW'''
+'WW.W.WW'
+'WpWOWpW'
+'WW.W.WW'
+'''WpW'''
+cA'WWW'Ac
+cc'''''cc
+ENDMAP
+
 ##############################################################################
 #
 # The portal vaults. As of 0.34:
