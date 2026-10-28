@@ -375,6 +375,11 @@ globe_of_annihilation_tar1 MONS_GLOBE_OF_ANNIHILATION_TAR
 globe_of_annihilation_tar2
 globe_of_annihilation_tar3
 battlesphere MONS_BATTLESPHERE
+battlepyramid MONS_BATTLEPYRAMID
+battlecube MONS_BATTLECUBE
+battledodecahedron MONS_BATTLEDODECAHEDRON
+battleoctahedron MONS_BATTLEOCTAHEDRON
+battlebifrustum MONS_BATTLEBIFRUSTUM
 fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3

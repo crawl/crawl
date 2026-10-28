@@ -3347,6 +3347,7 @@ static bool _mons_awaken_flesh(monster& caster, const int power,
 
         bolt shockwave(caster, SPELL_AWAKEN_FLESH, power);
         shockwave.source = shockwave.target = mon->pos();
+        shockwave.ench_power = 50;
         shockwave.explode(true, true);
     }
 

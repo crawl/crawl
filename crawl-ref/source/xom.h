@@ -107,6 +107,7 @@ enum xom_event_type
     XOM_BLESSING_GUARDIAN,
     XOM_BLESSING_SPELLSTRIDE,
     XOM_BLESSING_MANNEQUINS,
+    XOM_BLESSING_BATTLESHAPE,
 
     // Not even a real blessing, but allows wizmode to select a new blessing at random.
     XOM_BLESSING_RANDOM,

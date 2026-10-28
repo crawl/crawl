@@ -1064,6 +1064,7 @@ enum monster_type                      // env.mons[].type
     MONS_FULMINANT_PRISM,
     MONS_SHADOW_PRISM,
     MONS_BATTLESPHERE,
+    MONS_CHAOS_BATTLESHAPE,
     MONS_FOXFIRE,
     MONS_BOULDER,
     MONS_BLAZEHEART_CORE,
@@ -1455,6 +1456,7 @@ enum monster_type                      // env.mons[].type
     MONS_JADE_CRYSTAL_ICE,
     MONS_HYPNOTAIL,
     MONS_MANNEQUIN,
+    MONS_CHAOS_BATTLESHAPE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

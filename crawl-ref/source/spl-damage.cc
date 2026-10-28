@@ -467,7 +467,7 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
         beam.source = source;
         beam.target = target;
         beam.colour       = ETC_RANDOM;
-        beam.ench_power   = pow;
+        beam.ench_power   = 50;
         beam.damage       = calc_dice(3, 5 + pow / 6);
         beam.real_flavour = BEAM_CHAOS;
         beam.flavour      = BEAM_CHAOS;

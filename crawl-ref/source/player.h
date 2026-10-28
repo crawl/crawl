@@ -134,6 +134,7 @@ enum player_trigger_type
     DID_SOLAR_EMBER,     // Sun scarab ember attack
     DID_REV_UP,          // Coglin rev
     DID_WEST_WIND_SHOT,  // Gale Centaur West Wind ranged attack
+    DID_BATTLESHAPE_SHOT, // Xom chaos battleshape melee trigger
     NUM_PLAYER_TRIGGER_TYPES,
 };
 

@@ -7192,10 +7192,18 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
 
-    if (mi.type == MONS_BATTLESPHERE)
+    if (mi.type == MONS_BATTLESPHERE || mi.type == MONS_CHAOS_BATTLESHAPE)
     {
-        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        dice_def dam = battlesphere_damage_from_hd(mi.hd);
         result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+        if (mi.type == MONS_CHAOS_BATTLESHAPE)
+        {
+            dam = zap_damage(ZAP_CHAOS_BATTLESHAPE_FINALE, you.experience_level, false, false);
+            result << "Chaos blast: " << dam.num << "d" << dam.size << "\n";
+
+            dam = zap_damage(ZAP_SHOOTING_STAR, 20 + you.experience_level * 2, false, false);
+            result << "Shooting stars: " << dam.num << "d" << dam.size << "\n";
+        }
     }
     else if (mi.type == MONS_BURSTSHROOM)
     {

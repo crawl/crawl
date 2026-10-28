@@ -109,6 +109,10 @@ bool trigger_battlesphere(actor* agent);
 dice_def battlesphere_damage_from_power(int pow);
 dice_def battlesphere_damage_from_hd(int hd);
 
+monster* find_chaos_battleshape();
+bool trigger_chaos_battleshape_melee();
+bool trigger_chaos_battleshape_spell(int spell_level);
+
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail,
                                   bool is_shadow = false);

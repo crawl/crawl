@@ -4382,7 +4382,7 @@ void bolt::affect_player()
     // poison effects etc work properly.
     check_your_resists(pre_res_dam, flavour, "", this, true);
 
-    if (real_flavour == BEAM_CHAOS && coinflip())
+    if (real_flavour == BEAM_CHAOS && x_chance_in_y(ench_power, 100))
         chaos_affects_actor(&you, agent());
 
     if (flavour == BEAM_STUN_BOLT
@@ -5220,7 +5220,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mon->is_firewood())
         you.pet_target = mon->mindex();
 
-    if (real_flavour == BEAM_CHAOS && coinflip())
+    if (real_flavour == BEAM_CHAOS && x_chance_in_y(ench_power, 100))
         chaos_affects_actor(mon, agent());
 
     // We check player Sticky Flame by name and other effects by flavour, since

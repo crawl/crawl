@@ -1,0 +1,17 @@
+name: "chaos battleshape"
+glyph: {char: "¤", colour: etc_random}
+flags: [flies, see_invis, no_poly_to, maintain_range, avatar]
+resists: {elec: 3, fire: 2, cold: 2, corr: 1}
+exp: 140
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 5
+hp_10x: 150
+ac: 0
+ev: 5
+intelligence: brainless
+speed: 30
+size: little
+shape: orb
+tile: battlecube

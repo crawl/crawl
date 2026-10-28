@@ -1423,6 +1423,9 @@ static void _monster_die_cloud(const monster& mons, bool real_death)
                 place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
                 return;
 
+            case MONS_CHAOS_BATTLESHAPE:
+                place_cloud(CLOUD_CHAOS, mons.pos(), 3 + random2(3), &mons);
+
             default:
                 break;
         }
@@ -2828,6 +2831,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
+    else if (mons.type == MONS_CHAOS_BATTLESHAPE && !timeout && !reset)
+    {
+        you.duration[DUR_XOM_BATTLESHAPE_COOLDOWN] = random_range(70, 110);
+        you.props.erase(CHAOS_BATTLESHAPE_KEY);
+    }
     else if (mons.type == MONS_SPECTRAL_WEAPON)
         end_spectral_weapon(&mons, true, true);
     else if (mons.type == MONS_RENDING_BLADE)

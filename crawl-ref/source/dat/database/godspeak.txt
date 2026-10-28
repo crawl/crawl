@@ -1399,6 +1399,19 @@ Objects tumble out of Xom's toy box.
 
 w:5
 "I think this one might replace you if you don't step it up!"
+%%%%
+Xom battleshape
+
+Xom sculpts chaos into a physical form.
+
+Xom lends you a pet cube.
+
+"It's time for a geometry lesson."
+
+"You look lonely; take this."
+
+w:5
+"Enjoy this weightless companion dodecahedron."
 ######################################
 # Miscellaneous god messages.
 ######################################

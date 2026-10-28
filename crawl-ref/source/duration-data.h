@@ -939,6 +939,7 @@ static const duration_def duration_data[] =
     { DUR_EXEGESIS, WHITE, "Exegesis", "", "", "", D_NO_FLAGS, {{"", _end_exegesis}}},
     { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
     { DUR_XOM_MANNEQUIN_TIMER, 0, "", "", "", "", D_NO_FLAGS},
+    { DUR_XOM_BATTLESHAPE_COOLDOWN, 0, "", "", "", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

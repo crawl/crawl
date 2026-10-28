@@ -1413,3 +1413,9 @@ Troupe status
 
 Slaying corporeal foes yourself will cause Xom to gift you mannequins in their
 image once the battle is ended.
+%%%%
+Battleshape status
+
+A chaotic battleshape will appear next to you in combat, firing when you attack
+in melee and detonating when you cast a spell while it is fully charged. If it
+is destroyed, it will rematerialise again after a short time.

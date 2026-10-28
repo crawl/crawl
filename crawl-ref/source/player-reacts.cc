@@ -540,6 +540,46 @@ static void _handle_xom_mannequins(int time_taken)
     }
 }
 
+static void _handle_xom_battleshape()
+{
+    if (you.attribute[ATTR_XOM_BLESSING] != XOM_BLESSING_BATTLESHAPE
+        || you.duration[DUR_XOM_BATTLESHAPE_COOLDOWN])
+    {
+        return;
+    }
+
+    const bool hostiles = there_are_monsters_nearby(true, true, false);
+
+    monster* battleshape = find_chaos_battleshape();
+
+    // If enemies are around, create a battleshape.
+    if (!battleshape && hostiles)
+    {
+        mgen_data mg(MONS_CHAOS_BATTLESHAPE, BEH_FRIENDLY, you.pos(), MHITYOU);
+        mg.set_summoned(&you, MON_SUMM_XOM_BATTLESHAPE, 0, false);
+        mg.set_range(1, you.current_vision);
+        mg.hd = 1 + you.experience_level / 3;
+        mg.hp = 10 + you.experience_level * 3 / 2;
+        if (battleshape = create_monster(mg))
+        {
+            you.props[CHAOS_BATTLESHAPE_KEY].get_int() = battleshape->mid;
+            mprf("A chaotic battlecube coalesces beside you.");
+        }
+    }
+    // If a battleshape exists and the battle is over, start to time it out.
+    else if (battleshape && !hostiles)
+    {
+        if (!battleshape->has_ench(ENCH_SUMMON_TIMER))
+            battleshape->add_ench(mon_enchant(ENCH_SUMMON_TIMER, &you, random_range(50, 80)));
+    }
+    // But in case it started timing out and new hostiles appear, remove the timer.
+    else if (battleshape && hostiles)
+    {
+        if (battleshape->has_ench(ENCH_SUMMON_TIMER))
+            battleshape->del_ench(ENCH_SUMMON_TIMER, true, false);
+    }
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -622,6 +662,7 @@ void player_reacts_to_monsters()
         xom_check_guardian_revival();
 
     _handle_xom_mannequins(you.time_taken);
+    _handle_xom_battleshape();
 
     announce_beogh_conversion_offer();
 

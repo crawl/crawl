@@ -1138,6 +1138,9 @@ void do_post_spellcast_effects(spell_type spell)
     if (you.props.exists(BATTLESPHERE_KEY) && battlesphere_can_mirror(spell))
         trigger_battlesphere(&you);
 
+    if (you.props.exists(CHAOS_BATTLESHAPE_KEY))
+        trigger_chaos_battleshape_spell(spell_difficulty(spell));
+
     if (will_have_passive(passive_t::shadow_spells))
         dithmenos_shadow_spell(spell);
 

@@ -1789,7 +1789,9 @@ void stardust_fineff::fire()
     if (count == 0)
         return;
 
-    if (type == SHOOTING_STAR_JELLY)
+    if (type == SHOOTING_STAR_BATTLESHAPE)
+        mprf("%s breaks apart into shimmering stars!", agent->name(DESC_THE).c_str());
+    else if (type == SHOOTING_STAR_JELLY)
         mprf("A flurry of magic pours from %s injured body!", agent->name(DESC_ITS).c_str());
     else
     {
@@ -1797,8 +1799,10 @@ void stardust_fineff::fire()
             type == SHOOTING_STAR_CARINA ? "weapon" : "orb");
     }
 
-    count = type == SHOOTING_STAR_JELLY ? max_stars : min(max_stars, count + 1);
-    const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
+    count = type == SHOOTING_STAR_ORB ? min(max_stars, count + 1) : max_stars;
+    const int foe = agent->is_player() || type == SHOOTING_STAR_BATTLESHAPE
+                        ? int{MHITYOU}
+                        : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
         mgen_data mg(MONS_SHOOTING_STAR, BEH_COPY, agent->pos(),

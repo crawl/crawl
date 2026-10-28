@@ -574,7 +574,7 @@ monster_info::monster_info(const monster* m, int milev)
         is_active = !!m->ballisto_activity;
     else if (has_hydra_multi_attack())
         num_heads = m->num_heads;
-    else if (type == MONS_SEISMOSAURUS_EGG)
+    else if (type == MONS_SEISMOSAURUS_EGG || type == MONS_CHAOS_BATTLESHAPE)
         number = m->number;
     // others use number for internal information
     else
@@ -1160,6 +1160,18 @@ string monster_info::_core_name() const
                 }
             }
             break;
+        case MONS_CHAOS_BATTLESHAPE:
+            switch (number)
+            {
+                case 0:
+                case 1:     s = "battlepyramid";        break;
+                case 2:
+                case 3:     s = "battlecube";           break;
+                case 4:
+                case 5:     s = "battleoctahedron";     break;
+                case 6:     s = "battledodecahedron";   break;
+                case 7:     s = "battlebifrustum";      break;
+            }
         default:
             break;
         }

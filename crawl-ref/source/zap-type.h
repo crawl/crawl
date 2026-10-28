@@ -207,5 +207,6 @@ enum zap_type
     ZAP_ICE_THORNS,
     ZAP_SIROCCO,
     ZAP_PLINK,
+    ZAP_CHAOS_BATTLESHAPE_FINALE,
     NUM_ZAPS
 };

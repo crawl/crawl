@@ -3421,7 +3421,8 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Keep helpers with somewhat chaotic movement from deliberately breaking
     // LoS with their owners.
-    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE)
+    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE
+        || mons->type == MONS_CHAOS_BATTLESHAPE)
     {
         actor* creator = actor_by_mid(mons->summoner);
         if (creator && creator->alive_or_reviving())
@@ -4273,9 +4274,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
     if (delta.x || delta.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, delta);
 
-    // Battlespheres need to preserve their tracking targets after each move
-    if (mons_is_wandering(*mons)
-        && mons->type != MONS_BATTLESPHERE)
+    if (mons_is_wandering(*mons))
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();

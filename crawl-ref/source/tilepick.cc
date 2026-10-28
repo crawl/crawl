@@ -2278,6 +2278,31 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
     case MONS_SEISMOSAURUS_EGG:
         return tileidx_mon_clamp(TILEP_MONS_SEISMOSAURUS_EGG, number);
 
+    case MONS_CHAOS_BATTLESHAPE:
+    {
+        switch (number)
+        {
+            default:
+            case 0:
+            case 1:
+                return TILEP_MONS_BATTLEPYRAMID;
+
+            case 2:
+            case 3:
+                return TILEP_MONS_BATTLECUBE;
+
+            case 4:
+            case 5:
+                return TILEP_MONS_BATTLEOCTAHEDRON;
+
+            case 6:
+                return TILEP_MONS_BATTLEDODECAHEDRON;
+
+            case 7:
+                return TILEP_MONS_BATTLEBIFRUSTUM;
+        }
+    }
+
     // draconian ('d')
     case MONS_TIAMAT:
     {

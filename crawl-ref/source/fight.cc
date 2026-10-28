@@ -683,6 +683,12 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
     if (you.form == transformation::medusa && !you.triggers_done[DID_MEDUSA_STINGER])
         _do_medusa_stinger();
 
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_BATTLESHAPE
+        && !you.triggers_done[DID_BATTLESHAPE_SHOT])
+    {
+        trigger_chaos_battleshape_melee();
+    }
+
     if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP])
         you.rev_up(you.melee_attack_delay().roll());
 }

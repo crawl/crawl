@@ -35,6 +35,7 @@ enum shooting_star_fineff_type : int {
     SHOOTING_STAR_ORB,
     SHOOTING_STAR_JELLY,
     SHOOTING_STAR_CARINA,
+    SHOOTING_STAR_BATTLESHAPE,
 };
 
 void schedule_mirror_damage_fineff(const actor* attack, const actor* defend,

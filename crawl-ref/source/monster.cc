@@ -6962,8 +6962,11 @@ bool monster::is_peripheral() const
  */
 int monster::threat_range(bool include_lof_requiring, bool include_lof_ignoring) const
 {
-    if (include_lof_requiring && (launcher() || missiles() || type == MONS_BATTLESPHERE))
+    if (include_lof_requiring
+        && (launcher() || missiles() || type == MONS_BATTLESPHERE || type == MONS_CHAOS_BATTLESHAPE))
+    {
         return LOS_RADIUS;
+    }
 
     if (include_lof_ignoring && mons_has_los_ability(type))
         return LOS_RADIUS;

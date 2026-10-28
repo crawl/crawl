@@ -2940,4 +2940,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_MI_STONE,
 },
 
+{
+    ZAP_CHAOS_BATTLESHAPE_FINALE,
+    "blast of chaos",
+    new dicedef_calculator<3, 4, 3, 5>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    ETC_RANDOM,
+    false,
+    BEAM_CHAOS,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

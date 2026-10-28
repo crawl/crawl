@@ -1477,6 +1477,18 @@ static void _describe_xom_blessing(status_info& inf)
             break;
         }
 
+        case XOM_BLESSING_BATTLESHAPE:
+        {
+            const monster* shape = find_chaos_battleshape();
+            const bool charged = shape && shape->has_ench(ENCH_SPELL_CHARGED);
+            inf.light_text = "Battleshape";
+            inf.light_text_formatted = make_stringf("<red>B<lightred>a<yellow>t<green>t<lightgreen>l<cyan>e"
+                                                    "<lightcyan>s<blue>h<lightblue>a<magenta>p<lightmagenta>e%s",
+                                                    charged ? "<white>!!!" : "");
+            inf.short_text = "blessing of battleshape";
+            break;
+        }
+
         default:
         break;
     }
