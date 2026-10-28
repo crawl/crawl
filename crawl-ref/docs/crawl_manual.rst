@@ -1958,11 +1958,11 @@ Draconian types
 Red Draconians
   feel at home in fiery surroundings. They are bad with ice magic but very
   proficient with fire. They can breathe highly combustible embers which
-  cause a fiery explosion whenever they hits a foe.
+  cause a fiery explosion whenever they hit a foe.
 
 White Draconians
   stem from frost-bitten lands, and are naturally resistant to frost. They
-  beathe piercing cold which encases anything it kills in a solid block of
+  breathe piercing cold which encases anything it kills in a solid block of
   ice. They are versed in ice magic, but bad at fire.
 
 Green Draconians
