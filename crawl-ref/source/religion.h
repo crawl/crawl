@@ -77,6 +77,7 @@ void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
 vector<god_type> get_ecu_gods(coord_def pos);
+bool faded_altar_is_visited(coord_def pos);
 
 static inline bool you_worship(god_type god)
 {
