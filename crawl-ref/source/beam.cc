@@ -1056,6 +1056,7 @@ int bolt::range_used(bool leg_only) const
 void bolt::finish_beam()
 {
     extra_range_used = BEAM_STOP;
+    flavour = real_flavour;
 }
 
 void bolt::affect_wall()
