@@ -3580,6 +3580,29 @@ MAP
 .........
 ENDMAP
 
+NAME:  tekkud_striation
+TAGS:  transparent decor extra
+DEPTH: D:4-, Depths
+: if crawl.coinflip() then
+CLEAR: y'
+: else
+SUBST: y=x, '=.
+: end
+MAP
+yyyyyxxyy'''
+''''....'yyy
+yyyxxxxx.'''
+''......xxyy
+yxxxxxx....'
+.......xxxxx
+xxxxxx......
+'.....xxxxxy
+yyxxx.....''
+'''..xxxxyyy
+yyyy....''''
+''''yxxyyyyy
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
