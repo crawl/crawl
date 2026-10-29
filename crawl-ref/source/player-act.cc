@@ -315,7 +315,7 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only,
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    return rv::max(div_rand_round(attk_delay * player_speed(), BASELINE_DELAY),
+    return rv::max(div_rand_round(attk_delay * player_speed(1, false), BASELINE_DELAY),
                    random_var(1));
 }
 

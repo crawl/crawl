@@ -2752,6 +2752,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DETONATION_CATALYST:
         return cast_detonation_catalyst(fail);
 
+    case SPELL_TECTONIC_BULWARK:
+        return cast_tectonic_bulwark(powc, fail);
+
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
         return cast_revivification(powc, fail);
