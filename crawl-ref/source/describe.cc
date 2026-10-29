@@ -1373,7 +1373,7 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const float cur_delay = you.attack_delay_with(&dummy).expected();
+    const float cur_delay = round(you.attack_delay_with(&dummy).expected());
 
     return make_stringf("\n    Current attack delay: %.1f.", cur_delay / 10);
 }
