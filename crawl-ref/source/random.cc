@@ -345,7 +345,7 @@ int div_round_up(int num, int den)
 int div_round_near(int num, int den)
 {
     const int rem = num % den;
-    return num / den + (rem >= den / 2);
+    return num / den + (2 * rem >= den);
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance
