@@ -1704,22 +1704,7 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
 
 static void _protean_explosion(monster* mons)
 {
-    // This is slightly hacky, but we determine which thing to turn into by
-    // creating a dummy monster of the right hd, then making a poly set for it
-    // and picking the first one.
-    monster dummy;
-    dummy.type = MONS_SHAPESHIFTER;
-    define_monster(dummy);
-    dummy.set_hit_dice(12);
-    init_poly_set(&dummy);
-    const CrawlVector &set = dummy.props[POLY_SET_KEY];
-    monster_type target = (monster_type)set[0].get_int();
-
-    // It may be thematic to become a shapeshifter, but this also tosses off the
-    // might and haste immediately. (We can just pick the second polyset target
-    // since they should be guaranteed to be different.)
-    if (target == MONS_GLOWING_SHAPESHIFTER)
-        target = (monster_type)set[1].get_int();
+    monster_type target = get_protean_shapeshift_target(12);
 
     if (you.can_see(*mons))
     {
@@ -3282,6 +3267,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
             else if (mons.type == MONS_HYPNOTAIL)
                 msg = " shrivels and falls limp.";
+            else if (mons.was_created_by(MON_SUMM_XOM_PROTEAN))
+                msg = " loses form entirely.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))

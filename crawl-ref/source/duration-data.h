@@ -940,6 +940,8 @@ static const duration_def duration_data[] =
     { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
     { DUR_XOM_MANNEQUIN_TIMER, 0, "", "", "", "", D_NO_FLAGS},
     { DUR_XOM_BATTLESHAPE_COOLDOWN, 0, "", "", "", "", D_NO_FLAGS, {{""}}},
+    { DUR_XOM_PROTEAN_COOLDOWN, YELLOW, "-Flesh", "", "", "", D_COOLDOWN,
+      {{"Your body feels full of potential once again."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

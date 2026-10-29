@@ -1489,6 +1489,12 @@ static void _describe_xom_blessing(status_info& inf)
             break;
         }
 
+        case XOM_BLESSING_PROTEAN:
+            inf.light_text = "Protean";
+            inf.light_text_formatted = "<red>P<yellow>r<green>o<cyan>t<blue>e<lightblue>a<magenta>n";
+            inf.short_text = "blessing of protean form";
+            break;
+
         default:
         break;
     }

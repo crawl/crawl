@@ -1412,6 +1412,12 @@ Xom lends you a pet cube.
 
 w:5
 "Enjoy this weightless companion dodecahedron."
+%%%%
+Xom protean
+
+Xom blesses you with excessive genetic potential.
+
+"You could use more variety in your organs."
 ######################################
 # Miscellaneous god messages.
 ######################################

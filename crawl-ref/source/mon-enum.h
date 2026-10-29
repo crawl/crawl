@@ -206,6 +206,7 @@ enum mon_summon_type
     MON_SUMM_XOM_GUARDIAN, // Xom's guardian blessing
     MON_SUMM_XOM_MANNEQUIN, // Mannequins from Xom's 'reaping' aura
     MON_SUMM_XOM_BATTLESHAPE, // Xom's chaos battleshape blessing
+    MON_SUMM_XOM_PROTEAN, // Xom's protean blessing
 };
 
 #include "mon-flags.h"

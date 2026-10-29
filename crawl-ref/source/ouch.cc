@@ -828,6 +828,56 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
     }
 }
 
+static void _maybe_spawn_aspiring_flesh()
+{
+    if (you.attribute[ATTR_XOM_BLESSING] != XOM_BLESSING_PROTEAN
+        || you.duration[DUR_XOM_PROTEAN_COOLDOWN]
+        || you.hp * 10 > you.hp_max * 7)
+    {
+        return;
+    }
+
+    const int hd = 2 + you.experience_level / 2;
+    monster_type target = get_protean_shapeshift_target(hd);
+    int delay = random_range(3, 6) * BASELINE_DELAY;
+
+    int num = one_chance_in(6) ? 3 : 2;
+
+    bool created = false;
+    for (int i = 0; i < num; ++i)
+    {
+        const coord_def spot = find_newmons_square(target, you.pos(), 3, 6);
+        if (spot.origin())
+            return;
+
+        mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, BEH_FRIENDLY,
+                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH | MG_AUTOFOE);
+
+        mg.set_summoned(&you, MON_SUMM_CHAOS, delay + random_range(90, 150), false);
+        mg.hd = hd;
+
+        monster *flesh = create_monster(std::move(mg));
+        if (flesh)
+        {
+            flesh->props[PROTEAN_TARGET_KEY] = target;
+            flesh->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, nullptr, delay));
+
+            // Make each one shift a little later than the last
+            delay += random_range(1, 2) * BASELINE_DELAY;
+
+            created = true;
+        }
+    }
+
+    if (created)
+    {
+        mprf(MSGCH_FRIEND_SPELL,
+             "Protean flesh bursts from your body and begins taking on the form of %s!",
+             mons_type_name(target, DESC_A).c_str());
+        you.duration[DUR_XOM_PROTEAN_COOLDOWN] = random_range(120, 360);
+    }
+}
+
 static void _powered_by_pain(int dam)
 {
     const int level = you.get_mutation_level(MUT_POWERED_BY_PAIN);
@@ -1475,6 +1525,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         _maybe_spawn_monsters(dam, death_type, source);
         _maybe_spawn_rats(dam, death_type);
         _maybe_summon_demonic_guardian(dam, death_type);
+        _maybe_spawn_aspiring_flesh();
         _maybe_fog(dam);
         _maybe_blood_hastes_allies();
         _powered_by_pain(dam);

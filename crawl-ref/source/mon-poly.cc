@@ -762,3 +762,25 @@ void slimify_monster(monster* mon)
     if (mons_is_elven_twin(mon))
         elven_twin_died(mon, false, KILL_YOU, MID_PLAYER);
 }
+
+monster_type get_protean_shapeshift_target(int target_hd)
+{
+    // This is slightly hacky, but we determine which thing to turn into by
+    // creating a dummy monster of the right hd, then making a poly set for it
+    // and picking the first one.
+    monster dummy;
+    dummy.type = MONS_SHAPESHIFTER;
+    define_monster(dummy);
+    dummy.set_hit_dice(target_hd);
+    init_poly_set(&dummy);
+    const CrawlVector &set = dummy.props[POLY_SET_KEY];
+    monster_type target = (monster_type)set[0].get_int();
+
+    // It may be thematic to become a shapeshifter, but this also tosses off the
+    // might and haste immediately. (We can just pick the second polyset target
+    // since they should be guaranteed to be different.)
+    if (target == MONS_GLOWING_SHAPESHIFTER)
+        target = (monster_type)set[1].get_int();
+
+    return target;
+}

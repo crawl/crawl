@@ -1419,3 +1419,13 @@ Battleshape status
 A chaotic battleshape will appear next to you in combat, firing when you attack
 in melee and detonating when you cast a spell while it is fully charged. If it
 is destroyed, it will rematerialise again after a short time.
+%%%%
+Protean status
+
+When injured below 60% of your max HP, aspiring flesh will burst from your body,
+eventually transforming into short-lived but powerful allies.
+%%%%
+-Flesh status
+
+Aspiring flesh has recently burst from your body and cannot do so again for a
+short while.
