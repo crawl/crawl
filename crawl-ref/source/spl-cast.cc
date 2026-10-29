@@ -1852,8 +1852,12 @@ static vector<string> _desc_mercury_weak_chance(const monster_info& mi)
                             get_mercury_weaken_chance(mi.hd))};
 }
 
-static vector<string> _desc_warp_space_chance(int pow)
+static vector<string> _desc_warp_space_chance(const monster_info& mi, int pow)
 {
+    const monster* mon = monster_at(mi.pos);
+    if (mon && mon->stasis())
+        return vector<string>{"immune to blinking"};
+
     return vector<string>{make_stringf("chance to blink: %d%%",
                             get_warp_space_chance(pow))};
 }
@@ -1927,6 +1931,10 @@ static vector<string> _desc_rimeblight_valid(const monster_info& mi)
 
 static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
 {
+    const monster* mon = monster_at(mi.pos);
+    if (mon && mon->stasis())
+        return vector<string>{"immune to teleportation"};
+
     const int wl = mi.willpower();
     if (mons_class_is_stationary(mi.type))
         return vector<string>{"stationary"};
@@ -2123,7 +2131,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_MERCURY_ARROW:
             return _desc_mercury_weak_chance;
         case SPELL_WARP_SPACE:
-            return bind(_desc_warp_space_chance, powc);
+            return bind(_desc_warp_space_chance, placeholders::_1, powc);
         case SPELL_BECKONING:
             return bind(_desc_beckoning_valid, placeholders::_1);
         default:
