@@ -1387,6 +1387,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_HAILSTORM:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+    case SPELL_STELLAR_INVITATION:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
         return make_unique<targeter_multibeam>(&you, SPELL_STARBURST, range,
@@ -2823,6 +2824,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
+
+    case SPELL_STELLAR_INVITATION:
+        return cast_stellar_invitation(powc, fail);
 
     case SPELL_JINXBITE:
         return cast_jinxbite(powc, fail);

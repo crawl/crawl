@@ -2108,6 +2108,13 @@ Steam Breath spell
 
 <Steam breath ability>
 %%%%
+Stellar Invitation spell
+
+Radiates a wave of cosmic heat in a large area around the caster, which deals
+minor fire damage and summons a solar elemental to fight beside the caster for a
+short time. The elemental attacks in a wide area, and its health and duration
+increase with the number of enemies struck by the inital blast.
+%%%%
 Sticks to Snakes spell
 
 Casts forth sticks and transforms them into snakes. Stronger casters will always

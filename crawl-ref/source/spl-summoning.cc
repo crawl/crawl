@@ -2330,6 +2330,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_MARTYRS_KNELL,            { 1, 1 } },
     { SPELL_HAUNT,                    { 8, 8 } },
     { SPELL_SUMMON_CACTUS,            { 1, 1 } },
+    { SPELL_STELLAR_INVITATION,       { 1, 1 } },
     { SPELL_SOUL_SPLINTER,            { 1, 1 } },
     { SPELL_SIMULACRUM,               { 5, 5 } },
     { SPELL_HELLFIRE_MORTAR,          { 1, 1 } },
@@ -4656,6 +4657,23 @@ void trigger_rending_blade()
             mi->number = min((unsigned int)3, mi->number + 1);
             mi->speed_increment = 100;
             return;
+        }
+    }
+}
+
+void summon_solar_elemental(int count, int pow)
+{
+    int dur = 25 * (count + 1);
+    dur = random_range (dur, dur * 3 / 2);
+    mgen_data mg = _pal_data(MONS_SOLAR_ELEMENTAL, dur, SPELL_STELLAR_INVITATION);
+    mg.hp = hit_points(16 + random_range(count * 4, count * 8)
+        + random2(div_rand_round(pow, 4)), 1);
+    if (monster* mons = create_monster(mg))
+    {
+        if (you.can_see(*mons))
+        {
+            mprf("A%s solar elemental arrives.",
+             count > 8 ? " powerful" : count < 3 ? " minor" : "");
         }
     }
 }

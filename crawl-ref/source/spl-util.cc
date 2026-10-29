@@ -531,7 +531,8 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_HAILSTORM
         || spell == SPELL_PERMAFROST_ERUPTION
         || spell == SPELL_MANIFOLD_ASSAULT
-        || spell == SPELL_MAXWELLS_COUPLING) // n.b. not an area spell
+        || spell == SPELL_MAXWELLS_COUPLING
+        || spell == SPELL_STELLAR_INVITATION) // n.b. not an area spell
     {
         return true;
     }
@@ -1873,6 +1874,7 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_FLAME_WAVE:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+    case SPELL_STELLAR_INVITATION:
         return find_near_hostiles(you, range, true).empty();
 
     case SPELL_ANGUISH:

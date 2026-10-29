@@ -196,3 +196,4 @@ spret do_crystal_burst();
 
 spell_type dragon_vein_to_spell(dungeon_feature_type feat);
 void trigger_dragon_vein();
+spret cast_stellar_invitation(int pow, bool fail);
