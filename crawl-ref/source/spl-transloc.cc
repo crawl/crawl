@@ -2414,7 +2414,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+        if (!mi->is_stationary() && !mi->stasis() && you.see_cell_no_trans(mi->pos()))
             targs.push_back(*mi);
     }
 
@@ -2452,7 +2452,7 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
         if (you.aware_of(**mi))
         {
             occupied[mi->pos()] = *mi;
-            if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+            if (!mi->is_stationary() && !mi->stasis() && you.see_cell_no_trans(mi->pos()))
                 movers.push_back(*mi);
         }
 
