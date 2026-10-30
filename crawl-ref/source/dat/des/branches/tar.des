@@ -1168,6 +1168,44 @@ xx@@@xx
            xx@@@xx
 ENDMAP
 
+NAME:   tekkud_tar_oblivion_access
+TAGS:   transparent
+DEPTH:  Tar:2-, !Tar:$
+MONS:   oblivion hound / reaper w:2
+NSUBST: + = 2:+ / *:x
+NSUBST: ' = 2:1 / 4=1. / *:.
+SUBST:  - = x.
+MAP
+xxxxxxxxxxxx
+x'x-{-x.'.xx+x
+x.-.x-..xx-.'x
++......-x.''.x
+x.-.---..-.-.+
+xxx..x.x.x.x.x
+ xxx+xxxxx+xxx
+ENDMAP
+
+# avg 9.4 shadow wraiths
+NAME:   tekkud_tar_wraith_trap
+TAGS:   transparent overwritable
+DEPTH:  Tar, !Tar:$
+MONS:   shadow wraith, putrid mouth / eidolon
+NSUBST: . = 3:1 / 8=1... / 1:2 / *=.:180 1
+MAP
+     ..
+   ......
+  ........
+ ..........
+ ..........
+............
+............
+ ..........
+ ..........
+  ........
+   ......
+     ..
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################

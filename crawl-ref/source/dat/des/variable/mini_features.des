@@ -3580,6 +3580,61 @@ MAP
 .........
 ENDMAP
 
+NAME:  tekkud_striation
+TAGS:  transparent decor extra
+DEPTH: D:4-, Depths
+: if crawl.coinflip() then
+SUBST: y=x, '=.
+: else
+CLEAR: y'
+: end
+MAP
+yyyyyxxyy'''
+''''....'yyy
+yyyxxxxx.'''
+''......xxyy
+yxxxxxx....'
+.......xxxxx
+xxxxxx......
+'.....xxxxxy
+yyxxx.....''
+'''..xxxxyyy
+yyyy....''''
+''''yxxyyyyy
+ENDMAP
+
+NAME:  tekkud_still_life_1
+TAGS:  buniq_still_life transparent decor extra
+DEPTH: D:3-, Depths
+MAP
+        .....
+        ..xx.
+        .x.x.
+        ...x.
+    .........
+    ..x..
+    ..xx.
+    .x.x.
+.........
+.xxx.
+...x.
+..x..
+.....
+ENDMAP
+
+NAME:  tekkud_still_life_2
+TAGS:  buniq_still_life transparent decor extra
+DEPTH: D:3-, Depths
+MAP
+  .....
+ ...x.......
+..x...x..xx.....
+.x......xx.xxxx.
+.x....x..xxxxxx.
+.xxxxx....xxxx..
+.......  ......
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
