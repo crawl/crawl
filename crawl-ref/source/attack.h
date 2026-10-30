@@ -107,11 +107,7 @@ public:
     virtual int post_roll_to_hit_modifiers(int mhit, bool random);
 
     // Exact copies of their melee_attack predecessors
-    string actor_name(const actor *a, description_level_type desc,
-                      bool actor_visible);
-    string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
-    string anon_name(description_level_type desc);
-    string anon_pronoun(pronoun_type ptyp);
+    string actor_name(const actor *a, description_level_type desc);
 
     // TODO: Definitely want to get rid of this, which we can't really do
     // until we refactor the whole pronoun / desc usage from these lowly
@@ -194,9 +190,6 @@ protected:
     void stab_message();
 
     void handle_noise(const coord_def & pos);
-
-    string atk_name(description_level_type desc);
-    string def_name(description_level_type desc);
 
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();

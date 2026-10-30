@@ -328,7 +328,7 @@ void melee_attack::handle_phase_blocked()
                  defender_name(false).c_str(),
                  defender->conj_verb("block").c_str(),
                  attacker == defender ? "its own"
-                                      : atk_name(DESC_ITS).c_str());
+                                      : attacker->name(DESC_ITS).c_str());
     }
 
     if (defender->divinely_shielded()
@@ -375,7 +375,7 @@ void melee_attack::handle_phase_dodged()
         else
         {
             mprf("%s%s misses %s.",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  evasion_margin_adverb().c_str(),
                  defender_name(true).c_str());
         }
@@ -1153,7 +1153,7 @@ bool melee_attack::handle_phase_damaged()
     {
         you.duration[DUR_SHROUD_TIMEOUT] = 100 + random2(damage_done) * 10;
         mprf("your slimy shroud breaks as it bends %s attack away%s",
-                     atk_name(DESC_ITS).c_str(),
+                     attacker->name(DESC_ITS).c_str(),
                      attack_strength_punctuation(damage_done).c_str());
         did_hit = false;
         damage_done = 0;
@@ -3220,7 +3220,7 @@ void melee_attack::sear_defender()
     if (needs_message && visible_effect)
     {
         mprf("%s fire resistance is stripped away!",
-             def_name(DESC_ITS).c_str());
+             defender->name(DESC_ITS).c_str());
     }
 }
 
@@ -3396,7 +3396,7 @@ void melee_attack::decapitate()
         if (defender_visible)
         {
             mprf("%s %s %s last head off!",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb(verb).c_str(),
                  apostrophise(defender_name(true)).c_str());
         }
@@ -3416,7 +3416,7 @@ void melee_attack::decapitate()
     if (defender_visible)
     {
         mprf("%s %s one of %s heads off!",
-             atk_name(DESC_THE).c_str(),
+             attacker->name(DESC_THE).c_str(),
              attacker->conj_verb(verb).c_str(),
              apostrophise(defender_name(true)).c_str());
     }
@@ -3732,7 +3732,7 @@ void melee_attack::announce_hit()
     if (attacker->is_monster())
     {
         mprf("%s %s%s %s%s%s%s%s",
-             atk_name(DESC_THE).c_str(),
+             attacker->name(DESC_THE).c_str(),
              is_special_mon_stab
                 && attacker->as_monster()->has_ench(ENCH_VAMPIRE_THRALL)
                     ? "stealthily " : "",
@@ -3786,7 +3786,7 @@ bool melee_attack::mons_do_poison()
     if (needs_message)
     {
         mprf("%s poisons %s!",
-                atk_name(DESC_THE).c_str(),
+                attacker->name(DESC_THE).c_str(),
                 defender_name(true).c_str());
     }
 
@@ -3986,7 +3986,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message && base_damage)
         {
             mprf("%s %s %s%s",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("freeze").c_str(),
                  defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
@@ -4007,7 +4007,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message && base_damage)
         {
             mprf("%s %s %s%s",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
                  defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
@@ -4039,9 +4039,9 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
                 if (needs_message)
                 {
                     mprf("%s %s vitality from %s injuries!",
-                         atk_name(DESC_THE).c_str(),
+                         attacker->name(DESC_THE).c_str(),
                          attacker->conj_verb("draw").c_str(),
-                         def_name(DESC_ITS).c_str());
+                         defender->name(DESC_ITS).c_str());
                 }
             }
         }
@@ -4167,7 +4167,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         break;
 
     case AF_CORRODE:
-        defender->corrode(attacker, atk_name(DESC_THE).c_str());
+        defender->corrode(attacker, attacker->name(DESC_THE).c_str());
         break;
 
     case AF_DISTORT:
@@ -4181,7 +4181,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message)
         {
             mprf("%s %s %s!",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("infuriate").c_str(),
                  defender_name(true).c_str());
         }
@@ -4208,7 +4208,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message && special_damage)
         {
             mprf("%s %s %s%s",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("sear").c_str(),
                  defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
@@ -4226,7 +4226,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message && special_damage)
         {
             mprf("%s %s %s%s",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("sear").c_str(),
                  defender_name(true).c_str(),
                  attack_strength_punctuation(special_damage).c_str());
@@ -4289,7 +4289,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message)
         {
             mprf("%s %s %s.",
-                 atk_name(DESC_THE).c_str(),
+                 attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("grab").c_str(),
                  defender_name(true).c_str());
         }
@@ -4358,7 +4358,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         if (needs_message && special_damage)
         {
             mprf("%s %s %s!",
-                    atk_name(DESC_THE).c_str(),
+                    attacker->name(DESC_THE).c_str(),
                     attacker->conj_verb("burn").c_str(),
                     defender_name(true).c_str());
 
@@ -4395,7 +4395,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
             if (needs_message)
             {
                 mprf("%s %s %s%s",
-                    atk_name(DESC_THE).c_str(),
+                    attacker->name(DESC_THE).c_str(),
                     attacker->conj_verb("drown").c_str(),
                     defender_name(true).c_str(),
                     attack_strength_punctuation(special_damage).c_str());

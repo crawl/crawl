@@ -691,7 +691,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_CURARE:
         obvious_effect = curare_actor(attacker, defender,
                                       proj_name,
-                                      atk_name(DESC_A));
+                                      attacker->name(DESC_A));
         break;
     case SPMSL_CHAOS:
         obvious_effect = chaos_affects_actor(defender, attacker);

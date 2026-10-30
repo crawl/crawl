@@ -4147,10 +4147,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
             _swim_or_move_energy(*mons);
             if (you.see_cell(target))
             {
-                const bool actor_visible = you.can_see(*mons);
-                mprf("%s knocks down a tree!",
-                        actor_visible?
-                        mons->name(DESC_THE).c_str() : "Something");
+                mprf("%s knocks down a tree!", mons->name(DESC_THE).c_str());
                 noisy(25, target);
             }
             else

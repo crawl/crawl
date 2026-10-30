@@ -9498,8 +9498,8 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
                                    "out of sight";
 
         mprf("%s throws %s %s!",
-             (thrower_seen ? thrower.name(DESC_THE).c_str() : "Something"),
-             (throwee_seen ? throwee.name(DESC_THE, true).c_str() : "something"),
+             thrower.name(DESC_THE).c_str(),
+             throwee.name(DESC_THE).c_str(),
              destination.c_str());
 
         bolt beam = bolt::visual_beam(thrower.pos(), chosen_dest, 30,
