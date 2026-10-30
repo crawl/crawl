@@ -16,6 +16,7 @@
 #include "stringutil.h" // uppercase_first
 #include "tag-version.h"
 #include "transformation.h"
+#include "xom.h"
 
 #include <functional>
 
@@ -1069,6 +1070,19 @@ void trigger_exploration_conducts()
 
     if (you.form == transformation::mistmane)
         mistmane_distill_potions(you.newly_revealed_cells);
+
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SNEAKY
+        && you.props.exists(XOM_DISGUISE_RECOVERY_KEY))
+    {
+        int& remaining = you.props[XOM_DISGUISE_RECOVERY_KEY].get_int();
+        if (you.newly_revealed_cells >= remaining)
+        {
+            you.props.erase(XOM_DISGUISE_RECOVERY_KEY);
+            god_speaks(GOD_XOM, "You have finished assembling a new disguise.");
+        }
+        else
+            remaining -= you.newly_revealed_cells;
+    }
 
     while (you.newly_revealed_cells > 0)
     {

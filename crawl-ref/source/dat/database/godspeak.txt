@@ -1418,6 +1418,16 @@ Xom protean
 Xom blesses you with excessive genetic potential.
 
 "You could use more variety in your organs."
+%%%%
+Xom sneaky
+
+Xom teaches you the importance of not being seen.
+
+"Let's play hide and seek."
+
+"Nobody ever suspects the barrel."
+
+"They'll never see you coming."
 ######################################
 # Miscellaneous god messages.
 ######################################

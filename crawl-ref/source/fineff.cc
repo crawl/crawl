@@ -52,6 +52,7 @@
 #include "rltiles/tiledef-main.h"
 #include "transform.h"
 #include "view.h"
+#include "xom.h"
 
 class final_effect
 {
@@ -666,6 +667,19 @@ protected:
     item_def& wpn;
 };
 
+class disguise_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    disguise_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return true; }
+};
+
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
 
@@ -910,6 +924,11 @@ void schedule_hypnogecko_tail_fineff()
 void schedule_ephemeral_weapon_end(item_def& wpn)
 {
     _schedule_final_effect(new ephemeral_weapon_end_fineff(wpn));
+}
+
+void schedule_disguise_fineff()
+{
+    _schedule_final_effect(new disguise_fineff());
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -2132,6 +2151,11 @@ void ephemeral_weapon_end_fineff::fire()
 
     if (orig)
         try_equip_item(*orig, true);
+}
+
+void disguise_fineff::fire()
+{
+    xom_disguise_self();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

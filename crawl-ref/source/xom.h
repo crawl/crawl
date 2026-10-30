@@ -18,6 +18,8 @@ using std::string;
 #define XOM_CLEAVE_BRAND_KEY "xom_cleave_brand"
 #define XOM_SPELLSTRIDE_SPELL "spellstride_spell"
 #define XOM_MANNEQUIN_TROUPE "mannequin_troupe"
+#define XOM_DISGUISE_OBSERVER_KEY "xom_disguise_observers"
+#define XOM_DISGUISE_RECOVERY_KEY "xom_disguise_recovery"
 
 struct item_def;
 
@@ -109,6 +111,7 @@ enum xom_event_type
     XOM_BLESSING_MANNEQUINS,
     XOM_BLESSING_BATTLESHAPE,
     XOM_BLESSING_PROTEAN,
+    XOM_BLESSING_SNEAKY,
 
     // Not even a real blessing, but allows wizmode to select a new blessing at random.
     XOM_BLESSING_RANDOM,
@@ -156,5 +159,9 @@ void debug_xom_effects();
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 void xom_reduce_floor_lock();
+
+void xom_maybe_disguise_self(monster* observer);
+void xom_disguise_self();
+void xom_end_disguise(bool force = false);
 
 void validate_xom_events();

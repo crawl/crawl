@@ -671,6 +671,8 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
 
     you.attribute[ATTR_SUNDERING_CHARGE]++;
 
+    xom_end_disguise();
+
     if (will_have_passive(passive_t::shadow_attacks))
         dithmenos_shadow_melee(primary_target);
 

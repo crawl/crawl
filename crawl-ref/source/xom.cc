@@ -30,6 +30,7 @@
 #include "english.h"
 #include "env.h"
 #include "errors.h"
+#include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -52,6 +53,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -6169,6 +6171,172 @@ static void _xom_protean()
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "blessing of protean form"), true);
 }
 
+static void _xom_sneaky()
+{
+    you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_SNEAKY;
+
+    god_speaks(GOD_XOM, _get_xom_speech("sneaky").c_str());
+    mpr("You feel like a master of disguise.");
+
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "sneaky"), true);
+}
+
+static void _xom_disguise(monster* observer)
+{
+    tileidx_t tile = TILEP_MONS_PILE_OF_DEBRIS;
+    string msg;
+    switch (random2(4))
+    {
+        case 0:
+            msg = "You disguise yourself as a nondescript pile of rubble";
+            tile = random_choose(TILEP_MONS_DISGUISE_RUBBLE_1,
+                                 TILEP_MONS_DISGUISE_RUBBLE_2);
+            break;
+
+        case 1:
+            msg = "You disguise yourself as a common bush";
+            tile = TILEP_MONS_DISGUISE_BUSH;
+            break;
+
+        case 2:
+            msg = "You disguise yourself as a convenient statue";
+            tile = random_choose(TILEP_MONS_DISGUISE_STATUE_HERO,
+                                 TILEP_MONS_DISGUISE_STATUE_HORSE,
+                                 TILEP_MONS_DISGUISE_STATUE_IMP,
+                                 TILEP_MONS_DISGUISE_STATUE_MERMAID,
+                                 TILEP_MONS_DISGUISE_STATUE_SIGMUND,
+                                 TILEP_MONS_DISGUISE_STATUE_TRIANGLE);
+            break;
+
+        case 3:
+            msg = "You disguise yourself as an ordinary barrel";
+            if (you.body_size(PSIZE_BODY) >= SIZE_LARGE)
+                tile = TILEP_MONS_DISGUISE_BARREL_LARGE;
+            else if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
+                tile = TILEP_MONS_DISGUISE_BARREL_SMALL;
+            else
+                tile = TILEP_MONS_DISGUISE_BARREL;
+            break;
+    }
+
+    mprf("%s to avoid %s notice.",
+         msg.c_str(),
+         observer->name(DESC_ITS).c_str());
+    you.duration[DUR_DISGUISED] = random_range(80, 130);
+    you.props[XOM_DISGUISE_APPEARANCE_KEY].get_int() = tile;
+
+    if (mons_intel(*observer) == I_HUMAN && !observer->is_silenced()
+        && mon_shape_is_humanoid(get_mon_shape(*observer))
+        && one_chance_in(20))
+    {
+        mons_speaks_msg(observer, getSpeakString("disguise success"), MSGCH_TALK);
+    }
+
+    return;
+}
+
+static bool _valid_disguise_target(const monster* mon)
+{
+    return mon->hostile()
+           && !mon->is_peripheral()
+           && !mon->asleep()
+           && mons_is_threatening(*mon)
+           && you.can_see(*mon);
+}
+
+void xom_maybe_disguise_self(monster* observer)
+{
+    if (you.attribute[ATTR_XOM_BLESSING] != XOM_BLESSING_SNEAKY
+        || you.duration[DUR_DISGUISED]
+        || you.props.exists(XOM_DISGUISE_RECOVERY_KEY)
+        || !_valid_disguise_target(observer))
+    {
+        return;
+    }
+
+    schedule_disguise_fineff();
+}
+
+void xom_disguise_self()
+{
+    // Gather all valid observers in sight and remember them
+    vector<monster*> observers;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (_valid_disguise_target(*mi))
+            observers.push_back(*mi);
+
+    // If everyone has died between noticing the player and getting this far,
+    // don't do anything.
+    if (observers.empty())
+        return;
+
+    // Find the most threatening monster to mention avoiding.
+    sort(observers.begin(), observers.end(), [](monster* a, monster* b)
+        { return exp_value(*a) < exp_value(*b); });
+
+    _xom_disguise(observers[0]);
+
+    CrawlVector& vec = you.props[XOM_DISGUISE_OBSERVER_KEY].get_vector();
+    for (monster* mon : observers)
+        vec.push_back((int)mon->mid);
+}
+
+void xom_end_disguise(bool force)
+{
+    if (!force && !you.duration[DUR_DISGUISED])
+        return;
+
+    you.duration[DUR_DISGUISED] = 0;
+
+    // If the disguise breaks with no witnesses left alive, and no observers,
+    // you can avoid the cooldown.
+    bool observer = false;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (_valid_disguise_target(*mi) && !mi->asleep())
+        {
+            observer = true;
+            break;
+        }
+    }
+    // Now check the list of things that saw us transform and confirm whether
+    // they're still alive. (Technically, this is a minor information leak,
+    // since one of them *could* have died out of LoS of the player and the
+    // player may not be certain about that, but I consider that unimportant.)
+    if (!observer)
+    {
+        CrawlVector& vec = you.props[XOM_DISGUISE_OBSERVER_KEY].get_vector();
+        for (int i = 0; i < vec.size(); ++i)
+        {
+            if (monster* mon = monster_by_mid(vec[i].get_int()))
+            {
+                if (mon->alive())
+                {
+                    observer = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    you.props.erase(XOM_DISGUISE_OBSERVER_KEY);
+
+    if (!observer)
+    {
+        mprf(MSGCH_DURATION, "With no witnesses left, you stow your disguise for future use.");
+        return;
+    }
+
+    mprf(MSGCH_DURATION, "Your disguise falls apart.");
+
+    you.props[XOM_DISGUISE_RECOVERY_KEY] = random_range(120, 170);
+
+    // Make it obvious what just happened, but don't wake up sleeping things automatically.
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (mons_is_wandering(**mi))
+            behaviour_event(*mi, ME_ALERT, &you, you.pos(), true);
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -6192,6 +6360,7 @@ static const vector<pair<xom_event_type, int>> _blessing_weights =
     { XOM_BLESSING_MANNEQUINS, 10},
     { XOM_BLESSING_BATTLESHAPE, 10},
     { XOM_BLESSING_PROTEAN, 10},
+    { XOM_BLESSING_SNEAKY, 10},
 };
 
 void xom_give_blessing()
@@ -6258,6 +6427,11 @@ string xom_remove_blessing()
         case XOM_BLESSING_PROTEAN:
             msg = "Your body no longer feels quite so unstable.";
             you.duration[DUR_XOM_PROTEAN_COOLDOWN] = 0;
+            break;
+
+        case XOM_BLESSING_SNEAKY:
+            msg = "You feel abruptly conspicuous.";
+            xom_end_disguise();
             break;
 
         default:
@@ -6369,6 +6543,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BLESSING_MANNEQUINS, { "mannequins", [](int){ _xom_mannequins();} }},
     { XOM_BLESSING_BATTLESHAPE, { "battleshape", [](int){ _xom_battleshape();} }},
     { XOM_BLESSING_PROTEAN, { "protean", [](int){ _xom_protean();} }},
+    { XOM_BLESSING_SNEAKY, { "sneaky", [](int){ _xom_sneaky();} }},
     { XOM_BLESSING_RANDOM, {"blessing", [](int){ xom_give_blessing();} }},
 };
 

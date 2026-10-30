@@ -1039,9 +1039,19 @@ bool use_an_item(operation_types oper, item_def *target)
     case OPER_QUAFF:
         return drink(target);
     case OPER_READ:
-        return read(target);
+        if (read(target))
+        {
+            xom_end_disguise();
+            return true;
+        }
+        return false;
     case OPER_EVOKE:
-        return evoke_item(*target);
+        if (evoke_item(*target))
+        {
+            xom_end_disguise();
+            return true;
+        }
+        return false;
     case OPER_WIELD:
         if (!target)
             return _try_unwield_weapons();

@@ -2969,6 +2969,8 @@ bool handle_post_ability_effects(ability_type ability,
                     _invoke_dragons();
             }
 
+            xom_end_disguise();
+
             // XXX: Merge Dismiss Apostle #1/2/3 into a single count
             ability_type log_type = abil.ability;
             if (log_type == ABIL_BEOGH_DISMISS_APOSTLE_2

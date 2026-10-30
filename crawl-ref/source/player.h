@@ -77,6 +77,8 @@ constexpr int ENKINDLE_CHARGE_COST = 40;
 
 #define PYROMANIA_TRIGGERED_KEY "pyromania_triggered"
 
+#define XOM_DISGUISE_APPEARANCE_KEY "xom_disguise_appearance"
+
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5

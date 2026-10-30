@@ -1319,6 +1319,7 @@ bool player::weapon_is_good_stab(const item_def *weapon) const
     return wpn_skill == SK_SHORT_BLADES
            || you.get_mutation_level(MUT_PAWS)
            || you.form == transformation::spider
+           || you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SNEAKY
            || you.unrand_equipped(UNRAND_HOOD_ASSASSIN)
               && (!weapon || is_melee_weapon(*weapon));
 }
@@ -3652,6 +3653,9 @@ int player_stealth()
     }
 
     if (you.form == transformation::hypnogecko)
+        stealth += STEALTH_PIP;
+
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SNEAKY)
         stealth += STEALTH_PIP;
 
     if (feat_is_water(env.grid(you.pos())))

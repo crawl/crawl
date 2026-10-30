@@ -75,6 +75,7 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
+#include "xom.h"
 
 static bool _handle_pickup(monster* mons);
 static bool _monster_move(monster* mons, coord_def& delta);
@@ -4316,8 +4317,10 @@ void seen_monsters_react()
             if (!(*mi)->alive())
                 continue;
 
-            if (!vampire_mesmerism_check(**mi))
+            if (!you.duration[DUR_DISGUISED] && !vampire_mesmerism_check(**mi))
                 monster_consider_shouting(**mi);
+
+            xom_maybe_disguise_self(*mi);
         }
 
         if (!mi->has_ench(ENCH_FRENZIED))

@@ -3233,6 +3233,9 @@ tileidx_t tileidx_player_mons()
 {
     ASSERT(player_uses_monster_tile());
 
+    if (you.duration[DUR_DISGUISED])
+        return static_cast<tileidx_t>(you.props[XOM_DISGUISE_APPEARANCE_KEY].get_int());
+
     if (you.duration[DUR_EXECUTION])
         return TILEP_MONS_EXECUTIONER;
 

@@ -1080,6 +1080,16 @@ bool fill_status_info(int status, status_info& inf)
         _describe_xom_blessing(inf);
         break;
 
+    case STATUS_DISGUISE_COOLDOWN:
+        if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SNEAKY
+            && you.props.exists(XOM_DISGUISE_RECOVERY_KEY))
+        {
+            inf.light_text = "-Disguise";
+            inf.light_colour = YELLOW;
+            inf.short_text = "on disguise cooldown";
+        }
+        break;
+
     default:
         if (!found)
         {
@@ -1493,6 +1503,12 @@ static void _describe_xom_blessing(status_info& inf)
             inf.light_text = "Protean";
             inf.light_text_formatted = "<red>P<yellow>r<green>o<cyan>t<blue>e<lightblue>a<magenta>n";
             inf.short_text = "blessing of protean form";
+            break;
+
+        case XOM_BLESSING_SNEAKY:
+            inf.light_text = "Sneaky";
+            inf.light_text_formatted = "<red>S<yellow>n<green>e<blue>a<lightblue>k<lightmagenta>y";
+            inf.short_text = "blessing of disguise";
             break;
 
         default:

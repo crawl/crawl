@@ -9207,6 +9207,17 @@ VISUAL:@The_monster_possessive@ armour gleams in the torchlight.
 w:1
 VISUAL:@The_monster@, chosen of Okawaru, glows resplendent with favour.
 %%%%
+#######################
+# Xom disguise messages
+#######################
+disguise success
+
+@The_monster@ says, "Must have been the wind...."
+
+@The_monster@ mutters, "Probably just a rat."
+
+@The_monster@ asks, "Is somebody there?"
+%%%%
 #################################
 # Monsters who worship Nemelex Xobeh
 #################################

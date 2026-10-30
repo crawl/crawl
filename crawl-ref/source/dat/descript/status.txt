@@ -1429,3 +1429,25 @@ eventually transforming into short-lived but powerful allies.
 
 Aspiring flesh has recently burst from your body and cannot do so again for a
 short while.
+%%%%
+Sneaky status
+
+All of your stab attacks deal damage as though you were wielding a short blade
+and whenever you would be first noticed by an enemy, you will instead disguise
+yourself as an unremarkable object, allowing you to avoid detection for a brief
+while.
+%%%%
+Disguised status
+
+You are cleverly disguised and completely unnoticeable to enemies. You will
+always succeed at distraction stabs, but your disguise will end as soon as you
+attack, cast a spell, use an ability, read a scroll, or evoke an item. It will
+also end on its own after a short duration.
+
+If all enemies who were in sight when you donned the disguise are dead when it
+ends, and there is nobody else around to see you, its cooldown will be skipped.
+%%%%
+-Disguise status
+
+You have recently disguised yourself and must explore some more before being
+able to do so again.

@@ -24,6 +24,7 @@
 #include "tag-version.h"
 #include "timed-effects.h"
 #include "transform.h"
+#include "xom.h"
 
 
 static void _end_invis()
@@ -847,6 +848,12 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Plink",
       "plinking", "plink",
       "You are rapidly tossing pebbles at your foes.", D_NO_FLAGS,
+    },
+    { DUR_DISGUISED,
+      LIGHTBLUE, "Disguised",
+      "perfectly disguised", "disguised",
+      "", D_NO_FLAGS,
+      {{"", [](){ xom_end_disguise(true);}}}
     },
 
     // The following are visible in wizmode only, or are handled

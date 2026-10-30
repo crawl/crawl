@@ -85,6 +85,7 @@
 #include "unwind.h"
 #include "view.h"
 #include "viewchar.h" // stringize_glyph
+#include "xom.h"
 
 static int _spell_enhancement(spell_type spell);
 static int _apply_enhancement(const int initial_power,
@@ -2456,6 +2457,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
             end_enkindled_status();
+
+        if (god == GOD_NO_GOD)
+            xom_end_disguise();
 
         return spret::success;
     }
