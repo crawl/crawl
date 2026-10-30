@@ -331,8 +331,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 // its monster type, rather than a specific monster.
 void monster_info::_populate_as_generic()
 {
+    // Give an appriopriately 'normal' number of heads for the tile of sensed
+    // monsters. (Their name won't say how many they have, either way.)
     if (has_hydra_multi_attack())
-        num_heads = 1;
+        num_heads = type == MONS_LERNAEAN_HYDRA ? 27 : 5;
     else
         number = 0;
 
@@ -532,6 +534,8 @@ monster_info::monster_info(const monster* m, int milev)
     base_type = m->base_monster;
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
+
+    number = 0;
 
     // If this monster is currently hidden to the player, treat it as an
     // arbitrary healthy example of its type.
@@ -1241,13 +1245,16 @@ string monster_info::common_name(description_level_type desc) const
         && type != MONS_SENSED
         && !mons_class_is_remnant(type))
     {
-        ASSERT(num_heads > 0);
-        if (num_heads < 11)
-            ss << number_in_words(num_heads);
-        else
-            ss << std::to_string(num_heads);
+        // Invisible hydra have an unknown number of heads.
+        if (num_heads > 0 && !is(MB_KNOWN_INVIS))
+        {
+            if (num_heads < 11)
+                ss << number_in_words(num_heads);
+            else
+                ss << std::to_string(num_heads);
 
-        ss << "-headed ";
+            ss << "-headed ";
+        }
     }
 
     if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
