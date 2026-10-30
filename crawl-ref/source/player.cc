@@ -5309,7 +5309,7 @@ void barb_player(int turns, int pow)
  *
  * @param amount   The number of turns to increase blindness duration by.
  */
-void blind_player(int amount, colour_t flavour_colour)
+void blind_player(int amount, colour_t flavour_colour, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5322,10 +5322,13 @@ void blind_player(int amount, colour_t flavour_colour)
     if (you.duration[DUR_BLIND] > current)
     {
         you.props[BLIND_COLOUR_KEY] = flavour_colour;
-        if (current > 0)
-            mpr("You are blinded for an even longer time.");
-        else
-            mpr("You are blinded!");
+        if (!quiet)
+        {
+            if (current > 0)
+                mpr("You are blinded for an even longer time.");
+            else
+                mpr("You are blinded!");
+        }
         learned_something_new(HINT_YOU_ENCHANTED);
         xom_is_stimulated((you.duration[DUR_BLIND] - current) / BASELINE_DELAY);
     }

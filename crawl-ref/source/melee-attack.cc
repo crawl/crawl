@@ -348,7 +348,7 @@ void melee_attack::handle_phase_blocked()
         }
         else
         {
-            blind_player(random_range(3, 5), WHITE);
+            blind_player(random_range(3, 5), WHITE, true);
             mprf("You are blinded by the light of %s divine shield.",
                         defender->name(DESC_ITS).c_str());
         }
