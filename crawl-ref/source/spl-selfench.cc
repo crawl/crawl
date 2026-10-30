@@ -22,6 +22,7 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-other.h"
 #include "spl-util.h"
@@ -54,6 +55,12 @@ void remove_ice_armour()
     mprf(MSGCH_DURATION, "Your icy armour melts away.");
     you.redraw_armour_class = true;
     you.duration[DUR_ICY_ARMOUR] = 0;
+}
+
+int ice_armour_ac(int pow)
+{
+    return max(0, 500 + pow * 8
+                      - you.unadjusted_body_armour_penalty() * 50);
 }
 
 spret ice_armour(int pow, bool fail)
@@ -89,13 +96,28 @@ void fiery_armour()
     you.redraw_armour_class = true;
 }
 
+string revivification_loss_description(int pow)
+{
+    int max_loss = 15 * you.hp_max / 100;
+    int min_loss = (pow <= 8 ? max_loss : 6 * you.hp_max / 100);
+    //Would like to make avg_loss a double but taking the integer division
+    //of the real hp loss formula in account is difficult.
+    int avg_loss = (6 + lround(binomial_mean(9, 8, pow))) * you.hp_max / 100;
+    return make_stringf("%d-%d (avg ~%d)",
+                        min_loss, max_loss, avg_loss);
+}
+
+static int _revivification_loss(int pow)
+{
+    return (6 + binomial(9, 8, pow)) * you.hp_max / 100;
+}
+
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
     mpr("Your body is healed in an amazingly painful way.");
 
-    const int loss = 6 + binomial(9, 8, pow);
-    dec_max_hp(loss * you.hp_max / 100);
+    dec_max_hp(_revivification_loss(pow));
     set_hp(you.hp_max);
 
     if (you.duration[DUR_DEATHS_DOOR])
@@ -108,6 +130,15 @@ spret cast_revivification(int pow, bool fail)
     return spret::success;
 }
 
+string swiftness_duration_description(int power)
+{
+    int min_dur = 12;
+    int max_dur = min(power/2, 30);
+    string description = make_stringf("%d", min_dur);
+    if (max_dur > min_dur)
+        description += make_stringf("-%d", max_dur);
+    return description;
+}
 spret cast_swiftness(int power, bool fail)
 {
     fail_check();

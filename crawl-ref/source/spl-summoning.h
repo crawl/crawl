@@ -71,6 +71,7 @@ int mons_ball_lightning_per_cast(int pow, bool random = true);
 dice_def lightning_spire_damage(int pow);
 spret cast_forge_lightning_spire(int pow, bool fail);
 
+int imp_weapon_modifier(int pow);
 spret cast_call_imp(int pow, bool fail);
 spret summon_shadow_creatures();
 spret cast_summon_horrible_things(int pow, bool fail);
@@ -205,6 +206,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);
 
+int phalanx_beetle_barrier_ac(int pow);
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail);
 
 dice_def rending_blade_damage(int power, bool include_mp);

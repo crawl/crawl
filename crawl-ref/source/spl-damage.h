@@ -109,6 +109,7 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
+string toxic_radiance_duration_description(int pow);
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
@@ -147,6 +148,7 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
 bool handle_searing_ray(actor& agent, int turn);
 
 vector<monster *> find_maxwells_possibles();
+string maxwells_coupling_charge_description(int pow);
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
 void handle_maxwells_coupling();
 void end_maxwells_coupling(bool quiet = false);

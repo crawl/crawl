@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "spell-type.h"
 #include "spl-cast.h"
 
 #include <iomanip>
@@ -3354,6 +3355,53 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
     return dam_str;
 }
 
+string effect_description_string(spell_type spell, bool evoked, int pow)
+{
+    if (pow == -1)
+        pow = evoked ? wand_power(spell) : calc_spell_power(spell);
+    string description = "";
+    switch (spell)
+    {
+    case SPELL_PASSWALL:
+        return make_stringf("Bonus AC: ~%d AC.", passwall_ac(pow, false));
+    case SPELL_OZOCUBUS_ARMOUR:
+    {
+        double ac_bonus = ice_armour_ac(pow) / 100.0;
+        return make_stringf("Bonus AC: %.1f AC.", ac_bonus);
+    }
+    case SPELL_CALL_IMP:
+        return make_stringf("Weapon: %+d spear.",
+                            imp_weapon_modifier(pow));
+    case SPELL_PUTREFACTION:
+    {
+        int drain_amount = 1 + putrefaction_drain_amount(pow, false)
+                             * get_real_hp(false, false) / 750;
+        return make_stringf("Self drain: ~%d HP.", drain_amount);
+    }
+    case SPELL_BLINK:
+        return make_stringf("Cooldown: %s turns.",
+                            blink_cooldown_description(pow).c_str());
+    case SPELL_BORGNJORS_REVIVIFICATION:
+        return make_stringf("Max HP loss: %s HP.",
+                            revivification_loss_description(pow).c_str());
+    case SPELL_SWIFTNESS:
+        return make_stringf("Duration: %s turns.",
+                            swiftness_duration_description(pow).c_str());
+    case SPELL_PHALANX_BEETLE:
+    {
+        double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;
+        return make_stringf("Bonus AC: %.1f AC.", ac_bonus);
+    }
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return make_stringf("Duration: %s turns.",
+                            toxic_radiance_duration_description(pow).c_str());
+    case SPELL_MAXWELLS_COUPLING:
+        return make_stringf("Duration: %s turns.",
+                            maxwells_coupling_charge_description(pow).c_str());
+    default:
+        return "";
+    }
+}
 int spell_acc(spell_type spell)
 {
     const zap_type zap = spell_to_zap(spell);

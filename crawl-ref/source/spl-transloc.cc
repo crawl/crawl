@@ -930,6 +930,17 @@ spret controlled_blink(bool safe_cancel, dist *target)
 }
 
 /**
+ * Describes the cooldown of the player spell Blink.
+ * Make sure to update this if the cooldown formula changes.
+ */
+string blink_cooldown_description(int pow)
+{
+    int min_dur = 2 + (50 - pow) / 10;
+    int max_dur = 4 + div_round_up(50 - pow, 10);
+    return make_stringf("%d-%d", min_dur, max_dur);
+}
+
+/**
  * Cast the player spell Blink.
  *
  * @param fail              Whether the player miscast the spell.
