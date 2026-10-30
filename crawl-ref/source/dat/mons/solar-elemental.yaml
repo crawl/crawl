@@ -1,0 +1,19 @@
+name: "solar elemental"
+glyph: {char: "Σ", colour: lightred}
+flags: [insubstantial]
+resists: {elec: 1, fire: 3, cold: -1}
+exp: 392
+genus: elemental
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: pure_fire, damage: 0, reach: 2, cleaves: true}
+hd: 8
+hp_10x: 330
+ac: 4
+ev: 12
+intelligence: animal
+habitat: amphibious_lava
+speed: 13
+size: large
+shape: misc

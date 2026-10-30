@@ -329,6 +329,7 @@ air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
 wellspring MONS_ELEMENTAL_WELLSPRING
 shadow_puppet MONS_SHADOW_PUPPET
+solar_elemental MONS_SOLAR_ELEMENTAL
 %rim 0
 quicksilver_elemental MONS_QUICKSILVER_ELEMENTAL
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
