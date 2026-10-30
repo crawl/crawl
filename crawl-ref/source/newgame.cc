@@ -28,6 +28,7 @@
 #include "options.h"
 #include "playable.h"
 #include "prompt.h"
+#include "hiscores.h"
 #include "skills.h"
 #include "species-groups.h"
 #include "state.h"
@@ -96,6 +97,8 @@ enum MenuOptions
     M_VIABLE_CHAR = -7,
     M_RANDOM_CHAR = -8,
     M_DEFAULT_CHOICE = -9,
+    M_HIGHSCORES = -10,
+
 };
 
 enum MenuChoices
@@ -2135,9 +2138,8 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     // Don't overwhelm new players with aptitudes or the full list of commands!
     if (!crawl_state.game_is_tutorial())
     {
-        _add_menu_sub_item(sub_items, 0, 0, "% - List aptitudes",
-                "Lists the numerical skill train aptitudes for all races",
-                '%', M_APTITUDES);
+        _add_menu_sub_item(sub_items, 0, 0, "! - Highscores",
+            "View Sprint highscores", '!', M_HIGHSCORES);
         _add_menu_sub_item(sub_items, 0, 1, "? - Help",
                 "Opens the help screen", '?', M_HELP);
         _add_menu_sub_item(sub_items, 1, 0, "* - Random map",
@@ -2225,6 +2227,9 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
             case M_HELP:
                 ASSERT(ng_choice.type == GAME_TYPE_SPRINT);
                 show_help('6');
+                return true;
+            case M_HIGHSCORES:
+                show_hiscore_table();
                 return true;
             case M_DEFAULT_CHOICE:
                 _set_default_choice(ng, ng_choice, defaults);
