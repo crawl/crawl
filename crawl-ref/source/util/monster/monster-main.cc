@@ -601,7 +601,6 @@ static string canned_reports[][2] = {
                  " | Res: sanity | XP: ∞ | Int: god | Sz: !!!"))},
 };
 
-// Partial copy from monster::willpower(), not accounting for items
 static std::string _get_willpower_description(const monster & mon)
 {
     const auto willpower = mon.willpower(false);
@@ -785,15 +784,8 @@ int main(int argc, char* argv[])
                               || spec_type == MONS_SHAPESHIFTER
                               || spec_type == MONS_GLOWING_SHAPESHIFTER;
 
-    const bool nonbase =
-        mons_species(mon.type) == MONS_DRACONIAN && mon.type != MONS_DRACONIAN;
-
     const monsterentry* me =
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
-
-    const monsterentry* mbase =
-        nonbase ? get_monster_data(draconian_subspecies(mon))
-                : (monsterentry*)0;
 
     if (me)
     {
