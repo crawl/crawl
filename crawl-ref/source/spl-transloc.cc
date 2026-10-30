@@ -2005,8 +2005,7 @@ vector<monster *> find_chaos_targets(bool just_check)
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_is_tentacle_or_tentacle_segment(mi->type)
-            && !mons_class_is_stationary(mi->type)
+        if (!mi->no_tele()
             && !mi->is_peripheral()
             && !mi->wont_attack())
         {
@@ -2038,9 +2037,6 @@ spret word_of_chaos(int pow, bool fail)
     mpr("You speak a word of chaos!");
     for (auto mons : targets)
     {
-        if (mons->no_tele())
-            continue;
-
         blink_away(mons, &you, false);
         if (x_chance_in_y(pow, 500))
             mons->trap_in_web();

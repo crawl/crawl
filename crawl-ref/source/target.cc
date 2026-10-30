@@ -2760,6 +2760,11 @@ aff_type targeter_piledriver::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+bool targeter_dispersal::affects_monster(const monster_info& mon)
+{
+    return !mon.is(MB_NO_TELE);
+}
+
 targeter_teleport_other::targeter_teleport_other(const actor* act, int r) :
     targeter_smite(act, r)
 {
