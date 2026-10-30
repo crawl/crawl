@@ -7381,31 +7381,34 @@ int player::res_blind() const
         return 0;
 }
 
-int player::willpower() const
+int player::willpower(bool items) const
 {
-    return player_willpower();
+    return player_willpower(true, items);
 }
 
-int player_willpower(bool include_temp)
+int player_willpower(bool include_temp, bool items)
 {
     if (include_temp && you.form == transformation::slaughter)
         return WILL_INVULN;
 
-    if (you.unrand_equipped(UNRAND_FOLLY))
+    if (items && you.unrand_equipped(UNRAND_FOLLY))
         return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 
-    // randarts and dragon armour
-    rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
+    if (items)
+    {
+        // randarts and dragon armour
+        rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
 
-    // ego armours
-    rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
+        // ego armours
+        rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
 
-    rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
+        rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
 
-    // rings of willpower
-    rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+        // rings of willpower
+        rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+    }
 
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);

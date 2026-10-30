@@ -3969,7 +3969,7 @@ int monster::res_corr() const
  *
  * @return              The monster's willpower value.
  */
-int monster::willpower() const
+int monster::willpower(bool items) const
 {
     if (mons_invuln_will(*this))
         return WILL_INVULN;
@@ -4001,26 +4001,29 @@ int monster::willpower() const
     if (HD < get_experience_level())
         u = u * HD / get_experience_level();
 
-    // Resistance from artefact properties.
-    u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
+    if (items)
+    {
+        // Resistance from artefact properties.
+        u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
 
-    // Ego equipment resistance.
-    const int armour    = inv[MSLOT_ARMOUR];
-    const int aux       = inv[MSLOT_AUX_ARMOUR];
-    const int shld      = inv[MSLOT_SHIELD];
-    const int jewellery = inv[MSLOT_JEWELLERY];
+        // Ego equipment resistance.
+        const int armour = inv[MSLOT_ARMOUR];
+        const int aux = inv[MSLOT_AUX_ARMOUR];
+        const int shld = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
-    if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[armour], false);
 
-    if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[aux], false);
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[aux], false);
 
-    if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[shld], false);
 
-    if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
-        u += get_jewellery_willpower(env.item[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+          u += get_jewellery_willpower(env.item[jewellery], false);
+    }
 
     if (has_ench(ENCH_STRONG_WILLED)) //trog's hand
         u += 80;
