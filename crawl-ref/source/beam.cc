@@ -3585,27 +3585,16 @@ bool bolt::attempt_player_block()
                                         spell_title(origin_spell) :
                                         name;
 
-            const item_def *shield = you.shield();
+            bool reflected = false;
             if (is_reflectable(you))
             {
-                if (shield && shield_reflects(*shield))
-                {
-                    mprf("Your %s blocks the %s... and reflects it back!",
-                            shield->name(DESC_PLAIN).c_str(),
-                            refl_name.c_str());
-                }
-                else
-                {
-                    mprf("You block the %s... and reflect it back!",
-                            refl_name.c_str());
-                }
+                reflected = true;
                 reflect();
             }
             else
-            {
-                mprf("You block the %s.", name.c_str());
                 finish_beam();
-            }
+
+            mpr(block_event_string(&you, make_stringf("the %s", refl_name.c_str()), reflected));
             you.shield_block_succeeded(agent());
 
             return true;
@@ -5524,39 +5513,17 @@ bool bolt::attempt_block(monster* mon)
 
     mon->sense_if_invisible();
 
-    item_def *shield = mon->mslot_item(MSLOT_SHIELD);
+    bool reflected = false;
     if (is_reflectable(*mon))
     {
-        if (mon->observable())
-        {
-            if (shield && shield_reflects(*shield))
-            {
-                mprf("%s blocks the %s with %s %s... and reflects it back!",
-                     mon->name(DESC_THE).c_str(),
-                     name.c_str(),
-                     mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                     shield->name(DESC_PLAIN).c_str());
-            }
-            else
-            {
-                mprf("The %s reflects off %s %s!",
-                     name.c_str(),
-                     mon->divinely_shielded() ? "the divine shield protecting"
-                                              : "an invisible shield around",
-                     mon->name(DESC_THE).c_str());
-            }
-        }
-        else if (you.see_cell(pos()))
-            mprf("The %s bounces off of thin air!", name.c_str());
-
+        reflected = true;
         reflect();
     }
-    else if (you.see_cell(pos()))
-    {
-        mprf("%s blocks the %s.",
-             mon->name(DESC_THE).c_str(), name.c_str());
+    else
         finish_beam();
-    }
+
+    if (you.see_cell(pos()))
+        mpr(block_event_string(mon, make_stringf("the %s", name.c_str()), reflected));
 
     mon->shield_block_succeeded(agent());
     return true;

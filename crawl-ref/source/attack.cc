@@ -1636,3 +1636,24 @@ bool attack::paragon_defends_player()
 
     return false;
 }
+
+// Returns a standard phrased string about an actor blocking a given
+// attack or projectile, and possibly reflecting it.
+string block_event_string(const actor* blocker, const string& projectile,
+                          bool reflected)
+{
+    const string source = blocker->divinely_shielded()
+        ? make_stringf("%s divine shield", blocker->name(DESC_ITS).c_str())
+        : blocker->name(DESC_THE).c_str();
+
+    const bool player = blocker->is_player() && source == "you";
+    const string suffix = reflected && player ? " ...and reflect it back!" :
+                          reflected && !player ? " ...and reflects it back!" :
+                          ".";
+
+    return make_stringf("%s %s %s%s",
+        source.c_str(),
+        player ? "block" : "blocks",
+        projectile.c_str(),
+        suffix.c_str());
+}

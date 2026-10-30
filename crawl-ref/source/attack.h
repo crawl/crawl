@@ -212,3 +212,6 @@ private:
 };
 
 string attack_strength_punctuation(int dmg);
+
+string block_event_string(const actor* blocker, const string& projectile,
+                          bool reflected = false);

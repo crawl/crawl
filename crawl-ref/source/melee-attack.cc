@@ -324,11 +324,10 @@ void melee_attack::handle_phase_blocked()
 
     if (needs_block_message)
     {
-        mprf("%s %s %s attack.",
-                 defender_name(false).c_str(),
-                 defender->conj_verb("block").c_str(),
-                 attacker == defender ? "its own"
-                                      : attacker->name(DESC_ITS).c_str());
+        string atk_name = make_stringf("%s attack",
+            attacker == defender ? "its own"
+                                 : attacker->name(DESC_ITS).c_str());
+        mpr(block_event_string(defender, atk_name));
     }
 
     if (defender->divinely_shielded()
@@ -341,16 +340,14 @@ void melee_attack::handle_phase_blocked()
                                 random_range(3, 5) * BASELINE_DELAY))
                 && need_msg)
             {
-                mprf("%s is struck blind by the light of %s divine shield.",
-                        attacker->name(DESC_THE).c_str(),
-                        defender->name(DESC_ITS).c_str());
+                mprf("%s is struck blind by the light.",
+                        attacker->name(DESC_THE).c_str());
             }
         }
         else
         {
             blind_player(random_range(3, 5), WHITE, true);
-            mprf("You are blinded by the light of %s divine shield.",
-                        defender->name(DESC_ITS).c_str());
+            mpr("You are blinded by the light!");
         }
     }
 
