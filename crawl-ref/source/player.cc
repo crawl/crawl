@@ -3636,9 +3636,6 @@ int player_stealth()
     stealth += STEALTH_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_STEALTH);
     stealth += STEALTH_PIP * you.wearing_jewellery(RING_STEALTH);
 
-    if (you.duration[DUR_STEALTH])
-        stealth += STEALTH_PIP * 2;
-
     // Mutations.
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_NIGHTSTALKER) / 3;
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);

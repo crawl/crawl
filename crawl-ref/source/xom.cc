@@ -5547,30 +5547,6 @@ bool xom_saves_your_life(const kill_method_type death_type)
     return true;
 }
 
-// Xom might have something to say when you enter a new level.
-void xom_new_level_noise_or_stealth()
-{
-    if (!you_worship(GOD_XOM) && !player_under_penance(GOD_XOM))
-        return;
-
-    // But only occasionally.
-    if (one_chance_in(30))
-    {
-        if (!player_under_penance(GOD_XOM) && coinflip())
-        {
-            god_speaks(GOD_XOM, _get_xom_speech("stealth player").c_str());
-            mpr(you.duration[DUR_STEALTH] ? "You feel more stealthy."
-                                          : "You feel stealthy.");
-            you.increase_duration(DUR_STEALTH, 10 + random2(80));
-            take_note(Note(NOTE_XOM_EFFECT, -1, -1,
-                           "stealth player"), true);
-        }
-        else
-            _xom_noise(-1);
-    }
-    return;
-}
-
 /**
  * The Xom teleportation train takes you on instant
  * teleportation to a few random areas, stopping randomly but

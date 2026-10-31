@@ -2502,9 +2502,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 }
             }
         }
-
-        if (just_created_level)
-            xom_new_level_noise_or_stealth();
     }
 
     if (just_created_level && make_changes)

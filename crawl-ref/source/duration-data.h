@@ -407,11 +407,6 @@ static const duration_def duration_data[] =
       "silenced", "silence",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your hearing returns.", []() { invalidate_agrid(); }}}, 5 },
-    { DUR_STEALTH,
-      BLUE, "Stealth",
-      "especially stealthy", "stealth",
-      "You are especially stealthy.", D_NO_FLAGS,
-      {{ "You feel less stealthy." }}},
     { DUR_AFRAID,
       RED, "Fear",
       "afraid", "",
@@ -1008,5 +1003,6 @@ static const duration_def duration_data[] =
     { DUR_VILE_CLUTCH_OLD, 0, "", "", "old vile clutch", "", D_NO_FLAGS, {{""}}},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "old spike launcher", "", D_NO_FLAGS, {{""}}},
     { DUR_CLEAVE, 0, "", "", "old cleave", "", D_NO_FLAGS, {{""}}},
+    { DUR_STEALTH, 0, "", "", "old stealth", "", D_NO_FLAGS, {{""}}},
 #endif
 };

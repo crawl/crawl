@@ -73,9 +73,7 @@ enum duration_type
     DUR_RESISTANCE,
 #if TAG_MAJOR_VERSION == 34
     DUR_SLAYING,
-#endif
     DUR_STEALTH,
-#if TAG_MAJOR_VERSION == 34
     DUR_MAGIC_SHIELD,
 #endif
     DUR_SLEEP,
