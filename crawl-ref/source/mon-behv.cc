@@ -899,7 +899,10 @@ void handle_behaviour(monster* mon)
                     new_foe = MHITYOU;
                 }
                 else
+                {
                     new_beh = BEH_WANDER;
+                    mon->del_ench(ENCH_FEAR);
+                }
             }
             else
                 mon->target = foepos;
