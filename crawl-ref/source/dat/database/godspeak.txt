@@ -1428,6 +1428,14 @@ Xom teaches you the importance of not being seen.
 "Nobody ever suspects the barrel."
 
 "They'll never see you coming."
+%%%%
+Xom mirrors
+
+"Eeny, meeny, miny, moe...."
+
+"Which is real and which is illusion?"
+
+"Have a test of your perception, my child!"
 ######################################
 # Miscellaneous god messages.
 ######################################

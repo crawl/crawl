@@ -281,6 +281,7 @@ enum monster_info_flags
     MB_PHASE_SHIFT,
     MB_DIVINE_SHIELD,
     MB_GUARDIAN,
+    MB_MAYBE_FAKE,
     NUM_MB_FLAGS
 };
 

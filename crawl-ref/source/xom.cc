@@ -4504,6 +4504,55 @@ static void _xom_random_knowledge(int)
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, msg), true);
 }
 
+static bool _is_mirror_candidate(const monster* mon)
+{
+    return mon->hostile() && !mon->is_firewood() && !mon->is_summoned()
+           && !mon->has_ench(ENCH_HALL_OF_MIRRORS)
+           && !mons_is_unique(mon->type)
+           && !mons_is_ghost_demon(mon->type)
+           && you.can_see(*mon);
+}
+
+static void _xom_hall_of_mirrors(int)
+{
+    vector<monster*> candidates;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        if (_is_mirror_candidate(*mi))
+            candidates.push_back(*mi);
+
+    if (candidates.empty())
+        return;
+
+    monster* orig = candidates[random2(candidates.size())];
+    orig->add_ench(ENCH_HALL_OF_MIRRORS);
+
+    coord_def spot = find_newmons_square(orig->type, you.pos(), 3, 5, 2);
+    if (!spot.origin())
+        orig->move_to(spot, MV_INTERNAL);
+
+    int num_copies = random_range(5, 10);
+
+    vector<monster*> group;
+    group.push_back(orig);
+    for (int i = 0; i < num_copies; ++i)
+    {
+        spot = find_newmons_square(orig->type, you.pos(), 3, 5, 2);
+        if (monster* clone = cast_phantom_mirror(orig, orig, 30, MON_SUMM_CHAOS, i, spot))
+        {
+            mon_enchant timer(ENCH_SUMMON_TIMER, nullptr, INFINITE_DURATION);
+            clone->update_ench(timer);
+            clone->add_ench(ENCH_MOSTLY_HARMLESS);
+            clone->add_ench(ENCH_HALL_OF_MIRRORS);
+            group.push_back(clone);
+        }
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech("mirrors").c_str());
+    mprf(MSGCH_WARN, "%s shimmers and splits into %s!",
+         orig->name(DESC_THE).c_str(),
+         number_in_words(group.size()).c_str());
+}
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation orig_form)
@@ -5132,6 +5181,15 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     },
     {
         XOM_BAD_MINIBANE, 0, 0, 40
+    },
+    {
+        XOM_BAD_HALL_OF_MIRRORS, 0, 0, 55, [](int)
+        {
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+                if (_is_mirror_candidate(*mi))
+                    return true;
+            return false;
+        }, XOM_EXPLORE_NEXT_BATTLE
     },
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
@@ -6511,6 +6569,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
     { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
+    { XOM_BAD_HALL_OF_MIRRORS, {"hall of mirrors", _xom_hall_of_mirrors }},
 
     { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
     { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},

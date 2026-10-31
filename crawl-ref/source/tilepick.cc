@@ -3112,6 +3112,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_INVISIBLE, TILEI_SEEN_INVIS },
     { MB_DIVINE_SHIELD, TILEI_DIVINE_SHIELD },
     { MB_GUARDIAN, TILEI_GUARDIAN },
+    { MB_MAYBE_FAKE, TILEI_MAYBE_FAKE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

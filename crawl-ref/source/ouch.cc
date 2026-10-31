@@ -1397,6 +1397,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         if (mon_source->attitude() == ATT_MARIONETTE)
             dam = 0;
+
+        if (mon_source->has_ench(ENCH_MOSTLY_HARMLESS))
+            dam = div_rand_round(dam, 5);
     }
 
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)

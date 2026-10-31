@@ -2194,7 +2194,7 @@ static const char *enchant_names[] =
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
     "preparing_to_lurk", "phase_shift", "divine_shield",
-    "insubstantial",
+    "insubstantial", "mostly_harmless", "maybe_fake",
     "buggy", // NUM_ENCHANTMENTS
 };
 

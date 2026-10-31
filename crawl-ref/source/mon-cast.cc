@@ -4478,10 +4478,10 @@ static void _corrupting_pulse(monster *mons)
 
 // Returns the clone just created (null otherwise)
 monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc,
-                             int summ_type, int clone_index)
+                             int summ_type, int clone_index, coord_def pos)
 {
     // Create clone.
-    monster *mirror = clone_mons(targ, true);
+    monster *mirror = clone_mons(targ, true, nullptr, targ->attitude(), pos);
 
     // Abort if we failed to place the monster for some reason.
     if (!mirror)
@@ -5376,7 +5376,8 @@ bool handle_mon_spell(monster* mons)
     if (mons->asleep()
         || mons->berserk_or_frenzied()
         || mons_is_confused(*mons, false)
-        || !mons->has_spells())
+        || !mons->has_spells()
+        || mons->has_ench(ENCH_MOSTLY_HARMLESS) && !one_chance_in(3))
     {
         return false;
     }

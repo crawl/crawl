@@ -376,6 +376,12 @@ This creature has been condemned to inexorable decay and ruin. Whenever it takes
 damage from melee attacks, it will be drained heavily and either slowed, weakened,
 or blinded.
 %%%%
+maybe fake monstatus
+
+This monster may be an illusion, having greatly reduced health and doing very
+little damage. Only one of them is real, and killing the original will destroy
+all the copies.
+%%%%
 mesmerising monstatus
 
 This creature has mesmerised you, making you unable to voluntarily move away

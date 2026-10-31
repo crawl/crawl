@@ -259,6 +259,8 @@ enum enchant_type
     ENCH_PHASE_SHIFT,
     ENCH_DIVINE_SHIELD,
     ENCH_INSUBSTANTIAL,
+    ENCH_MOSTLY_HARMLESS,
+    ENCH_HALL_OF_MIRRORS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

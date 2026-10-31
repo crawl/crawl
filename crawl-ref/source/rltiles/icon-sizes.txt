@@ -67,6 +67,7 @@ divine_shield: 8
 recall: 9
 teleporting: 9
 figment: 9
+maybe_fake: 9
 
 blind: 10
 brilliance: 10
