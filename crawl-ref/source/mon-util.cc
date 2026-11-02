@@ -5851,8 +5851,12 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
     }
     else
     {
-        if (mons_is_avatar(target->type) || target->type == MONS_SHOOTING_STAR)
+        if (mons_is_avatar(target->type)
+            || target->type == MONS_SHOOTING_STAR
+            || target->type == MONS_LIVING_SPELL)
+        {
             return true;
+        }
 
         if ((agent->is_player() && have_passive(passive_t::shoot_through_plants)
             || agent->is_monster() && agent->deity() == GOD_FEDHAS)
