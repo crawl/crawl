@@ -1960,6 +1960,25 @@ static void _xom_fake_shatter(int)
 
 }
 
+// Scan any bad mutations the player has and remove a bad one at random, if one
+// is found.
+// Returns whether a mutation was removed.
+static bool _maybe_remove_badmut()
+{
+    vector<mutation_type> badmuts;
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        const mutation_type mut = (mutation_type)i;
+        if (is_bad_mutation(mut) && you.get_base_mutation_level(mut, false, false, true))
+            badmuts.push_back(mut);
+    }
+
+    if (badmuts.empty())
+        return false;
+
+    return delete_mutation(badmuts[random2(badmuts.size())], "Xom's grace", false, false, true);
+}
+
 static void _xom_give_mutations(bool good)
 {
     if (!you.can_safely_mutate())
@@ -1968,7 +1987,7 @@ static void _xom_give_mutations(bool good)
     god_speaks(GOD_XOM, good ? _get_xom_speech("good mutations").c_str()
                              : _get_xom_speech("random mutations").c_str());
 
-    const int num_tries = random2(4) + 1 + good;
+    int num_tries = random2(4) + 1;
 
     const string note = make_stringf("give %smutation%s",
 #ifdef NOTE_DEBUG_XOM
@@ -1980,6 +1999,10 @@ static void _xom_give_mutations(bool good)
 
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
     mpr("Your body is suffused with distortional energy.");
+
+    if (good && one_chance_in(4))
+        if (_maybe_remove_badmut())
+            num_tries -= 1;
 
     bool failMsg = true;
 
@@ -4951,7 +4974,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_MUTATION, 0, 0, 80, [](int)
-        {return x_chance_in_y(you.how_mutated(), 54)
+        {return !x_chance_in_y(you.how_mutated(true, false, false, false, true, true), 16)
                 && you.can_safely_mutate();}
     },
     {

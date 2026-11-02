@@ -786,7 +786,8 @@ public:
 
     bool      has_any_mutations() const;
     int       how_mutated(bool normal = true, bool silver = false, bool all_innate = false,
-                          bool include_temp = false, bool levels = true) const;
+                          bool include_temp = false, bool levels = true,
+                          bool only_good = false) const;
 
     int wearing(object_class_type obj_type, int sub_type,
                 bool count_plus = 0, bool check_attuned = false) const override;
