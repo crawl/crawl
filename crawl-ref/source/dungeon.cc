@@ -7521,6 +7521,19 @@ string vault_placement::map_name_at(const coord_def &where) const
     return map.name_at(offset);
 }
 
+const string *vault_placement::feature_rename_at(const coord_def &where,
+                                                 dungeon_feature_type feat) const
+{
+    const coord_def offset = where - pos;
+    if (map.map.in_bounds(offset))
+    {
+        const auto key = make_pair(map.glyph_at(offset), feat);
+        if (const string *rename = map_find(map.glyph_feat_renames, key))
+            return rename;
+    }
+    return map_find(map.feat_renames, feat);
+}
+
 void vault_placement::reset()
 {
     if (_current_temple_hash != nullptr)

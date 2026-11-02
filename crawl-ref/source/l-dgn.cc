@@ -1029,6 +1029,25 @@ static int lua_dgn_set_feature_name(lua_State *ls)
     return 0;
 }
 
+static int lua_dgn_set_glyph_feature_name(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) != 4)
+    {
+        luaL_error(ls, "set_glyph_feature_name takes a feature, the glyphs to "
+                       "rename it for and the new name.");
+    }
+
+    const dungeon_feature_type feat_type = check_lua_feature(ls, 2);
+    const string glyphs = luaL_checkstring(ls, 3);
+    const string name = luaL_checkstring(ls, 4);
+
+    for (const char glyph : glyphs)
+        map->glyph_feat_renames[{glyph, feat_type}] = name;
+
+    return 0;
+}
+
 static int dgn_floor_halo(lua_State *ls)
 {
     string error = "";
@@ -1856,6 +1875,7 @@ const struct luaL_Reg dgn_dlib[] =
 { "set_branch_epilogue", lua_dgn_set_branch_epilogue },
 { "set_border_fill_type", lua_dgn_set_border_fill_type },
 { "set_feature_name", lua_dgn_set_feature_name },
+{ "set_glyph_feature_name", lua_dgn_set_glyph_feature_name },
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },

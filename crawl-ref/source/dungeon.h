@@ -160,6 +160,8 @@ public:
     void draw_at(const coord_def &c);
     int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
+    const string *feature_rename_at(const coord_def &c,
+                                    dungeon_feature_type feat) const;
     dungeon_feature_type feature_at(const coord_def &c);
     bool is_exit(const coord_def &c) const;
     bool is_space(const coord_def &c) const;

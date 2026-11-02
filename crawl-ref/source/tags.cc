@@ -2424,6 +2424,19 @@ static void unmarshall_level_map_unique_ids(reader &th)
 static void marshall_subvault_place(writer &th,
                                     const subvault_place &subvault_place);
 
+static void _marshall_glyph_feat(writer &th,
+                                 const pair<int, dungeon_feature_type> &key)
+{
+    marshallInt(th, key.first);
+    _marshall_as_int(th, key.second);
+}
+
+static pair<int, dungeon_feature_type> _unmarshall_glyph_feat(reader &th)
+{
+    const int glyph = unmarshallInt(th);
+    return make_pair(glyph, unmarshall_int_as<dungeon_feature_type>(th));
+}
+
 static void marshall_mapdef(writer &th, const map_def &map)
 {
     marshallString(th, map.name);
@@ -2432,6 +2445,8 @@ static void marshall_mapdef(writer &th, const map_def &map)
     marshallString(th, map.description);
     marshallMap(th, map.feat_renames,
                 _marshall_as_int<dungeon_feature_type>, marshallString);
+    marshallMap(th, map.glyph_feat_renames,
+                _marshall_glyph_feat, marshallString);
     _marshall_iterator(th,
                        map.subvault_places.begin(),
                        map.subvault_places.end(),
@@ -2457,6 +2472,11 @@ static map_def unmarshall_mapdef(reader &th)
     unmarshallMap(th, map.feat_renames,
                   unmarshall_int_as<dungeon_feature_type>,
                   unmarshallString);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GLYPH_FEAT_RENAMES)
+#endif
+        unmarshallMap(th, map.glyph_feat_renames, _unmarshall_glyph_feat,
+                      unmarshallString);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_REIFY_SUBVAULTS
         && th.getMinorVersion() != TAG_MINOR_0_11)

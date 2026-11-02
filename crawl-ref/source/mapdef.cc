@@ -2265,6 +2265,7 @@ void map_def::reinit()
     map.clear();
     mons.clear();
     feat_renames.clear();
+    glyph_feat_renames.clear();
     subvault_places.clear();
     update_cached_tags();
 }
@@ -2468,6 +2469,7 @@ void map_def::strip()
     veto.clear();
     epilogue.clear();
     feat_renames.clear();
+    glyph_feat_renames.clear();
 }
 
 void map_def::load()

@@ -1139,6 +1139,7 @@ public:
     dungeon_feature_type border_fill_type;
 
     ::map<dungeon_feature_type, string> feat_renames;
+    ::map<pair<int, dungeon_feature_type>, string> glyph_feat_renames;
     vector<subvault_place> subvault_places;
     string          file;
 
