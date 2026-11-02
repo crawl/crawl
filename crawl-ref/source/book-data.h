@@ -371,6 +371,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Everburning Encyclopedia
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
+    SPELL_STELLAR_INVITATION,
     SPELL_IGNITION,
 },
 

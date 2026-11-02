@@ -2924,4 +2924,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_SIROCCO,
 },
 
+{
+    ZAP_STELLAR_INVITATION,
+    "stellar invitation",
+    new calcdice_calculator<2, 12, 1, 3>,
+    new tohit_calculator<40>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

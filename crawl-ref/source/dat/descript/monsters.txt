@@ -3049,6 +3049,10 @@ snapping turtle
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
 extensible and can reach out and bite from afar.
 %%%%
+solar elemental
+
+A spirit of intense luminescense and heat drawn down from the stars.
+%%%%
 solar ember
 
 A mote of intense light and heat manifested by a sun scarab. It is linked to

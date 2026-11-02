@@ -372,6 +372,7 @@ enum monster_type                      // env.mons[].type
     MONS_ELEMENTAL_WELLSPRING,
     MONS_SHADOW_PUPPET,
     MONS_MONARCH_BOMB,
+    MONS_SOLAR_ELEMENTAL,
 #endif
     MONS_TWISTER,        // air miscasts
     MONS_GOLDEN_EYE,
@@ -1453,6 +1454,7 @@ enum monster_type                      // env.mons[].type
     MONS_JADE_CRYSTAL_FIRE,
     MONS_JADE_CRYSTAL_ICE,
     MONS_HYPNOTAIL,
+    MONS_SOLAR_ELEMENTAL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

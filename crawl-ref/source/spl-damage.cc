@@ -4383,6 +4383,55 @@ spret cast_imb(int pow, bool fail)
     return spret::success;
 }
 
+spret cast_stellar_invitation(int pow, bool fail)
+{
+    int range = spell_range(SPELL_STELLAR_INVITATION, &you);
+    auto hitfunc = find_spell_targeter(SPELL_STELLAR_INVITATION, pow, range);
+
+    if (stop_attack_prompt(*hitfunc, "blast", [](const actor *act)
+                                                { return act->res_fire() < 3;}))
+    {
+        return spret::abort;
+    }
+
+    if (!player_summon_check(MONS_SOLAR_ELEMENTAL))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("You radiate a wave of heat!");
+
+    int count = 0;
+
+    for (actor_near_iterator ai(you.pos(), LOS_SOLID_SEE); ai; ++ai)
+    {
+        if (ai->pos().distance_from(you.pos()) > range || ai->pos() == you.pos())
+            continue;
+
+        if (!mons_aligned(&you, *ai) && _act_worth_targeting(you, **ai))
+            count++;
+
+        bolt beam;
+        zappy(ZAP_STELLAR_INVITATION, pow, false, beam);
+        beam.source_id     = MID_PLAYER;
+        beam.set_agent(&you);
+        beam.origin_spell  = SPELL_STELLAR_INVITATION;
+        beam.target        = ai->pos();
+        beam.source        = ai->pos();
+        beam.hit_verb      = "engulfs";
+        beam.aimed_at_spot = true;
+        beam.fire();
+    }
+
+    draw_ring_animation(you.pos(), range, RED, RED, true, 50, TILE_BOLT_FLAME);
+
+    // summon the elemental
+    if (count > 0)
+        summon_solar_elemental(count, pow);
+
+    return spret::success;
+}
+
 dice_def toxic_bog_damage()
 {
     return dice_def(4, 6);

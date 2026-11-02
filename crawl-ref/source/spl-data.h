@@ -4783,6 +4783,17 @@ static const struct spell_desc spelldata[] =
     TILEG_SIROCCO,
 },
 
+{
+    SPELL_STELLAR_INVITATION, "Stellar Invitation",
+    spschool::fire | spschool::summoning,
+    spflag::none,
+    6,
+    200,
+    3, 3,
+    20,
+    TILEG_ERROR,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },
