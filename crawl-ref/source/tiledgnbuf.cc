@@ -643,8 +643,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     {
         if (you.duration[DUR_TAILWIND])
             m_buf_icons.add(TILEI_RAMPAGE_INSTANT, x, y);
-        else
+        else if (you.rampaging())
             m_buf_icons.add(TILEI_RAMPAGE, x, y);
+        else if (you.duration[DUR_TECTONIC_BULWARK])
+            m_buf_icons.add(TILEI_BULWARK, x, y);
+        else
+            m_buf_icons.add(TILEI_RAMPAGE, x, y); // shouldn't get here
     }
 
     // Don't let the "new stair" icon cover up any existing icons, but

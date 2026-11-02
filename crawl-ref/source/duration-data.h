@@ -826,6 +826,13 @@ static const duration_def duration_data[] =
             mprf(MSGCH_DURATION, "You feel more solid again.");
           }
       }}},
+    { DUR_TECTONIC_BULWARK,
+      BLUE, "Bulwark",
+      "tectonic bulwark", "tectonic shield",
+      "You are surrounded by a dense stone shield.", D_DISPELLABLE,
+      {{ "Your stone shield falls away.", []() {
+          you.redraw_armour_class = true;
+      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

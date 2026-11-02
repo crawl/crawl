@@ -566,7 +566,7 @@ static coord_def _rampage_destination(coord_def move, monster* target)
 /// What can the player rampage towards in the given direction, if anything?
 monster* get_rampage_target(coord_def move)
 {
-    if (!you.rampaging())
+    if (!you.rampaging() && !you.duration[DUR_TECTONIC_BULWARK])
         return nullptr;
 
     // Don't rampage if the player has status effects that should prevent it.
@@ -1136,10 +1136,14 @@ void move_player_action(coord_def move)
         return;
 
     int num_steps = 1;
+    bool bulwark_affects_move = true;
     // If this movement can rampage, check how many steps in total we want to move.
     monster* mon_target = get_rampage_target(move);
     if (mon_target)
+    {
         num_steps = min(you.rampaging() + 1, grid_distance(you.pos(), mon_target->pos()));
+        bulwark_affects_move = false;
+    }
     const bool rampage_attack = mon_target && grid_distance(you.pos(), mon_target->pos()) == num_steps;
 
     // Now, calculate any warnings we want to give the player for each step they will take.
@@ -1249,7 +1253,7 @@ void move_player_action(coord_def move)
     // player_fight())
     if (did_move)
     {
-        you.time_taken = div_rand_round(player_speed(delay_scale) * delay,
+        you.time_taken = div_rand_round(player_speed(delay_scale, bulwark_affects_move) * delay,
                                         BASELINE_DELAY * delay_scale * delay_scale * steps_taken);
         you.turn_is_over = true;
     }

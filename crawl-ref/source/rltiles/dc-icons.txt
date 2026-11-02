@@ -20,6 +20,7 @@ tutorial_cursor TUTORIAL_CURSOR
 travel_exclusion DISABLED
 rampage_indicator RAMPAGE
 rampage_indicator_instant RAMPAGE_INSTANT
+bulwark_indicator BULWARK
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB

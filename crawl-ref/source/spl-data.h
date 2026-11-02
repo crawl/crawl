@@ -4783,6 +4783,17 @@ static const struct spell_desc spelldata[] =
     TILEG_SIROCCO,
 },
 
+{
+    SPELL_TECTONIC_BULWARK, "Tectonic Bulwark",
+    spschool::earth,
+    spflag::selfench,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

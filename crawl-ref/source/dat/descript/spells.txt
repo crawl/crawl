@@ -2336,6 +2336,16 @@ Calls on the powers of darkness to cause agonising injury to any living or
 holy thing in the caster's vicinity, cutting their health in half (partially
 resisted by negative energy resistance). This damage is never directly lethal.
 %%%%
+Tectonic Bulwark spell
+
+Draws forth great plates of stone capable of deflecting attacks. The stone
+shield is very dense and cumbersome; the effectiveness of its shielding is
+greatly increased if the caster wears heavier armour to help bear its weight,
+and is reduced if they must manage other sources of shielding alongside it
+(though it always provides some benefit). The great weight of stone also
+impedes the caster's actions to some degree, but movement towards their enemies
+and their melee or ranged attacks are unaffected.
+%%%%
 Teleport Other spell
 
 Attempts to teleport a targeted creature out of the caster's sight, after a
