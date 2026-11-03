@@ -2339,7 +2339,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 
 {
     ZAP_GRAVE_CLAW,
-    "claw of jagged bones",
+    "jagged bones",
     new dicedef_calculator<2, 7, 1, 7>,
     new tohit_calculator<AUTOMATIC_HIT>,
     new dicedef_calculator<2, 4, 1, 8>,
