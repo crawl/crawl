@@ -11066,17 +11066,18 @@ NSUBST: ~ = 1:1 / 1:2 / 1:d / *=~
 CLEAR:  A
 : else -- Vaults
 ITEM:   parchment of Sphinx Sisters
-NSUBST: ~ = 2:1 / 2:2 / 1:d / *=~
+ITEM:   any magical staff randart artprops:hexes pre_id
+NSUBST: ~ = 2:1 / 2:2 / 1:d / 1:e / *=~
 SUBST:  A+ = .
 TILE:   b = wall_depths_crystal
 : end
 KFEAT:  m = iron_grate
 KFEAT:  F = cache_of_baked_goods
 SUBST:  ' = x. , - = m.
-KPROP:  ~12dF = no_tele_into
-KMASK:  ~d = no_monster_gen
+KPROP:  ~12deF = no_tele_into
+KMASK:  ~de = no_monster_gen
 TILE:   x = wall_catacombs
-FTILE:  ~12dFbn = floor_pebble_darkgray
+FTILE:  ~12deFbn = floor_pebble_darkgray
 MAP
 ..................
 .'------'.'-----'.

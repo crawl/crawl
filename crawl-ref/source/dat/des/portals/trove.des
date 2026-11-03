@@ -729,22 +729,23 @@ cc..cc..ccc..cc..cc
     ccccccccccc
 ENDMAP
 
-NAME:   tekkud_trove_entry_lotus
-TAGS:   transparent no_descent
-KMONS:  p = plant
-KMONS:  s = sacred lotus
-KFEAT:  ps = W
-NSUBST: p = 1:s / *=ppppWWW1
+NAME:    tekkud_trove_entry_lotus
+TAGS:    transparent no_descent
+KMONS:   p = plant
+KMONS:   s = sacred lotus
+KFEAT:   psB = W
+SHUFFLE: AB
+NSUBST:  p = 1:s / *=ppppWWW1
 : trove.portal(_G)
 MAP
 cc'''''cc
-cW'WWW'Wc
+cA'WWW'Ac
 '''WpW'''
 'WW.W.WW'
 'WpWOWpW'
 'WW.W.WW'
 '''WpW'''
-cW'WWW'Wc
+cA'WWW'Ac
 cc'''''cc
 ENDMAP
 

@@ -3603,16 +3603,17 @@ yyyy....''''
 ''''yxxyyyyy
 ENDMAP
 
-NAME:  tekkud_still_life_1
-TAGS:  buniq_still_life transparent decor extra
-DEPTH: D:3-, Depths
+NAME:    tekkud_still_life_1
+TAGS:    buniq_still_life transparent decor extra
+DEPTH:   D:3-, Depths
+SHUFFLE: cx
+TILE:    x : wall_pebble_green / wall_pebble_cyan
 MAP
-        .....
-        ..xx.
-        .x.x.
-        ...x.
-    .........
-    ..x..
+       .....
+       ..xx.
+       .x.x.
+    ......x.
+    ..x.....
     ..xx.
     .x.x.
 .........
@@ -3625,6 +3626,7 @@ ENDMAP
 NAME:  tekkud_still_life_2
 TAGS:  buniq_still_life transparent decor extra
 DEPTH: D:3-, Depths
+TILE:  x = wall_pebble_darkgray
 MAP
   .....
  ...x.......
