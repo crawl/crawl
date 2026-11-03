@@ -1913,9 +1913,11 @@ static int _xom_shatter_walls(coord_def where, bool more_than_dig)
 // Xom produces Shatter level noise, demolishes random features, and also
 // fails to actually do any actual damage. Unlike actual Shatter, this both
 // leaves behind debris and usually has very little chance to do more than dig.
-static void _xom_fake_shatter(int)
+static void _xom_fake_shatter(int tension)
 {
-    bool more_than_dig = one_chance_in(5);
+    // Don't dig through hard walls out of combat, to prevent the possibility
+    // of players waiting around for it to happen, in order to dig into a vault.
+    bool more_than_dig = one_chance_in(5) && tension > 0;
 
     god_speaks(GOD_XOM, _get_xom_speech("fake shatter").c_str());
 
@@ -5103,7 +5105,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return you.magic_points > 3;}
     },
     {
-        XOM_BAD_FAKE_SHATTER, 75, 0, 10, [](int)
+        XOM_BAD_FAKE_SHATTER, 65, 80, 0, [](int)
         {
             // Check if there's a reasonable amount of features
             // the fake Xom shatter is likely to collapse.
