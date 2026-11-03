@@ -4785,7 +4785,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
             }
 
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-                if (_mons_has_smite_attack(*mi) && grid_distance(mi->pos(), you.pos()) > 2)
+                if (mi->threat_range(false) > 2 && grid_distance(mi->pos(), you.pos()) > 2)
                     smiters++;
 
             return plant_capacity >= 3
@@ -4930,7 +4930,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
                 if (!mi->wont_attack())
                 {
                     total_hostiles++;
-                    if (_mons_has_smite_attack(*mi))
+                    if (mi->threat_range(false) > 2)
                         smiters++;
                 }
             }
