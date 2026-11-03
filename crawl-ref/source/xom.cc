@@ -5170,7 +5170,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return player_prot_life() < 3;}
     },
     {
-        XOM_BAD_DOOM, 0, 0, 120, [](int)
+        XOM_BAD_DOOM, 0, 250, 0, [](int)
         {return you.attribute[ATTR_DOOM] < 80 || you.penance[GOD_XOM]
                 || one_chance_in(3);}
     },
