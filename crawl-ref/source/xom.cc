@@ -5091,8 +5091,8 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return _xom_mons_poly_target() != nullptr;}
     },
     {
-        XOM_BAD_SUMMON_HOSTILES, 170, 670, 40, [](int tn)
-        {return tn <= 48;}, XOM_EXPLORE_HEALTHY
+        XOM_BAD_SUMMON_HOSTILES, 170, 450, 40, [](int tn)
+        {return tn <= 48 && you.hp * 3 >= you.hp_max;}, XOM_EXPLORE_HEALTHY
     },
     {
         XOM_BAD_TIME_CONTROL, 133, 0, 0, [](int)
