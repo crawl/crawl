@@ -4738,9 +4738,9 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_SINGLE_ALLY, 400, 60, 0, [](int tn)
-        {return (tn > 0 || (you.explore_estimate < 25))
-                && !you.allies_forbidden();}
+        XOM_GOOD_SINGLE_ALLY, 300, 0, 50, [](int)
+        {return !you.allies_forbidden();},
+        XOM_EXPLORE_NEXT_BATTLE
     },
     {
         XOM_GOOD_POLYMORPH, 275, 0, 0, [](int)
