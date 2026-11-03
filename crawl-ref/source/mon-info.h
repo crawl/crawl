@@ -278,6 +278,7 @@ enum monster_info_flags
     MB_REMEMBERED_INVIS,
     MB_PHASE_SHIFT,
     MB_DIVINE_SHIELD,
+    MB_OSTRACISED,
     NUM_MB_FLAGS
 };
 

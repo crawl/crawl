@@ -166,4 +166,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_REMEMBERED_INVIS, "remembered", "remembered", "remembered"},
     { MB_PHASE_SHIFT, "phased", "out of phase", "phased"},
     { MB_DIVINE_SHIELD, "divine shielded", "divinely shielded", "divine shielded"},
+    { MB_OSTRACISED, "ostracised", "ostracised", "ostracised"},
 };

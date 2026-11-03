@@ -1197,6 +1197,14 @@ void actor::clear_deferred_move()
     last_move_flags = MV_DEFAULT;
 }
 
+void actor::ostracise(int pow)
+{
+    if (is_player())
+        ostracise_player(pow);
+    else
+        this->as_monster()->add_ench(mon_enchant(ENCH_OSTRACISED, nullptr, pow * BASELINE_DELAY));
+}
+
 /**
  * Ensures that `act` is valid if possible. If this isn't possible,
  * return nullptr. This will convert YOU_FAULTLESS into `you`.
