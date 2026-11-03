@@ -4577,6 +4577,53 @@ static void _xom_hall_of_mirrors(int)
          number_in_words(group.size()).c_str());
 }
 
+static void _xom_make_traps(int)
+{
+    int num_traps = random_range(3, 9);
+    vector<coord_def> spots;
+
+    // Only deploy traps on plain floor, not other types of floor.
+    for (radius_iterator ri(you.pos(), 6, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+        if (env.grid(*ri) == DNGN_FLOOR)
+            spots.push_back(*ri);
+
+    num_traps = min(num_traps, (int)spots.size() / 4);
+
+    if (num_traps < 1)
+        return;
+
+    shuffle_array(spots);
+    int placed = 0;
+    for (int i = 0; i < (int)spots.size() && placed < num_traps; ++i)
+    {
+        // Skip spots that might locally-disconnect the level
+        if (plant_forbidden_at(spots[i]))
+            continue;
+
+        // Draw traps from the local set, skipping ones that aren't really traps
+        // for the player, and adding in chaos-flavor traps and ones that don't
+        // spawn normally. (Otherwise you get just alarm/dispersal in many places.)
+        dungeon_feature_type trap = DNGN_FLOOR;
+        if (one_chance_in(4))
+            trap = DNGN_TRAP_HARLEQUIN;
+        else if (one_chance_in(4))
+            trap = DNGN_TRAP_NET;
+        else
+            trap = random_trap_for_place();
+        while (trap == DNGN_TRAP_TELEPORT || trap == DNGN_TRAP_SHAFT)
+            trap = random_trap_for_place();
+
+        dungeon_terrain_changed(spots[i], trap);
+        placed++;
+    }
+
+    if (placed)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("make traps").c_str());
+        take_note(Note(NOTE_XOM_EFFECT, -1, -1, "made traps"), true);
+    }
+}
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation orig_form)
@@ -5158,6 +5205,9 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_TORMENT, 6, 0, 0, [](int)
         {return !you.res_torment();}
+    },
+    {
+        XOM_BAD_MAKE_TRAPS, 100, 0, 0
     },
 
     // Strategic effects.
@@ -6594,6 +6644,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
     { XOM_BAD_HALL_OF_MIRRORS, {"hall of mirrors", _xom_hall_of_mirrors }},
+    { XOM_BAD_MAKE_TRAPS, {"traps", _xom_make_traps }},
 
     { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
     { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},

@@ -1436,6 +1436,19 @@ Xom mirrors
 "Which is real and which is illusion?"
 
 "Have a test of your perception, my child!"
+%%%%
+Xom make traps
+
+Xom adds a little enrichment to your environment.
+
+Xom reveals the presence of traps!
+
+Xom creates an obstacle course for you.
+
+"Watch out! This place is dangerous!"
+
+w:2
+Xom draws the Minefield card.
 ######################################
 # Miscellaneous god messages.
 ######################################

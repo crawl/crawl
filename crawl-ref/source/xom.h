@@ -102,7 +102,8 @@ enum xom_event_type
     XOM_BAD_FLOOR_LOCK,
     XOM_BAD_MINIBANE,
     XOM_BAD_HALL_OF_MIRRORS,
-    XOM_LAST_BAD_ACT = XOM_BAD_HALL_OF_MIRRORS,
+    XOM_BAD_MAKE_TRAPS,
+    XOM_LAST_BAD_ACT = XOM_BAD_MAKE_TRAPS,
 
     // Not 'real' events, but in this enum so they can be triggered easily in wizmode
     XOM_BLESSING_CLEAVE,
