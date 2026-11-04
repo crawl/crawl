@@ -3145,6 +3145,7 @@ static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
     { DUR_VITRIFIED, {TILEI_VITRIFIED, "fragile"} },
     { DUR_LOWERED_WL, {TILEI_WEAK_WILLED, "will/2"} },
     { DUR_SENTINEL_MARK, {TILEI_SENTINEL_MARK, "mark"} },
+    { DUR_CONF, {TILEI_CONFUSED, "conf"} },
 
     // Less critical or positive effects (or ones already covered by a default
     // force_more_message). Not enabled by default.
