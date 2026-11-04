@@ -960,7 +960,7 @@ bool melee_attack::handle_phase_hit()
         do_valour_beam();
 
     if (damage_brand == SPWPN_CONCUSSION || xom_extra_brand() == SPWPN_CONCUSSION)
-        handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
+        handle_concussion_brand(weapon && is_unrandom_artefact(*weapon, UNRAND_CARINA));
 
     if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
         handle_centipede_poison(weapon->plus);
