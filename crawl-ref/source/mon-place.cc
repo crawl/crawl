@@ -3336,12 +3336,15 @@ monster* create_monster(mgen_data mg, bool fail_msg)
  *                       excludes nothing. 0 will exclude only the center.)
  * @param in_sight_of  If not null, spots will only be considered valid so long
  *                     as they are in sight of the given actor.
+ * @param avoid_traps  If true, this will not return tiles on which friendly
+ *                     monsters would refuse to step.
  *
  * @return Whether a valid spot was found. (If true, empty will be set to this spot)
  */
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, coord_def& result, int exclude_radius,
-                              const actor* in_sight_of, bool no_sanctuary)
+                              const actor* in_sight_of, bool no_sanctuary,
+                              bool avoid_traps)
 {
     int good_count = 0;
 
@@ -3364,6 +3367,9 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
             continue;
 
         if (no_sanctuary && is_sanctuary(*ri))
+            continue;
+
+        if (avoid_traps && trap_is_bad_for_player(env.grid(*ri)))
             continue;
 
         if (one_chance_in(++good_count))

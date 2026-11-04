@@ -2135,7 +2135,7 @@ void handle_monster_move(monster* mons)
         {
             coord_def spot;
             if (find_habitable_spot_near(you.pos(), mons->type, 3, spot,
-                                         -1, &you))
+                                         -1, &you, false, true))
             {
                 mons->move_to(spot, MV_TRANSLOCATION);
                 simple_monster_message(*mons, " returns to your side.");
