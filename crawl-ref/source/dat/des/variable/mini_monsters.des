@@ -11663,9 +11663,6 @@ CHANCE: 1% (Geh, Coc, Dis, Tar, Pan), 2%
 DEPTH:  D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
         Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$, Pan
 KFEAT:  X = slimy_wall
-# FIXME: subvaults still don't set feature names on a higher level.
-#        For now, only the bee room uses this, so this should be fine.
-: set_feature_name("decorative_floor", "flower patch")
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).
