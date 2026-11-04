@@ -486,6 +486,9 @@ string kill_def::base_name(const kill_monster_desc &md) const
     case kill_monster_desc::M_SPECTRE:
         name = "spectral " + name;
         break;
+    case kill_monster_desc::M_MANNEQUIN:
+        name += " mannequin";
+        break;
     default:
         // Silence compiler warning about not handling M_NORMAL and
         // M_SHAPESHIFTER
@@ -646,6 +649,9 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
+        case MONS_MANNEQUIN:
+            modifier = M_MANNEQUIN;
+            break;
         default: break;
     }
     if (modifier != M_NORMAL)
@@ -675,6 +681,8 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
+        case MONS_MANNEQUIN:
+            modifier = M_MANNEQUIN;
         default: break;
     }
     if (modifier != M_NORMAL)
@@ -754,6 +762,9 @@ static int kill_lualc_modifier(lua_State *ls)
             break;
         case kill_monster_desc::M_SHAPESHIFTER:
             modifier = "shapeshifter";
+            break;
+        case kill_monster_desc::M_MANNEQUIN:
+            modifier = "mannequin";
             break;
         default:
             modifier = "";
@@ -845,6 +856,9 @@ static int kill_lualc_symbol(lua_State *ls)
             break;
         case kill_monster_desc::M_SPECTRE:
             ch = mons_char(MONS_SPECTRAL_THING);
+            break;
+        case kill_monster_desc::M_MANNEQUIN:
+            ch = mons_char(MONS_MANNEQUIN);
             break;
         default:
             break;

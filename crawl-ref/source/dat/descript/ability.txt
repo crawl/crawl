@@ -1126,3 +1126,8 @@ always perform a Howl afterward.
 
 Can only target an enemy who is afraid, and who has at least one occupiable tile
 adjacent to them.
+%%%%
+Chaos Eisegesis ability
+
+Harnesses raw chaos (and tempts fate) to cast the following spell without risk
+of failure:

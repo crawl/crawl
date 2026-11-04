@@ -16,6 +16,7 @@
 #include "stringutil.h" // uppercase_first
 #include "tag-version.h"
 #include "transformation.h"
+#include "xom.h"
 
 #include <functional>
 
@@ -820,7 +821,17 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, _yred_kill_response() },
     },
     // GOD_XOM,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            nullptr, false, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                piety = 0;
+                denom = 1;
+                you.attribute[ATTR_XOM_EXPLORE_COUNT] += piety_scale(1);
+            }
+        } },
+    },
     // GOD_VEHUMET,
     DEFAULT_KILL_CONDUCT,
     // GOD_OKAWARU,
@@ -1059,6 +1070,19 @@ void trigger_exploration_conducts()
 
     if (you.form == transformation::mistmane)
         mistmane_distill_potions(you.newly_revealed_cells);
+
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SNEAKY
+        && you.props.exists(XOM_DISGUISE_RECOVERY_KEY))
+    {
+        int& remaining = you.props[XOM_DISGUISE_RECOVERY_KEY].get_int();
+        if (you.newly_revealed_cells >= remaining)
+        {
+            you.props.erase(XOM_DISGUISE_RECOVERY_KEY);
+            god_speaks(GOD_XOM, "You have finished assembling a new disguise.");
+        }
+        else
+            remaining -= you.newly_revealed_cells;
+    }
 
     while (you.newly_revealed_cells > 0)
     {

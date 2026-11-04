@@ -92,6 +92,7 @@ enum class spret
 #define INNATE_SPELLS_KEY "innate_spells"
 
 #define EXEGESIS_SPELL "exegesis_spell"
+#define EISEGESIS_SPELL "eisegesis_spell"
 
 #define fail_check() if (fail) return spret::fail
 
@@ -146,6 +147,9 @@ string spell_power_string(spell_type spell);
 string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
                            bool terse = false);
 string spell_max_damage_string(spell_type spell);
+pair<string, string> effect_description(spell_type spell, bool evoked = false,
+                                        int pow = -1, bool terse = false);
+string spell_max_effect_string(spell_type spell);
 int spell_acc(spell_type spell);
 string spell_defence_string(spell_type spell, bool is_monster = false,
                             int pow = -1);

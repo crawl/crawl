@@ -66,6 +66,27 @@ extern vector<apostle_data> apostles;
 #define BEOGH_VENGEANCE_NUM_KEY "beogh_vengeance_num"
 #define BEOGH_BFB_VALID_KEY "beogh_bfb_valid"
 
+struct xom_guardian_data
+{
+    // Saved copy of the guardian's healthy state
+    follower guardian;
+
+    // Timestamp of when they ought to next respawn (of 0, if still alive)
+    int respawn_timer;
+
+    // Number of lives remaining before they go away for good
+    int lives_remaining;
+
+    xom_guardian_data(const monster& guardian);
+    xom_guardian_data() : guardian(), respawn_timer(0), lives_remaining(9) { }
+
+    // Returns them to life and tries to place them near the player
+    monster* restore();
+};
+
+// List of currently assigned Xom guardians (if any)
+extern vector<xom_guardian_data> xom_guardians;
+
 void init_companions();
 void add_companion(monster* mons);
 void remove_companion(monster* mons);
@@ -109,6 +130,13 @@ void beogh_resurrect_followers(bool end_ostracism_only = false);
 bool tile_has_valid_bfb_corpse(const coord_def pos);
 
 string apostle_short_description(int slot);
+
+void xom_check_guardian_revival();
+void xom_guardian_died(monster& mons);
+void xom_remove_guardians();
+void xom_add_guardian(monster& guardian);
+bool mons_is_xom_guardian(const monster& mon);
+monster_type xom_guardian_type();
 
 #if TAG_MAJOR_VERSION == 34
 void fixup_bad_companions();

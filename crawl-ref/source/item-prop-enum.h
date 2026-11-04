@@ -477,6 +477,8 @@ enum scroll_type
 #endif
     SCR_POISON,
     SCR_BUTTERFLIES,
+    SCR_FROG,
+    SCR_PLINKING,
     NUM_SCROLLS
 };
 

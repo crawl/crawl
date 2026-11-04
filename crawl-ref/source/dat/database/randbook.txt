@@ -1248,6 +1248,8 @@ Combustion
 
 Conflagration
 
+Ebullition
+
 Embers
 
 Fever

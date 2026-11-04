@@ -798,6 +798,22 @@ bat
 A large grey bat that, despite being herbivorous, is quite aggressive. It is
 myopic and uses echolocation to navigate.
 %%%%
+chaos battleshape
+
+A scintillating and ever-changing prism of pure chaos that resonates with its
+partner's actions.
+
+Each time its partner performs a melee attack, it will launch a barrage of
+chaotic energy at a random enemy and change its form. After doing this several
+times, it will become fully charged and stop resonating with attacks.
+
+If its partner casts a spell in this state, it will violently release its stored
+power with an effect that scales to the level of spell used:
+
+ Level 1-4: Blast 3 random enemies with chaos.\n
+Level 5-7: Blast 5 random enemies with chaos and create shooting stars.\n
+Level 8-9: Blast 7 random enemies with chaos explosions and create even more shooting stars.
+%%%%
 battlesphere
 
 A small globe of destructive energy. Each time its creator casts an offensive
@@ -2111,8 +2127,9 @@ give off an eerie red glow.
 %%%%
 living spell
 
-A spell, waiting to cast itself at the first foe that enters its range. Once
-it does, it'll dissipate into the ether.
+A spell given ephemeral form, waiting only for a suitable target to enter its
+range. It will dissipate the moment it casts itself at a foe (or even if swapped
+with by an ally).
 %%%%
 lost soul
 
@@ -2133,6 +2150,15 @@ mana viper
 A violet-scaled serpent with faintly glowing eyes. It thirsts for magic as well
 as flesh, and its bite can drink dry the magical reservoirs of even a powerful
 mage in no time.
+%%%%
+mannequin
+
+A wooden theatre prop that moves as if possessed by a glimmer of another
+creature's skill and memory. It leaps to and fro with grace that is far from
+wooden, but its abilities often prove too much for its body - slowly falling
+apart with every action it takes besides moving.
+
+It refuses to acknowledge any instructions besides its own instinct.
 %%%%
 manticore
 

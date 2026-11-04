@@ -197,12 +197,13 @@ force_more_message += deal. but finds you have enough
 force_more_message += chain yourself with knowledge
 force_more_message += allow you to induct
 force_more_message += will allow you to brand your body
+force_more_message += grow incredibly long
+force_more_message += Xom locks all of
 
 force_more_message += Beogh speaks to you:
 
 # Xom doing things you really shouldn't miss
 force_more_message += is forced to slowly start .* word of recall
-force_more_message += too known and too boring
 
 # Crucible exit notification
 force_more_message += Makhleb acknowledges your contrition

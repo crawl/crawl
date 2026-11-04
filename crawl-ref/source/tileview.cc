@@ -235,6 +235,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         }
         return;
 
+    case BRANCH_XOM_ARENA:
     case BRANCH_PANDEMONIUM:
         flv.floor = tile_dngn_coloured(TILE_FLOOR_DEMONIC, env.floor_colour);
         if (env.rock_colour == LIGHTRED)
@@ -1011,8 +1012,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tile_with_flags_t t = tileidx_monster(mon);
     tileidx_t t0 = t.tile();
 
-    if (mons_class_is_stationary(mon.type)
-        && mon.type != MONS_TRAINING_DUMMY)
+    if (mons_class_is_stationary(mon.type))
     {
         // If necessary add item brand.
         if (env.map_knowledge(gc).item())
@@ -1023,12 +1023,10 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
                 tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
         }
     }
-    else
-    {
-        tileidx_t mcache_idx = mcache.register_monster(mon);
-        t0 = mcache_idx ? mcache_idx : t0;
-        t.set_tile(t0);
-    }
+
+    tileidx_t mcache_idx = mcache.register_monster(mon);
+    t0 = mcache_idx ? mcache_idx : t0;
+    t.set_tile(t0);
 
     tile_env.bk_fg(gc) = t;
 

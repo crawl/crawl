@@ -30,6 +30,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
+#include "xom.h"
 
 actor::~actor()
 {
@@ -732,7 +733,9 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
     else if (typ == CONSTRICT_ENTANGLE)
     {
         return grid_distance(pos(), defender.pos()) <= reach_range()
-                && !num_constricting(CONSTRICT_ENTANGLE);
+                && !num_constricting(CONSTRICT_ENTANGLE)
+                   || is_player()
+                      && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE;
     }
 
     if (!see_cell_no_trans(defender.pos()))

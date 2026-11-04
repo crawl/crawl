@@ -183,35 +183,12 @@ void ranged_attack::handle_phase_blocked()
     string punctuation = ".";
 
     if (defender->reflection())
-    {
         reflected = true;
-        if (defender->observable())
-        {
-            if (defender_shield && shield_reflects(*defender_shield))
-            {
-                punctuation = " with " + defender->pronoun(PRONOUN_POSSESSIVE)
-                              + " " + defender_shield->name(DESC_PLAIN).c_str();
-            }
-            else if (defender->divinely_shielded())
-                punctuation = " with a divine shield";
-            else
-                punctuation = " with an invisible shield";
-        }
-
-        punctuation += make_stringf("... and %s it back!",
-                                    defender->conj_verb("reflect").c_str());
-    }
     else
         range_used = BEAM_STOP;
 
     if (needs_message)
-    {
-        mprf("%s %s the %s%s",
-             defender_name(false).c_str(),
-             defender->conj_verb("block").c_str(),
-             proj_name.c_str(),
-             punctuation.c_str());
-    }
+        mpr(block_event_string(defender, make_stringf("the %s", proj_name.c_str()), reflected));
 
     if (!weapon->is_type(OBJ_MISSILES, MI_DART)
         && !weapon->is_type(OBJ_MISSILES, MI_THROWING_NET))
@@ -691,7 +668,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_CURARE:
         obvious_effect = curare_actor(attacker, defender,
                                       proj_name,
-                                      atk_name(DESC_A));
+                                      attacker->name(DESC_A));
         break;
     case SPMSL_CHAOS:
         obvious_effect = chaos_affects_actor(defender, attacker);

@@ -52,6 +52,7 @@
 #include "rltiles/tiledef-main.h"
 #include "transform.h"
 #include "view.h"
+#include "xom.h"
 
 class final_effect
 {
@@ -396,12 +397,12 @@ protected:
     string name;
 };
 
-class make_derived_undead_fineff : public final_effect
+class make_derived_mon_fineff : public final_effect
 {
 public:
     void fire() override;
 
-    make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
+    make_derived_mon_fineff(coord_def pos, mgen_data _mg, int _xl,
         const string& _agent, const string& _msg,
         function<bool ()> _should_trigger, bool _act_immediately)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
@@ -666,6 +667,19 @@ protected:
     item_def& wpn;
 };
 
+class disguise_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    disguise_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return true; }
+};
+
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
 
@@ -801,16 +815,16 @@ void schedule_infestation_death_fineff(coord_def pos, const string& name)
     _schedule_final_effect(new infestation_death_fineff(pos, name));
 }
 
-void schedule_make_derived_undead_fineff(coord_def pos, mgen_data mg, int xl,
-                                         const string& agent,
-                                         const string& msg,
-                                         function<bool ()> should_trigger,
-                                         bool act_immediately)
+void schedule_make_derived_mon_fineff(coord_def pos, mgen_data mg, int xl,
+                                      const string& agent,
+                                      const string& msg,
+                                      function<bool ()> should_trigger,
+                                      bool act_immediately)
 {
-    _schedule_final_effect(new make_derived_undead_fineff(pos, mg, xl, agent,
-                                                          msg,
-                                                          should_trigger,
-                                                          act_immediately));
+    _schedule_final_effect(new make_derived_mon_fineff(pos, mg, xl, agent,
+                                                       msg,
+                                                       should_trigger,
+                                                       act_immediately));
 }
 
 void schedule_mummy_death_curse_fineff(const actor* attack,
@@ -910,6 +924,11 @@ void schedule_hypnogecko_tail_fineff()
 void schedule_ephemeral_weapon_end(item_def& wpn)
 {
     _schedule_final_effect(new ephemeral_weapon_end_fineff(wpn));
+}
+
+void schedule_disguise_fineff()
+{
+    _schedule_final_effect(new disguise_fineff());
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -1558,35 +1577,35 @@ void infestation_death_fineff::fire()
     }
 }
 
-void make_derived_undead_fineff::fire()
+void make_derived_mon_fineff::fire()
 {
     if (!should_trigger())
         return;
 
-    monster *undead = create_monster(mg);
-    if (!undead)
+    monster *mon = create_monster(mg);
+    if (!mon)
         return;
 
-    if (!message.empty() && you.can_see(*undead))
+    if (!message.empty() && you.can_see(*mon))
         mpr(message);
 
     // If the original monster has been levelled up, its HD might be
     // different from its class HD, in which case its HP should be
     // rerolled to match.
-    if (undead->get_experience_level() != experience_level)
+    if (mon->get_experience_level() != experience_level)
     {
-        undead->set_hit_dice(max(experience_level, 1));
-        roll_zombie_hp(undead);
+        mon->set_hit_dice(max(experience_level, 1));
+        roll_derived_mon_hp(mon);
     }
 
     if (!agent.empty())
-        mons_add_blame(undead, "animated by " + agent);
+        mons_add_blame(mon, "animated by " + agent);
 
     if (act_immediately)
     {
-        undead->flags &= ~MF_JUST_SUMMONED;
-        undead->speed_increment = 80;
-        queue_monster_for_action(undead);
+        mon->flags &= ~MF_JUST_SUMMONED;
+        mon->speed_increment = 80;
+        queue_monster_for_action(mon);
     }
 }
 
@@ -1789,7 +1808,9 @@ void stardust_fineff::fire()
     if (count == 0)
         return;
 
-    if (type == SHOOTING_STAR_JELLY)
+    if (type == SHOOTING_STAR_BATTLESHAPE)
+        mprf("%s breaks apart into shimmering stars!", agent->name(DESC_THE).c_str());
+    else if (type == SHOOTING_STAR_JELLY)
         mprf("A flurry of magic pours from %s injured body!", agent->name(DESC_ITS).c_str());
     else
     {
@@ -1797,8 +1818,10 @@ void stardust_fineff::fire()
             type == SHOOTING_STAR_CARINA ? "weapon" : "orb");
     }
 
-    count = type == SHOOTING_STAR_JELLY ? max_stars : min(max_stars, count + 1);
-    const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
+    count = type == SHOOTING_STAR_ORB ? min(max_stars, count + 1) : max_stars;
+    const int foe = agent->is_player() || type == SHOOTING_STAR_BATTLESHAPE
+                        ? int{MHITYOU}
+                        : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
         mgen_data mg(MONS_SHOOTING_STAR, BEH_COPY, agent->pos(),
@@ -2128,6 +2151,11 @@ void ephemeral_weapon_end_fineff::fire()
 
     if (orig)
         try_equip_item(*orig, true);
+}
+
+void disguise_fineff::fire()
+{
+    xom_disguise_self();
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

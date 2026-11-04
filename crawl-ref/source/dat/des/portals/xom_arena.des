@@ -1,0 +1,241 @@
+##############################################################################
+#
+# Xom's Arena (by DracoOmega and regret-index).
+#
+# A rare negative strategic effect of Xom forces a duel against several
+# out-of-depths, with rare weakened Pan lord or butterfly rolls instead.
+# (You can still escape from the portal, unlike Okawaru's Duel effect, but
+# 33% of the time there's some fight-helping consumables in the arena you'll
+# lose doing this.) These resemble Okawaru's arenas, but with a lot more
+# decoration and a small chance of fight-interrupting gimmicks, naturally
+# reflecting Xom.
+#
+##############################################################################
+
+default-depth: Arena?
+
+: crawl_require('dlua/vault.lua')
+
+{{
+function xom_arena_setup(e)
+    e.tags("no_dump no_item_gen allow_dup")
+    e.orient("encompass")
+    e.kfeat("+ = closed_clear_door")
+    e.kfeat("_ = altar_xom")
+    e.kfeat("< = exit_xom_arena")
+    local f_col = "red"
+
+    -- Pillars: 40% trees, 40% crystal, 15% gimmick statues, 5% permaglass.
+    if crawl.x_chance_in_y(2, 5) then
+      e.kfeat("S = demonic_tree")
+    elseif crawl.x_chance_in_y(2, 3) then
+      e.kfeat("S = b")
+      if crawl.coinflip() then
+        e.tile("S = bedevilled_crystal_pandemonium / bedevilled_crystal_abyss w:5")
+        e.set_feature_name("crystal_wall", "bedevilled crystal wall")
+      else
+        e.tile("S = dngn_crystal_lightgray")
+      end
+    elseif crawl.one_chance_in(4) then
+      e.subst("S = o")
+    elseif crawl.coinflip() then
+      vault_granite_statue_setup(e, "S", "scintillating statue")
+    else
+      vault_metal_statue_setup(e, "S", "misfortune conduit")
+    end
+
+    -- Xom's spectators... who restlessly wander around anyway.
+    e.kprop("1` = no_tele_into")
+    e.kmask("1`< = no_monster_gen")
+    e.ftile("1` = floor_demonic_darkgray")
+    local g = "generate_awake att:good_neutral"
+    e.mons(g .. " laughing skull w:12 / " .. g .. " crimson imp / " ..
+           g .. " ugly thing w:8 / " .. g .. " iron imp w:8 / " ..
+           g .. " demonspawn w:4 / " .. g .. " weeping skull w:2")
+
+    -- 33% of the time, provide an item reward for not running out the exit.
+    -- A separate 40% of the time, provide teleport traps to reposition with.
+    if crawl.one_chance_in(3) then
+      e.kitem("d = potion of berserk rage pre_id / potion of ambrosia pre_id / " ..
+                  "scroll of immolation pre_id / scroll of poison pre_id / " ..
+                  "any beam wand charges:1 pre_id / any hex wand charges:1 pre_id")
+    else
+      e.subst("$d = .")
+    end
+    e.kfeat("? = trap_teleport_permanent")
+    e.subst("? : ??...")
+
+    -- On the !, ^, and ~ glyphs:
+    -- 10% gimmicks: 5% seething chaos, 2.5% traps, 2.5% toadstools.
+    -- 90% decoration: fountains / trash / blood buckets / food.
+    if you.xl() > 3 and crawl.one_chance_in(10) then
+      if crawl.coinflip() then
+        e.kfeat("! = fountain_eyes")
+        e.lua_marker("!",
+            fog_machine { cloud_type = "seething chaos", size = 3,
+                          pow_max = 16, delay_min = 80, delay_max = 120,
+                          start_clouds = 1, excl_rad = -1, walk_dist = 1 })
+        e.subst("^~ = .")
+      elseif crawl.coinflip() then
+        if you.xl() > 18 and crawl.x_chance_in_y(you.xl() / 3, 27) then
+          e.kfeat("! = trap_zot")
+          e.subst("^~ = .")
+        else
+          e.kfeat("^ : trap_harlequin w:20 / trap_dispersal")
+          e.subst("!~ = .")
+        end
+        local z = math.max(0, you.xl() - 9)
+      else
+        e.kmons("!^~ = toadstool")
+      end
+    else
+      if crawl.one_chance_in(3) then
+        e.subst("^ = U")
+        e.subst("!~ = .")
+      elseif crawl.coinflip() then
+        decorative_floor(e, '!', "bloodied mop and bucket")
+        e.subst("^~ = ;")
+        e.kprop("; = bloody")
+        f_col = "lightred"
+      elseif crawl.one_chance_in(3) then
+        e.kfeat("^ = cache_of_fruit / cache_of_meat / cache_of_baked_goods")
+        e.subst("! = ^.., ~ = ^....")
+      else
+        e.kfeat("! = abandoned_shop")
+        decorative_floor(e, '^~', "assortment of trash")
+        f_col = "lightred"
+      end
+    end
+
+    -- Set up the rest of the surrounding tile arrangements.
+    e.kfeat("yz = v")
+    e.shuffle("vz / zv / vy / yv")
+    e.tile("v = metal_wall_xom_a")
+    e.tile("y = metal_wall_xom_b")
+    e.tile("z = metal_wall_xom_c")
+    e.tile("o = clear_permarock_chaos")
+    e.ftile("o = floor_nerves_darkgray")
+    e.lfloortile("floor_demonic_" .. f_col)
+    e.set_border_fill_type('metal_wall')
+    e.lua_marker("v", props_marker { veto_destroy="veto" })
+
+    -- With no traceable depth for the portal itself, use an XL check like
+    -- most other Xom effects for Shadow Creatures & scrolls of summoning.
+    local l_xl = math.max(0, 18 - you.xl())
+    local h_xl = math.min(0, (you.xl() - 16) * 3)
+    local mlist = "common demon / ugly thing"
+    e.set_random_mon_list("lesser demon w:" .. l_xl .. " / common demon w:" .. l_xl .. " / " ..
+                          "ugly thing w:" .. l_xl .. " / shapeshifter / " ..
+                          "glowing shapeshifter / very ugly thing w:" .. h_xl .. " / " ..
+                          "shadow demon w:" .. h_xl .. " / tentacled monstrosity w:" .. h_xl)
+end
+}}
+
+##############################################################################
+# Xom arena maps.
+# Each map doesn't bother with terrain randomization itself, but should use
+# the setup function for creating decoration / gimmick zones as well as the
+# spectator / item / pillar set-up. Exits should be a bit far from the start
+# and require opening three seperate doors to leave through.
+#
+
+NAME: xom_arena_diamond
+: xom_arena_setup(_G)
+MAP
+        vvvvv
+      vvv`1`vvv
+      z``ooo``v
+     zz1oo_oo1vv
+    zz`oo$d$oo`vv
+   zz`oo.....oo`zv
+  zz``o~..S..~o``vv
+ vz``oo^~...~^oo``vv
+ v`1oo~!^~?~^!~oo1`v
+vv`oo..^ooooo^..oo`vv
+v`oo...oo+o+oo...oo`v
+v1o_.ASo<o+o..S.._o1v
+v`oo...oo+o+oo...oo`v
+vv`oo..^ooooo^..oo`vv
+ v`1oo~!^~?~^!~oo1`v
+ vv``oo^~...~^oo``zv
+  vv``o~..S..~o``zz
+   vz`oo.....oo`zz
+    vv`oo$d$oo`zz
+     vv1oo_oo1zz
+      v``ooo``z
+      vvv`1`vvv
+        vvvvv
+ENDMAP
+
+NAME: xom_arena_sandwich
+: xom_arena_setup(_G)
+MAP
+     vvvvvvvvvvvvv
+   vvz1z`z1z1z`z1zvv
+ vvz1`````````````1zvv
+vz````ooooooooooo````zv
+v```ooo$..?~...$ooo```v
+v`ooooo.S.~^~.S.o+ooo`v
+v1o1oo_.A.^!^..d+o+<o1v
+v`ooooo.S.~^~.S.o+ooo`v
+v```ooo$...~?..$ooo```v
+vz````ooooooooooo````zv
+ vvz1`````````````1zvv
+   vvz1z`z1z1z`z1zvv
+     vvvvvvvvvvvvv
+ENDMAP
+
+NAME:  xom_arena_cent
+: xom_arena_setup(_G)
+KPROP: _ = no_tele_into
+MAP
+         vvzvzvv
+        vz``1``zv
+        v`ooooo`vv
+        v`o_o_o``zv
+    vvvvz`oo+oo`z`vvz
+    v1```1o+o+o1```1v
+    v`ooooooooooooo`v
+ vvvz`o$.d~.?.~..$o`vvvv
+vz```1o.S~~.S.~~S.o1```zv
+v`ooooo.~~!^.^!~~.ooooo`v
+v`o<o+o..S^...^S..o+o<o`v
+v1oo+o+.....A.....+o+oo1v
+v`o<o+o..S^...^S..o+o<o`v
+v`ooooo.~~!^.^!~~.ooooo`v
+vz```1o.S~~.S.~~S.o1```zv
+ vvvz`o$..~.?.~d.$o`zvvv
+    v`ooooooooooooo`v
+    v1```1o+o+o1```1v
+    zvv`z`oo+oo`zvvvv
+      vz``o_o_o`v
+       vv`ooooo`v
+        vz``1``zv
+         vvzvzvv
+ENDMAP
+
+NAME: xom_arena_jacks
+: xom_arena_setup(_G)
+MAP
+                vvv
+              zvv`vvv
+      zzz    zv`````zzv
+    vzz1zzvvzv`1ooo1``v
+    v`````1````oo+ooo`v
+   zz`oooooooooo+o+<o`v
+   z1`o...S~...~o+ooo`v
+   zz`o.A...~^~.ooo1``v
+    z`o.....^!^.o```zzv
+    v1oS.._..^~.o`vvv
+    v`o~...S...~o`v
+  vvv`o.~^.._..So1v
+vzz```o.^!^...$do`z
+v``1ooo.~^~..$?$o`zz
+v`ooo+o~...~Sd$.o`1z
+v`o<+o+oooooooooo`zz
+v`ooo+oo````1`````v
+v``1ooo1`vzvvzz1zzv
+vzz`````vz    zzz
+  vvv`vvz
+    vvv
+ENDMAP

@@ -65,3 +65,19 @@ bool is_level_on_stack(level_id lev)
 
     return false;
 }
+
+// Returns true if the player is either in a branch or the branch is somewhere
+// on the level stack above them.
+bool player_in_branch_recursive(branch_type branch)
+{
+    // First, the trivial check.
+    if (player_in_branch(branch))
+        return true;
+
+    // Then check all levels on the stack to see if any match this branch
+    for (const level_pos& lv : you.level_stack)
+        if (lv.id.branch == branch)
+            return true;
+
+    return false;
+}

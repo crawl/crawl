@@ -444,6 +444,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_BAZAAR:
     case DNGN_EXIT_TROVE:
     case DNGN_EXIT_ARENA:
+    case DNGN_EXIT_XOM_ARENA:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_NECROPOLIS:
         return TILE_DNGN_EXIT_NECROPOLIS;
@@ -1928,9 +1929,236 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
     return TILEP_ERROR;
 }
 
-/// What tile should be used for a given derived undead monster?
-static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
+/**
+ * For a given monster, what tile is appropriate for that monster if it's a
+ * mannequin?
+ *
+ * @param mon   The monster in question.
+ * @return      An appropriate mannequin tile; e.g. TILEP_MONS_ZOMBIE_DRAGON.
+ */
+static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
 {
+    const monster_type subtype = mon.base_type;
+
+    // hydras get special casing
+    if (mons_genus(subtype) == MONS_HYDRA)
+        return TILEP_MONS_MANNEQUIN_HYDRA + min(mon.num_heads, 5) - 1;
+
+    if (mons_base_char(mon.base_type) == 'z')
+        return TILEP_MONS_MANNEQUIN_SKELETON;
+
+    switch (mons_demon_tier(subtype))
+    {
+        case 1:
+        case 2:
+            return mons_class_flag(subtype, M_FLIES) ? TILEP_MONS_MANNEQUIN_GREATER_DEMON_WINGED
+                                                     : TILEP_MONS_MANNEQUIN_GREATER_DEMON;
+
+        case 3:
+        case 4:
+            return mons_class_flag(subtype, M_FLIES) ? TILEP_MONS_MANNEQUIN_COMMON_DEMON_WINGED
+                                                     : TILEP_MONS_MANNEQUIN_COMMON_DEMON;
+
+        case 5:
+            return TILEP_MONS_MANNEQUIN_MINOR_DEMON;
+
+        default:
+        break;
+    }
+
+    // specific per-species zombies - use to override genuses
+    static const map<monster_type, tileidx_t> species_tiles = {
+        { MONS_BOMBARDIER_BEETLE,           TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_BOULDER_BEETLE,              TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_DEATH_SCARAB,                TILEP_MONS_MANNEQUIN_BEETLE },
+
+        { MONS_CATOBLEPAS,                  TILEP_MONS_MANNEQUIN_CATOBLEPAS },
+
+        { MONS_CRYSTAL_GUARDIAN,            TILEP_MONS_MANNEQUIN_CRYSTAL },
+        { MONS_SCREAMING_REFRACTION,        TILEP_MONS_MANNEQUIN_CRYSTAL },
+        { MONS_CRYSTAL_ECHIDNA,             TILEP_MONS_MANNEQUIN_CRYSTAL },
+
+        { MONS_DRACONIAN_ANNIHILATOR,       TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+        { MONS_DRACONIAN_KNIGHT,            TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+        { MONS_DRACONIAN_MONK,              TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+        { MONS_DRACONIAN_SCORCHER,          TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+        { MONS_DRACONIAN_SHIFTER,           TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+        { MONS_DRACONIAN_STORMCALLER,       TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
+
+        { MONS_JUGGERNAUT,                  TILEP_MONS_MANNEQUIN_JUGGERNAUT },
+        { MONS_GUARDIAN_SERPENT,            TILEP_MONS_MANNEQUIN_GUARDIAN_SERPENT },
+        { MONS_MOUNTAINSHELL,               TILEP_MONS_MANNEQUIN_TURTLE },
+
+        { MONS_FIRE_GIANT,                  TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+        { MONS_FROST_GIANT,                 TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+        { MONS_IRON_GIANT,                  TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+        { MONS_PROTEAN_PROGENITOR,          TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+        { MONS_TAINTED_LEVIATHAN,           TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+        { MONS_TITAN,                       TILEP_MONS_MANNEQUIN_GIANT_ELEMENTAL },
+
+        { MONS_ARCANIST,                    TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_BURIAL_ACOLYTE,              TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_CLOUD_MAGE,                  TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_HELLBINDER,                  TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_NECROMANCER,                 TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_OCCULTIST,                   TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_RAGGED_HIEROPHANT,           TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+        { MONS_SERVANT_OF_WHISPERS,         TILEP_MONS_MANNEQUIN_HUMAN_MAGE },
+
+        { MONS_VAULT_GUARD,                 TILEP_MONS_MANNEQUIN_IRONBOUND },
+        { MONS_VAULT_WARDEN,                TILEP_MONS_MANNEQUIN_IRONBOUND },
+        { MONS_IRONBOUND_BEASTMASTER,       TILEP_MONS_MANNEQUIN_IRONBOUND },
+        { MONS_IRONBOUND_CONVOKER,          TILEP_MONS_MANNEQUIN_IRONBOUND },
+        { MONS_IRONBOUND_FROSTHEART,        TILEP_MONS_MANNEQUIN_IRONBOUND },
+        { MONS_IRONBOUND_PRESERVER,         TILEP_MONS_MANNEQUIN_IRONBOUND },
+
+        { MONS_MELIAI,                      TILEP_MONS_MANNEQUIN_MELIAI},
+
+        { MONS_CRAWLING_FLESH_CAGE,         TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_RUSTED_INSPECTOR,            TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_IRON_ELEMENTAL,              TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_IRON_GOLEM,                  TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_LIGHTNING_SPIRE,             TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_PEACEKEEPER,                 TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+        { MONS_WAR_GARGOYLE,                TILEP_MONS_MANNEQUIN_METAL_CONSTRUCT },
+
+        { MONS_QUICKSILVER_DRAGON,          TILEP_MONS_MANNEQUIN_QUICKSILVER_DRAGON },
+
+        { MONS_SKELETAL_WARRIOR,            TILEP_MONS_MANNEQUIN_SKELETON },
+        { MONS_ANCIENT_CHAMPION,            TILEP_MONS_MANNEQUIN_SKELETON },
+
+        { MONS_WEEPING_SKULL,               TILEP_MONS_MANNEQUIN_SKULL },
+        { MONS_LAUGHING_SKULL,              TILEP_MONS_MANNEQUIN_SKULL },
+        { MONS_CURSE_SKULL,                 TILEP_MONS_MANNEQUIN_SKULL },
+
+        { MONS_SALTLING,                    TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_EARTH_ELEMENTAL,             TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_USHABTI,                     TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_GARGOYLE,                    TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_MOLTEN_GARGOYLE,             TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_TOENAIL_GOLEM,               TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+
+        { MONS_TWO_HEADED_OGRE,             TILEP_MONS_MANNEQUIN_TWO_HEADED },
+        { MONS_ETTIN,                       TILEP_MONS_MANNEQUIN_TWO_HEADED },
+
+        { MONS_ANCIENT_ZYME,                TILEP_MONS_MANNEQUIN_UGLY_THING },
+        { MONS_TENTACLED_MONSTROSITY,       TILEP_MONS_MANNEQUIN_UGLY_THING },
+        { MONS_TENTACLED_STARSPAWN,         TILEP_MONS_MANNEQUIN_UGLY_THING },
+        { MONS_THRASHING_HORROR,            TILEP_MONS_MANNEQUIN_UGLY_THING },
+
+        { MONS_DREAM_SHEEP,                 TILEP_MONS_MANNEQUIN_YAK },
+        { MONS_ICE_BEAST,                   TILEP_MONS_MANNEQUIN_YAK },
+
+        { MONS_ORB_GUARDIAN,                TILEP_MONS_MANNEQUIN_X },
+        { MONS_UNSEEN_HORROR,               TILEP_MONS_MANNEQUIN_X },
+
+        { MONS_CURSE_TOE,                   TILEP_MONS_MANNEQUIN_ZOMBIE },
+        { MONS_COGNITOGAUNT,                TILEP_MONS_MANNEQUIN_ZOMBIE },
+        { MONS_WIGHT,                       TILEP_MONS_MANNEQUIN_ZOMBIE },
+    };
+    // per-genus zombies - use by default
+    static const map<monster_type, tileidx_t> genus_tiles = {
+        { MONS_ANGEL,                   TILEP_MONS_MANNEQUIN_ANGEL },
+        { MONS_BEAR,                    TILEP_MONS_MANNEQUIN_BEAR },
+        { MONS_KILLER_BEE,              TILEP_MONS_MANNEQUIN_BEE },
+        { MONS_SCORPION,                TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_CENTAUR,                 TILEP_MONS_MANNEQUIN_CENTAUR },
+        { MONS_CRAB,                    TILEP_MONS_MANNEQUIN_CRAB },
+        { MONS_DRACONIAN,               TILEP_MONS_MANNEQUIN_DRACONIAN },
+        { MONS_DRAKE,                   TILEP_MONS_MANNEQUIN_DRAKE },
+        { MONS_WYVERN,                  TILEP_MONS_MANNEQUIN_DRAKE },
+        { MONS_DRAGON,                  TILEP_MONS_MANNEQUIN_DRAGON },
+        { MONS_ELEPHANT,                TILEP_MONS_MANNEQUIN_ELEPHANT },
+        { MONS_ELF,                     TILEP_MONS_MANNEQUIN_ELF },
+        { MONS_FLOATING_EYE,            TILEP_MONS_MANNEQUIN_EYE },
+        { MONS_FAUN,                    TILEP_MONS_MANNEQUIN_FAUN },
+        { MONS_FROG,                    TILEP_MONS_MANNEQUIN_FROG },
+        { MONS_FUNGUS,                  TILEP_MONS_MANNEQUIN_FAUN },
+        { MONS_GNOLL,                   TILEP_MONS_MANNEQUIN_GNOLL },
+        { MONS_GOBLIN,                  TILEP_MONS_MANNEQUIN_GOBLIN },
+        { MONS_HARPY,                   TILEP_MONS_MANNEQUIN_BIRD },
+        { MONS_HIPPOGRIFF,              TILEP_MONS_MANNEQUIN_BIRD },
+        { MONS_HOBGOBLIN,               TILEP_MONS_MANNEQUIN_GOBLIN },
+        { MONS_HOG,                     TILEP_MONS_MANNEQUIN_HOG },
+        { MONS_HORNET,                  TILEP_MONS_MANNEQUIN_HORNET },
+        { MONS_HOUND,                   TILEP_MONS_MANNEQUIN_HOUND },
+        { MONS_HUMAN,                   TILEP_MONS_MANNEQUIN_HUMAN },
+        { MONS_KOBOLD,                  TILEP_MONS_MANNEQUIN_KOBOLD },
+        { MONS_LICH,                    TILEP_MONS_MANNEQUIN_LICH },
+        { MONS_GIANT_LIZARD,            TILEP_MONS_MANNEQUIN_LIZARD },
+        { MONS_MERFOLK,                 TILEP_MONS_MANNEQUIN_MERFOLK },
+        { MONS_MINOTAUR,                TILEP_MONS_MANNEQUIN_MINOTAUR },
+        { MONS_MOTH,                    TILEP_MONS_MANNEQUIN_MOTH },
+        { MONS_MUMMY,                   TILEP_MONS_MANNEQUIN_MUMMY },
+        { MONS_NAGA,                    TILEP_MONS_MANNEQUIN_NAGA },
+        { MONS_OGRE,                    TILEP_MONS_MANNEQUIN_OGRE },
+        { MONS_ONI,                     TILEP_MONS_MANNEQUIN_OGRE },
+        { MONS_ORC,                     TILEP_MONS_MANNEQUIN_ORC },
+        { MONS_PLANT,                   TILEP_MONS_MANNEQUIN_PLANT },
+        { MONS_RAT,                     TILEP_MONS_MANNEQUIN_RODENT },
+        { MONS_QUOKKA,                  TILEP_MONS_MANNEQUIN_RODENT },
+        { MONS_SALAMANDER,              TILEP_MONS_MANNEQUIN_SALAMANDER },
+        { MONS_REVENANT,                TILEP_MONS_MANNEQUIN_SKELETON },
+        { MONS_RIBBON_WORM,             TILEP_MONS_MANNEQUIN_SLUG },
+        { MONS_SPIDER,                  TILEP_MONS_MANNEQUIN_SPIDER },
+        { MONS_SPRIGGAN,                TILEP_MONS_MANNEQUIN_SPRIGGAN },
+        { MONS_STATUE,                  TILEP_MONS_MANNEQUIN_STONE_CONSTRUCT },
+        { MONS_TROLL,                   TILEP_MONS_MANNEQUIN_TROLL },
+        { MONS_TENGU,                   TILEP_MONS_MANNEQUIN_TENGU },
+        { MONS_SNAPPING_TURTLE,         TILEP_MONS_MANNEQUIN_TURTLE },
+        { MONS_UGLY_THING,              TILEP_MONS_MANNEQUIN_UGLY_THING },
+        { MONS_YAK,                     TILEP_MONS_MANNEQUIN_YAK },
+        { MONS_YAKTAUR,                 TILEP_MONS_MANNEQUIN_YAKTAUR },
+        { MONS_VAMPIRE,                 TILEP_MONS_MANNEQUIN_VAMPIRE },
+        { MONS_WALKING_TOME,            TILEP_MONS_MANNEQUIN_WALKING_TOME },
+        { MONS_MANTICORE,               TILEP_MONS_MANNEQUIN_WINGED_CAT },
+        { MONS_SPHINX,                  TILEP_MONS_MANNEQUIN_WINGED_CAT },
+        { MONS_GHOUL,                   TILEP_MONS_MANNEQUIN_ZOMBIE },
+        { MONS_ABOMINATION_SMALL,       TILEP_MONS_MANNEQUIN_ZOMBIE },
+    };
+
+    struct shape_size_tiles
+    {
+        tileidx_t small; ///< Z_SMALL and default tile
+        tileidx_t big;   ///< Z_BIG tile
+    };
+    static const map<mon_body_shape, shape_size_tiles> shape_tiles = {
+        { MON_SHAPE_BAT,                {TILEP_MONS_MANNEQUIN_BAT} },
+        { MON_SHAPE_BIRD,               {TILEP_MONS_MANNEQUIN_BIRD} },
+        { MON_SHAPE_FISH,               {TILEP_MONS_MANNEQUIN_FISH} },
+        { MON_SHAPE_SNAKE,              {TILEP_MONS_MANNEQUIN_SNAKE} },
+        { MON_SHAPE_SNAIL,              {TILEP_MONS_MANNEQUIN_SLUG} },
+        { MON_SHAPE_BLOB,               {TILEP_MONS_MANNEQUIN_JELLY}},
+        { MON_SHAPE_HUMANOID,           {TILEP_MONS_MANNEQUIN_HUMAN, TILEP_MONS_MANNEQUIN_HUMANOID_LARGE} },
+    };
+
+    const tileidx_t *subtype_tile = map_find(species_tiles, subtype);
+    if (subtype_tile)
+        return *subtype_tile;
+
+    const tileidx_t *genus_tile = map_find(genus_tiles, mons_genus(subtype));
+    if (genus_tile)
+        return *genus_tile;
+
+    const bool big = mons_class_body_size(subtype) > SIZE_MEDIUM;
+    const shape_size_tiles *shape_tile_pair
+        = map_find(shape_tiles, get_mon_shape(subtype));
+    if (shape_tile_pair)
+    {
+        if (big && shape_tile_pair->big)
+            return shape_tile_pair->big;
+        return shape_tile_pair->small;
+    }
+
+    return TILEP_MONS_MANNEQUIN_HUMAN;
+}
+
+/// What tile should be used for a given derived monster?
+static tileidx_t _tileidx_monster_derived(const monster_info& mon)
+{
+    if (mon.type == MONS_MANNEQUIN)
+        return _mon_to_mannequin_tile(mon);
+
     const tileidx_t zombie_tile = _mon_to_zombie_tile(mon);
     switch (mon.type)
     {
@@ -2049,6 +2277,31 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
 
     case MONS_SEISMOSAURUS_EGG:
         return tileidx_mon_clamp(TILEP_MONS_SEISMOSAURUS_EGG, number);
+
+    case MONS_CHAOS_BATTLESHAPE:
+    {
+        switch (number)
+        {
+            default:
+            case 0:
+            case 1:
+                return TILEP_MONS_BATTLEPYRAMID;
+
+            case 2:
+            case 3:
+                return TILEP_MONS_BATTLECUBE;
+
+            case 4:
+            case 5:
+                return TILEP_MONS_BATTLEOCTAHEDRON;
+
+            case 6:
+                return TILEP_MONS_BATTLEDODECAHEDRON;
+
+            case 7:
+                return TILEP_MONS_BATTLEBIFRUSTUM;
+        }
+    }
 
     // draconian ('d')
     case MONS_TIAMAT:
@@ -2276,8 +2529,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         return (tileidx_t)mon.props[MONSTER_TILE_KEY].get_int();
 
     // Show only base class for detected monsters.
-    if (mons_class_is_zombified(mon.type))
-        return _tileidx_monster_zombified(mon);
+    if (mons_class_is_derived(mon.type))
+        return _tileidx_monster_derived(mon);
 
     int tile_num = 0;
     if (mon.props.exists(TILE_NUM_KEY))
@@ -2858,6 +3111,8 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_KNOWN_INVIS, TILEI_UNSEEN_INVIS_KNOWN },
     { MB_INVISIBLE, TILEI_SEEN_INVIS },
     { MB_DIVINE_SHIELD, TILEI_DIVINE_SHIELD },
+    { MB_GUARDIAN, TILEI_GUARDIAN },
+    { MB_MAYBE_FAKE, TILEI_MAYBE_FAKE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2890,6 +3145,7 @@ static const map<duration_type, pair<tileidx_t, string>> player_status_icons = {
     { DUR_VITRIFIED, {TILEI_VITRIFIED, "fragile"} },
     { DUR_LOWERED_WL, {TILEI_WEAK_WILLED, "will/2"} },
     { DUR_SENTINEL_MARK, {TILEI_SENTINEL_MARK, "mark"} },
+    { DUR_CONF, {TILEI_CONFUSED, "conf"} },
 
     // Less critical or positive effects (or ones already covered by a default
     // force_more_message). Not enabled by default.
@@ -2978,6 +3234,9 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
 tileidx_t tileidx_player_mons()
 {
     ASSERT(player_uses_monster_tile());
+
+    if (you.duration[DUR_DISGUISED])
+        return static_cast<tileidx_t>(you.props[XOM_DISGUISE_APPEARANCE_KEY].get_int());
 
     if (you.duration[DUR_EXECUTION])
         return TILEP_MONS_EXECUTIONER;
@@ -4705,6 +4964,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IGNIS_FOXFIRE;
     case ABIL_IGNIS_RISING_FLAME:
         return TILEG_ABILITY_IGNIS_RISING_FLAME;
+    // Xom
+    case ABIL_XOM_CHAOS_EISEGESIS:
+        if (you.props.exists(EISEGESIS_SPELL))
+            return tileidx_spell(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int()));
+        else
+            return TILEG_ABILITY_SIF_MUNA_EXEGESIS;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
@@ -4800,6 +5065,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_DESOLATION;
     case BRANCH_ARENA:
         return TILE_DNGN_ALTAR_OKAWARU;
+    case BRANCH_XOM_ARENA:
+        return TILE_DNGN_ALTAR_XOM;
     case BRANCH_CRUCIBLE:
         return TILE_DNGN_ALTAR_MAKHLEB;
     default:

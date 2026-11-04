@@ -78,8 +78,6 @@ public:
 
     bool would_prompt_player();
 
-    static void chaos_affect_actor(actor *victim);
-
     bool player_do_aux_attack(unarmed_attack_type atk);
     bool do_drag();
 
@@ -213,6 +211,8 @@ private:
     bool _extra_aux_attack(unarmed_attack_type atk);
 
     bool can_reach(int dist);
+
+    brand_type xom_extra_brand() const;
 
     item_def *primary_weapon() const;
     item_def *offhand_weapon() const;

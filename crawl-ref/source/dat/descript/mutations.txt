@@ -1308,7 +1308,7 @@ increased by your Shapeshifting skill.
 The type of cloud created depends on the potion drank:
 
  Mist and Curing: Blinding Haze\n
-Berserk Rage: Flame\n
+Berserk: Flame\n
 Mutation: Mutagenic Fog\n
 All Others: Noxious Fumes\n
 %%%%

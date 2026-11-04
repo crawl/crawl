@@ -210,8 +210,12 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
 
     if (feat_is_portal(stair))
     {
-        if (stair != DNGN_ENTER_CRUCIBLE)
+        if (stair != DNGN_ENTER_CRUCIBLE
+            && stair != DNGN_ENTER_ARENA
+            && stair != DNGN_ENTER_XOM_ARENA)
+        {
             mpr("The world spins around you as you enter the gateway.");
+        }
     }
     else if (feat_is_escape_hatch(stair))
     {
@@ -254,6 +258,25 @@ static void _remove_unstable_monsters()
     }
 }
 
+static void _transit_xom_followers(level_id destination)
+{
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_GUARDIAN)
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mons_is_xom_guardian(**mi))
+            {
+                mi->set_transit(destination);
+                monster_die(**mi, KILL_RESET, NON_MONSTER);
+            }
+        }
+    }
+
+    // No pulling mannequins between floors, even if you do it during the delay
+    // between killing and gifting.
+    you.props.erase(XOM_MANNEQUIN_TROUPE);
+}
+
 static void _complete_zig()
 {
     if (!zot_immune())
@@ -261,7 +284,7 @@ static void _complete_zig()
     you.zigs_completed++;
 }
 
-void leaving_level_now(dungeon_feature_type stair_used)
+void leaving_level_now(dungeon_feature_type stair_used, level_id destination)
 {
     if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
@@ -291,6 +314,14 @@ void leaving_level_now(dungeon_feature_type stair_used)
     end_terrain_changes(TERRAIN_CHANGE_GOLUBRIA);
     _remove_unstable_monsters();
     cancel_pending_lurkers();
+    _transit_xom_followers(destination);
+
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK])
+    {
+        end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL);
+        god_speaks(GOD_XOM, getSpeakString("Xom sneaky congratulations").c_str());
+        you.attribute[ATTR_XOM_FLOOR_LOCK] = 0;
+    }
 
     // Allow players to be interrupted by sensed monsters on their return to this level.
     for (monster_iterator mi; mi; ++mi)
@@ -828,7 +859,7 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // Fire level-leaving trigger.
-    leaving_level_now(how);
+    leaving_level_now(how, whither);
 
     // Determine this now so the milestones and notes report the correct
     // destination floor.
@@ -893,6 +924,8 @@ void floor_transition(dungeon_feature_type how,
     {
         mpr("Thank you for visiting Hell. Please come again soon.");
     }
+    else if (old_level.branch == BRANCH_XOM_ARENA)
+        mprf("You exit %s.", getMiscString("xom_arena_name").c_str());
 
     if (how == DNGN_EXIT_ABYSS
         || how == DNGN_EXIT_PANDEMONIUM

@@ -310,10 +310,9 @@ static void _fill_doll_equipment_default(dolls_data& result)
     }
 }
 
-void fill_doll_equipment(dolls_data &result)
+static void _fill_doll_from_form(dolls_data &result)
 {
     tileidx_t ch;
-
     switch (you.form)
     {
     case transformation::spider:
@@ -323,7 +322,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_SPIDER;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::statue:
         switch (you.species)
         {
@@ -340,7 +340,8 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
-        break;
+        return;
+
     case transformation::serpent:
         if (you.species == SP_FELID)
             ch = TILEP_TRAN_SERPENT_FELID;
@@ -350,7 +351,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_SERPENT;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::dragon:
     {
         switch (you.species)
@@ -370,8 +372,9 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
     }
+    return;
+
     case transformation::death:
         switch (you.species)
         {
@@ -397,7 +400,8 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BODY]    = 0;
         result.parts[TILEP_PART_ARM]     = 0;
         result.parts[TILEP_PART_CLOAK]   = 0;
-        break;
+        return;
+
     case transformation::bat:
         if (you.species == SP_GARGOYLE)
             ch = TILEP_TRAN_BAT_GARGOYLE;
@@ -405,7 +409,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_BAT;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
 #if TAG_MAJOR_VERSION == 34
     case transformation::porcupine:
 #endif
@@ -416,7 +421,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_PIG;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::tree:
         result.parts[TILEP_PART_BASE]    = TILEP_TRAN_TREE;
         result.parts[TILEP_PART_HELM]    = 0; // fixme, should show up
@@ -425,19 +431,23 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BEARD]   = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
-        break;
+        return;
+
     case transformation::wisp:
         result.parts[TILEP_PART_BASE] = TILEP_TRAN_WISP;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::jelly:
         result.parts[TILEP_PART_BASE] = TILEP_TRAN_JELLY;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::fungus:
         result.parts[TILEP_PART_BASE] = TILEP_TRAN_MUSHROOM;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::storm:
         switch (you.species)
         {
@@ -447,7 +457,8 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::quill:
         result.parts[TILEP_PART_HAIR] = 0;
         if (you.species == SP_FELID)
@@ -469,7 +480,8 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_LEG] = 0;
             result.parts[TILEP_PART_HELM] = ch;
         }
-        break;
+        return;
+
     case transformation::maw:
         _fill_doll_equipment_default(result);
         if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)
@@ -480,7 +492,8 @@ void fill_doll_equipment(dolls_data &result)
             const unsigned int count = tile_player_count(maw);
             result.parts[TILEP_PART_BODY] = maw + you.frame_no % count;
         }
-        break;
+        return;
+
     case transformation::flux:
         switch (you.species)
         {
@@ -496,7 +509,8 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_BODY] = TILEP_TRAN_FLUX_HUMANOID;
             break;
         }
-        break;
+        return;
+
     case transformation::eel_hands:
         switch (you.species)
         {
@@ -510,7 +524,8 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_EEL_FORM_HUMANOID;
             break;
         }
-        break;
+        return;
+
     case transformation::blade:
         switch (you.species)
         {
@@ -524,7 +539,8 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLADE_FORM_HUMANOID;
             break;
         }
-        break;
+        return;
+
     case transformation::spore:
         switch (you.species)
         {
@@ -547,7 +563,8 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_HUMANOID;
             break;
         }
-        break;
+        return;
+
     case transformation::slaughter:
     {
         switch (you.species)
@@ -561,8 +578,9 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
     }
+    return;
+
     case transformation::vampire:
         switch (you.species)
         {
@@ -588,7 +606,8 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BODY]    = 0;
         result.parts[TILEP_PART_ARM]     = 0;
         result.parts[TILEP_PART_CLOAK]   = 0;
-        break;
+        return;
+
     case transformation::bat_swarm:
         if (you.species == SP_GARGOYLE)
             ch = TILEP_TRAN_BAT_SWARM_GARGOYLE;
@@ -596,7 +615,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_BAT_SWARM;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::rime_yak:
         if (you.species == SP_GARGOYLE)
             ch = TILEP_TRAN_RIME_YAK_GARGOYLE;
@@ -604,7 +624,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_RIME_YAK;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::hive:
         switch (you.species)
         {
@@ -619,7 +640,8 @@ void fill_doll_equipment(dolls_data &result)
             break;
         }
         result.parts[TILEP_PART_HAIR] = 0;
-        break;
+        return;
+
     case transformation::aqua:
         switch (you.species)
         {
@@ -633,7 +655,8 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
-        break;
+        return;
+
     case transformation::sphinx:
         if (you.species == SP_FELID)
             ch = TILEP_TRAN_SPHINX_FELID;
@@ -650,7 +673,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_SPHINX;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::werewolf:
         switch (you.species)
         {
@@ -665,11 +689,13 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_BASE]    = ch;
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
-        break;
+        return;
+
     case transformation::walking_scroll:
         result.parts[TILEP_PART_BASE] = TILEP_TRAN_WALKING_SCROLL;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::sun_scarab:
         if (you.species == SP_GARGOYLE)
             ch = TILEP_TRAN_SUN_SCARAB_GARGOYLE;
@@ -677,7 +703,8 @@ void fill_doll_equipment(dolls_data &result)
             ch = TILEP_TRAN_SUN_SCARAB;
         result.parts[TILEP_PART_BASE] = ch;
         _fill_doll_equipment_all_melded(result);
-        break;
+        return;
+
     case transformation::medusa:
         switch (you.species)
         {
@@ -697,7 +724,8 @@ void fill_doll_equipment(dolls_data &result)
             break;
         }
         result.parts[TILEP_PART_HAIR] = 0;
-        break;
+        return;
+
     case transformation::vision:
         switch (you.species)
         {
@@ -712,7 +740,8 @@ void fill_doll_equipment(dolls_data &result)
             break;
         }
         result.parts[TILEP_PART_HAIR] = 0;
-        break;
+        return;
+
     case transformation::jademantle:
     {
         const bool charged = jademantle_is_fully_charged();
@@ -742,7 +771,8 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_HAIR] = 0;
     }
-        break;
+    return;
+
     case transformation::hypnogecko:
         switch (you.species)
         {
@@ -760,7 +790,8 @@ void fill_doll_equipment(dolls_data &result)
         if (you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
             result.parts[TILEP_PART_BASE]++;
         result.parts[TILEP_PART_LEG]     = 0;
-        break;
+        return;
+
     case transformation::mistmane:
         switch (you.species)
         {
@@ -775,11 +806,21 @@ void fill_doll_equipment(dolls_data &result)
             break;
         }
         result.parts[TILEP_PART_HAIR] = 0;
-        break;
+        return;
+
     default:
         _fill_doll_equipment_default(result);
-        break;
+        return;
     }
+}
+
+void fill_doll_equipment(dolls_data &result)
+{
+    // Certain statuses should override form-based player tiles.
+    if (player_uses_monster_tile(true))
+        _fill_doll_equipment_default(result);
+    else
+        _fill_doll_from_form(result);
 
     // XXX: The checks to hide pants per-species fail if they're not using a
     //      normal base species tile. But no form is going to *give* them pants,

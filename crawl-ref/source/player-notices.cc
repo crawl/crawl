@@ -116,6 +116,7 @@ static monster_type _mons_merge_genus(monster_type mc)
         case MONS_ZOMBIE:
         case MONS_SIMULACRUM:
         case MONS_DRAUGR:
+        case MONS_MANNEQUIN:
             return mons_genus(mc);
 
         default:
@@ -322,8 +323,8 @@ static string _describe_monsters_from_species(const vector<details> &species,
         {
             string name = det.name;
             const monster_type base_type =
-                mons_is_zombified(*(det.mon)) ? det.mon->base_monster
-                                              : det.mon->type;
+                det.mon->is_derived() ? det.mon->base_monster
+                                      : det.mon->type;
             // Treat all monsters with unique base types as named, since zombified
             // uniques keep their names.
             if ((det.mon->is_named() || mons_is_unique(base_type)) && det.count == 1)

@@ -272,10 +272,10 @@ void give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
     {
         you.religion = GOD_XOM;
-        you.raw_piety = 100;
-        int timeout_rnd = random2(40);
-        timeout_rnd += random2(40); // force a sequence point between random2s
-        you.gift_timeout = max(5, timeout_rnd);
+        // Guarantee the first few explore actions are positive to reduce
+        // hostile actions at the very start of the game.
+        you.gift_timeout = 4;
+        you.attribute[ATTR_XOM_BLESSING_TIMER] = 35;
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;

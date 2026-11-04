@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "attack.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
@@ -339,6 +340,7 @@ static void _iood_common_beam_setup(monster& orb, const coord_def& pos, bolt& be
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
+    beam.animate = false;
     beam.source_name = orb.props[IOOD_CASTER].get_string();
 }
 
@@ -620,60 +622,15 @@ move_again:
         {
             if (!victim->reflection())
             {
-                if (victim->is_player())
-                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
-                else
-                {
-                    simple_monster_message(*mons, (" blocks "
-                        + mon.name(DESC_THE, true) + ".").c_str());
-                }
+                if (you.see_cell(pos))
+                    mpr(block_event_string(victim, mon.name(DESC_THE, true)));
                 victim->shield_block_succeeded(&mon);
                 _iood_stop(mon);
                 return true;
             }
 
-            item_def *shield = victim->shield();
-            if (victim->is_player())
-            {
-                if (shield && shield_reflects(*shield))
-                {
-                    mprf("Your %s blocks %s... and reflects it back!",
-                         shield->name(DESC_PLAIN).c_str(),
-                         mon.name(DESC_THE, true).c_str());
-                }
-                else // has reflection property not from shield
-                {
-                    mprf("You block %s... and reflect it back!",
-                         mon.name(DESC_THE, true).c_str());
-                }
-            }
-            else if (you.see_cell(pos))
-            {
-                if (victim->observable())
-                {
-                    if (shield && shield_reflects(*shield))
-                    {
-                        mprf("%s blocks %s with %s %s... and reflects it back!",
-                             victim->name(DESC_THE, true).c_str(),
-                             mon.name(DESC_THE, true).c_str(),
-                             victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                             shield->name(DESC_PLAIN).c_str());
-                    }
-                    else
-                    {
-                        mprf("%s reflects off %s %s!",
-                             mon.name(DESC_THE, true).c_str(),
-                             victim->divinely_shielded() ? "the divine shield protecting"
-                                                         : "an invisible shield around",
-                             victim->name(DESC_THE, true).c_str());
-                    }
-                }
-                else
-                {
-                    mprf("%s bounces off of thin air!",
-                         mon.name(DESC_THE, true).c_str());
-                }
-            }
+            if (you.see_cell(pos))
+                mpr(block_event_string(victim, mon.name(DESC_THE, true), true));
             victim->shield_block_succeeded(&mon);
 
             // mid_t is unsigned so won't fit in a plain int

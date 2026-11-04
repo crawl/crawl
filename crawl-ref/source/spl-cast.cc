@@ -85,6 +85,7 @@
 #include "unwind.h"
 #include "view.h"
 #include "viewchar.h" // stringize_glyph
+#include "xom.h"
 
 static int _spell_enhancement(spell_type spell);
 static int _apply_enhancement(const int initial_power,
@@ -565,6 +566,10 @@ int raw_spell_fail(spell_type spell, bool enkindled, bool include_temp)
  */
 int calc_spell_power(spell_type spell)
 {
+    // Eisegesis completely ignores your skills and other bonuses
+    if (you.chaos_eisegesis)
+        return 15 + you.experience_level * 5;
+
     int power = _skill_power(spell);
 
     if (you.divine_exegesis)
@@ -1134,6 +1139,9 @@ void do_post_spellcast_effects(spell_type spell)
     if (you.props.exists(BATTLESPHERE_KEY) && battlesphere_can_mirror(spell))
         trigger_battlesphere(&you);
 
+    if (you.props.exists(CHAOS_BATTLESHAPE_KEY))
+        trigger_chaos_battleshape_spell(spell_difficulty(spell));
+
     if (will_have_passive(passive_t::shadow_spells))
         dithmenos_shadow_spell(spell);
 
@@ -1418,6 +1426,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_walls>(&you, find_ramparts_walls());
     case SPELL_DISPERSAL:
+        return make_unique<targeter_dispersal>(&you, range);
     case SPELL_DISJUNCTION:
     case SPELL_GLOOM:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
@@ -1852,8 +1861,11 @@ static vector<string> _desc_mercury_weak_chance(const monster_info& mi)
                             get_mercury_weaken_chance(mi.hd))};
 }
 
-static vector<string> _desc_warp_space_chance(int pow)
+static vector<string> _desc_warp_space_chance(const monster_info& mi, int pow)
 {
+    if (mi.is(MB_NO_TELE))
+        return vector<string>{"immune to blinking"};
+
     return vector<string>{make_stringf("chance to blink: %d%%",
                             get_warp_space_chance(pow))};
 }
@@ -1928,8 +1940,8 @@ static vector<string> _desc_rimeblight_valid(const monster_info& mi)
 static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
 {
     const int wl = mi.willpower();
-    if (mons_class_is_stationary(mi.type))
-        return vector<string>{"stationary"};
+    if (mi.is(MB_NO_TELE))
+        return vector<string>{"immune to dispersal"};
 
     if (wl == WILL_INVULN)
         return vector<string>{"will blink"};
@@ -2027,6 +2039,15 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
     return descs;
 }
 
+static vector<string> _desc_teleport_other_chance(const monster_info& mi,
+                                                  int pow, targeter* hitfunc)
+{
+    if (mi.is(MB_NO_TELE))
+        return vector<string>{"immune to teleportation"};
+
+    return desc_wl_success_chance(mi, pow, hitfunc);
+}
+
 static vector<string> _desc_beckoning_valid(const monster_info& mi)
 {
     if (!can_beckon(mi))
@@ -2083,6 +2104,11 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 
         if (spell == SPELL_ENFEEBLE)
             return bind(_desc_enfeeble_chance, placeholders::_1, eff_pow);
+        else if (spell == SPELL_TELEPORT_OTHER)
+        {
+            return bind(_desc_teleport_other_chance, placeholders::_1, eff_pow,
+                        hitfunc);
+        }
         else
             return bind(desc_wl_success_chance, placeholders::_1, eff_pow,
                         hitfunc);
@@ -2123,7 +2149,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_MERCURY_ARROW:
             return _desc_mercury_weak_chance;
         case SPELL_WARP_SPACE:
-            return bind(_desc_warp_space_chance, powc);
+            return bind(_desc_warp_space_chance, placeholders::_1, powc);
         case SPELL_BECKONING:
             return bind(_desc_beckoning_valid, placeholders::_1);
         default:
@@ -2431,6 +2457,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (enkindled && --you.props[ENKINDLE_CHARGES_KEY].get_int() == 0)
             end_enkindled_status();
+
+        if (god == GOD_NO_GOD)
+            xom_end_disguise();
 
         return spret::success;
     }
@@ -3208,6 +3237,11 @@ static dice_def _spell_damage(spell_type spell, int power)
     return zap_damage(zap, power, false, false);
 }
 
+static bool _at_max_spell_power(spell_type spell)
+{
+    return calc_spell_power(spell) >= spell_power_cap(spell);
+}
+
 string spell_max_damage_string(spell_type spell)
 {
     switch (spell)
@@ -3228,11 +3262,9 @@ string spell_max_damage_string(spell_type spell)
     }
     // Only show a distinct max damage string if we're not at max power
     // already. Otherwise, it's redundant!
-    const int pow = calc_spell_power(spell);
-    const int max_pow = spell_power_cap(spell);
-    if (pow >= max_pow)
+    if (_at_max_spell_power(spell))
         return "";
-    return spell_damage_string(spell, false, max_pow);
+    return spell_damage_string(spell, false, spell_power_cap(spell));
 }
 
 string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
@@ -3334,6 +3366,54 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
         return dam_str + "*"; // many special cases of more/less damage
     }
     return dam_str;
+}
+
+pair<string, string> effect_description(spell_type spell, bool evoked, int pow,
+                                        bool terse)
+{
+    if (pow == -1)
+        pow = evoked ? wand_power(spell) : calc_spell_power(spell);
+    switch (spell)
+    {
+    case SPELL_BLINK:
+        return make_pair("Cooldown", blink_cooldown_description(pow)
+                                     + (terse ? "" : " turns"));
+    case SPELL_BORGNJORS_REVIVIFICATION:
+        return make_pair("Max HP loss",
+                         revivification_loss_description(pow, terse));
+    case SPELL_MAXWELLS_COUPLING:
+        return make_pair("Charge time",
+            maxwells_coupling_charge_description(pow) + (terse ? "" : " turns"));
+    case SPELL_OZOCUBUS_ARMOUR:
+    {
+        double ac_bonus = ice_armour_ac(pow) / 100.0;
+        return make_pair("Bonus AC", make_stringf("%.1f", ac_bonus));
+    }
+    case SPELL_PASSWALL:
+        return make_pair("Bonus AC",
+                         make_stringf("~%d", passwall_ac(pow, false)));
+    case SPELL_PHALANX_BEETLE:
+    {
+        double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;
+        return make_pair("Bonus AC", make_stringf("%.1f", ac_bonus));
+    }
+    case SPELL_PUTREFACTION:
+    {
+        const int hp_loss = player_drain_hp_loss(
+                                putrefaction_drain_amount(pow, false), false);
+        return make_pair("Self drain", make_stringf("~%d%s", hp_loss,
+                                                    terse ? "" : " HP"));
+    }
+    default:
+        return make_pair("", "");
+    }
+}
+
+string spell_max_effect_string(spell_type spell)
+{
+    if (_at_max_spell_power(spell))
+        return "";
+    return effect_description(spell, false, spell_power_cap(spell), true).second;
 }
 
 int spell_acc(spell_type spell)
@@ -3644,7 +3724,7 @@ string spell_range_string(spell_type spell)
 string range_string(int range, int maxrange, int minrange)
 {
     if (range <= 0)
-        return "N/A";
+        return "";
 
     string ret = to_string(range);
     if (maxrange > -1)

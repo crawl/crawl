@@ -120,12 +120,9 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
     }
 
     // Copied from _tile_place_monster()
-    if (!mons_class_is_stationary(mon.type) || mon.type == MONS_TRAINING_DUMMY)
-    {
-        tileidx_t mcache_idx = mcache.register_monster(mon);
-        t0 = mcache_idx ? mcache_idx : t0;
-        t.set_tile(t0);
-    }
+    tileidx_t mcache_idx = mcache.register_monster(mon);
+    t0 = mcache_idx ? mcache_idx : t0;
+    t.set_tile(t0);
 
     // Copied from ::add()
     if (t0 >= TILEP_MCACHE_START)

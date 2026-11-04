@@ -24,6 +24,7 @@ enum poly_power_type
     PPT_MORE,
     PPT_SAME,
     PPT_SLIME,
+    PPT_WAND,   // Specifically respect the monster's precalculated polymorph set
 };
 
 void monster_drop_things(
@@ -38,3 +39,5 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
 void slimify_monster(monster* mons);
 bool mon_can_be_slimified(const monster* mons);
+
+monster_type get_protean_shapeshift_target(int target_hd);

@@ -313,6 +313,11 @@ Arena
 Okawaru's most favoured followers are granted access to the Arena to duel
 against their foes.
 %%%%
+Arena?
+
+A gladiatorial arena interpreted through funhouse mirrors, though supposedly the
+concessions stand is to die for. Best not to ask how literally.
+%%%%
 Crucible
 
 The Crucible of Flesh is an infernal pit where Makhleb's most devoted and

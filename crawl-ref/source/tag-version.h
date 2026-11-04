@@ -371,6 +371,8 @@ enum tag_minor_version
     TAG_MINOR_UNIQUE_ITEM_ID,      // Implement unique item IDs for better-handling transient weapons
     TAG_MINOR_FORM_XP_TRACKING,    // Tracking of how much XP per level was gained in each form
     TAG_MINOR_MONINFO_SPELLS,      // Marshall monster_info::spells
+    TAG_MINOR_XOM_EXPLORATION,     // Add exploration tracking and effects to Xom
+    TAG_MINOR_XOM_GUARDIANS,       // Add tracking for Xom's guardian blessing
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

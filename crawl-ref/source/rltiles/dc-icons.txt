@@ -129,6 +129,8 @@ invis_remembered UNSEEN_INVIS_REMEMBERED
 seen_invis SEEN_INVIS
 phase_shifted PHASE_SHIFT
 divine_shield DIVINE_SHIELD
+guardian GUARDIAN
+maybe_fake MAYBE_FAKE
 
 item_stack1 ITEM_STACK_1
 item_stack2 ITEM_STACK_2

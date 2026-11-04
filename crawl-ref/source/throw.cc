@@ -1001,7 +1001,11 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
 
     // dubious...
     if (mons->alive())
+    {
         _handle_cannon_fx(*mons, weapon, target);
+        if (mons->type == MONS_MANNEQUIN)
+            mons->hurt(mons, div_rand_round(mons->max_hit_points, 15));
+    }
 
     return true;
 }

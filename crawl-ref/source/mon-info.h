@@ -16,6 +16,8 @@ using std::vector;
 #define ACTUAL_SPELLCASTER_KEY "actual_spellcaster"
 #define NECROMANCER_KEY "necromancer"
 
+#define XOM_PAN_LORD_DESC "xom_pan_lord_desc"
+
 enum monster_info_flags
 {
     MB_STABBABLE,
@@ -278,6 +280,8 @@ enum monster_info_flags
     MB_REMEMBERED_INVIS,
     MB_PHASE_SHIFT,
     MB_DIVINE_SHIELD,
+    MB_GUARDIAN,
+    MB_MAYBE_FAKE,
     NUM_MB_FLAGS
 };
 
@@ -340,8 +344,8 @@ struct monster_info_base
 struct monster_info : public monster_info_base
 {
     static bool less_than(const monster_info& m1,
-                          const monster_info& m2, bool zombified = true,
-                          bool fullname = true);
+                          const monster_info& m2,
+                          bool consolidate = false);
 
     static bool less_than_wrapper(const monster_info& m1,
                                   const monster_info& m2);

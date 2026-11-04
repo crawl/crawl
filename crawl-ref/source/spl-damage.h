@@ -147,6 +147,7 @@ spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail);
 bool handle_searing_ray(actor& agent, int turn);
 
 vector<monster *> find_maxwells_possibles();
+string maxwells_coupling_charge_description(int pow);
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
 void handle_maxwells_coupling();
 void end_maxwells_coupling(bool quiet = false);

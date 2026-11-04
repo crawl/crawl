@@ -35,6 +35,7 @@ enum shooting_star_fineff_type : int {
     SHOOTING_STAR_ORB,
     SHOOTING_STAR_JELLY,
     SHOOTING_STAR_CARINA,
+    SHOOTING_STAR_BATTLESHAPE,
 };
 
 void schedule_mirror_damage_fineff(const actor* attack, const actor* defend,
@@ -68,11 +69,11 @@ void schedule_rakshasa_clone_fineff(const actor* defend, const coord_def& pos);
 void schedule_bennu_revive_fineff(const monster* bennu);
 void schedule_avoided_death_fineff(monster* mons);
 void schedule_infestation_death_fineff(coord_def pos, const string& name);
-void schedule_make_derived_undead_fineff(coord_def pos, mgen_data mg, int xl,
-                                         const string& agent,
-                                         const string& msg,
-                                         function<bool ()> should_trigger = []() { return true; },
-                                         bool act_immediately = false);
+void schedule_make_derived_mon_fineff(coord_def pos, mgen_data mg, int xl,
+                                      const string& agent,
+                                      const string& msg,
+                                      function<bool ()> should_trigger = []() { return true; },
+                                      bool act_immediately = false);
 void schedule_mummy_death_curse_fineff(const actor* attack,
                                        const monster* dead_mummy,
                                        killer_type killer, int pow);
@@ -97,6 +98,7 @@ void schedule_revert_terrain_fineff(const coord_def& pos,
                                     terrain_change_type type);
 void schedule_hypnogecko_tail_fineff();
 void schedule_ephemeral_weapon_end(item_def& wpn);
+void schedule_disguise_fineff();
 
 void fire_final_effects();
 void clear_final_effects();

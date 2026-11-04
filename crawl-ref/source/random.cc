@@ -345,7 +345,7 @@ int div_round_up(int num, int den)
 int div_round_near(int num, int den)
 {
     const int rem = num % den;
-    return num / den + (rem >= den / 2);
+    return num / den + (2 * rem >= den);
 }
 
 // random2avg() returns same mean value as random2() but with a lower variance
@@ -390,6 +390,27 @@ int biased_random2(int max, int n)
         if (x_chance_in_y(n, n + max - 1 - i))
             return i;
     return 0;
+}
+
+/** Mean of a binomial distribution.
+ *
+ * Returns the mean value of successes in a sequence of independent trials with
+ * fixed probability.
+ *
+ * @param n_trials The number of trials.
+ * @param trial_prob The numerator of the probability of success of each trial.
+ *                   If greater than scale, the probability is 1.0.
+ * @param scale The denominator of trial_prob, default 100.
+ * @return The mean number of successes, range [0, n_trials]
+ */
+double binomial_mean(unsigned n_trials, unsigned trial_prob,
+                     unsigned scale)
+{
+    if (scale == 0)
+        scale = 1;
+    trial_prob = std::min(trial_prob, scale);
+
+    return static_cast<double>(n_trials) * trial_prob / scale;
 }
 
 /** Sample from a binomial distribution.

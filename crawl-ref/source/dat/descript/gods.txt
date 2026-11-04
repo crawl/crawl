@@ -204,7 +204,8 @@ Xom
 Xom is a wild and unpredictable god of chaos, who seeks not worshippers but
 playthings with which to toy. Many choose to follow Xom in the hope of
 receiving fabulous rewards and mighty powers, but Xom is nothing if not
-capricious. There is nothing a follower can do to influence Xom's mood.
+capricious - throwing followers into peril almost as readily as saving them
+from it.
 %%%%
 Yredelemnul
 
@@ -469,11 +470,13 @@ their precision and damage for as long as they keep using martial attacks.
 %%%%
 Xom powers
 
-To worship Xom is to live riskily. In a good mood Xom may shower worshippers
-with gifts, while at other times this capricious god could decide to “spice
-things up a little” and send worshippers to their doom. If such toys of Xom
-prove to be interesting, so much the better; if not, well, there'll be other
-playthings...
+Mortals who attract Xom's interest through their devotion will be granted
+powerful chaos blessings, enhancing their combat abilities in unique ways so
+as to better amuse their god. However, to invite Xom's attention is to live
+dangerously; while favoured pets may be showered with boons, Xom may also
+decide to make their lives more 'interesting' from time to time, creating deadly
+peril where none previously existed. If such toys survive, so much the better;
+if not, well, there'll be other playthings...
 %%%%
 Yredelemnul powers
 

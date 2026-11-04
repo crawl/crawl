@@ -44,9 +44,6 @@ bool needs_resolution(monster_type mon_type);
 
 monster_type resolve_monster_type(monster_type mon_type,
                                   monster_type &base_type,
-                                  proximity_type proximity = PROX_ANYWHERE,
-                                  coord_def *pos = nullptr,
-                                  unsigned mmask = 0,
                                   level_id *place = nullptr,
                                   bool *want_band = nullptr,
                                   bool allow_ood = true);
@@ -78,9 +75,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
 monster_type pick_local_wretch(level_id place);
 
-void roll_zombie_hp(monster* mon);
+void roll_derived_mon_hp(monster* mon);
 
-void define_zombie(monster* mon, monster_type ztype, monster_type cs);
+void define_derived_monster(monster* mon, monster_type ztype, monster_type cs);
 
 class level_id;
 
@@ -97,7 +94,8 @@ void check_lovelessness(monster &mon);
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, coord_def& result, int exclude_radius = -1,
                               const actor* in_sight_of = nullptr,
-                              bool no_sanctuary = true);
+                              bool no_sanctuary = true,
+                              bool avoid_traps = false);
 bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
                                      int max_radius, int exclude_radius = 0,
                                      spell_type ignore_summons_of = SPELL_NO_SPELL);

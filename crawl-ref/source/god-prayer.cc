@@ -193,7 +193,10 @@ static bool _pray_ecumenical_altar()
     else if (you_worship(GOD_ASHENZARI))
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
     else if (you_worship(GOD_XOM))
-        xom_is_stimulated(200, XM_INTRIGUED, true);
+    {
+        xom_take_action(XOM_GOOD_JOKE_CONSUMABLE, 0);
+        you.attribute[ATTR_XOM_BLESSING_TIMER] -= 50;
+    }
     else
         gain_piety(20, 1, false);
 

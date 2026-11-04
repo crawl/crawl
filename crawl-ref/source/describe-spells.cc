@@ -574,7 +574,14 @@ string spell_effect_string(spell_type spell, const monster_info *mon_owner,
     if (!heal_str.empty())
         return make_stringf("(%s)", heal_str.c_str());
 
-    const dice_def dam = _spell_damage(spell, hd, pow);
+    dice_def dam = _spell_damage(spell, hd, pow);
+
+    if (mon_owner && mon_owner->type == MONS_LIVING_SPELL
+        && mon_owner->props.exists(SPELL_DMG_OVERRIDE_KEY))
+    {
+        dam.size = mon_owner->props[SPELL_DMG_OVERRIDE_KEY].get_int();
+    }
+
     if (dam.num == 0 || dam.size == 0)
         return "";
 

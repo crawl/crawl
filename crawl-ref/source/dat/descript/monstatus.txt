@@ -376,6 +376,12 @@ This creature has been condemned to inexorable decay and ruin. Whenever it takes
 damage from melee attacks, it will be drained heavily and either slowed, weakened,
 or blinded.
 %%%%
+maybe fake monstatus
+
+This monster may be an illusion, having greatly reduced health and doing very
+little damage. Only one of them is real, and killing the original will destroy
+all the copies.
+%%%%
 mesmerising monstatus
 
 This creature has mesmerised you, making you unable to voluntarily move away
@@ -421,7 +427,7 @@ This creature has been briefly distracted by something else.
 out of phase monstatus
 
 This creature is slightly out of phase and has greatly increased evasion against
-those who lacks the ability to see invisible creatures. Their degree of injury
+those who lack the ability to see invisible creatures. Their degree of injury
 is also hidden.
 %%%%
 paralysed monstatus
@@ -760,6 +766,11 @@ withering away monstatus
 
 This creature will die in a few turns.
 ## Not real statuses, but common clauses to add to some others
+%%%%
+your guardian monstatus
+
+Your innate bond with this monster allows you to shoot through it and also
+protects it from any harm you might do to it.
 %%%%
 low-tier stab monstatus
 

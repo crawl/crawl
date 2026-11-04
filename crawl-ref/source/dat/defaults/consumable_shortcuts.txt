@@ -16,7 +16,9 @@ consumable_shortcut ^= scroll of vulnerability:V
 consumable_shortcut ^= scroll of silence:S
 consumable_shortcut ^= scroll of amnesia:x
 consumable_shortcut ^= scroll of poison:p
-consumable_shortcut ^= scroll of butterflies:s
+consumable_shortcut ^= scroll of butterflies:B
+consumable_shortcut ^= scroll of frog:G
+consumable_shortcut ^= scroll of plinking:l
 
 consumable_shortcut ^= potion of curing:c
 consumable_shortcut ^= potion of heal wounds:w
@@ -36,6 +38,8 @@ consumable_shortcut ^= potion of resistance:r
 consumable_shortcut ^= potion of lignification:L
 consumable_shortcut ^= potion of mist:t
 consumable_shortcut ^= potion of moonshine:o
+consumable_shortcut ^= potion of berserk sage:O
+consumable_shortcut ^= potion of expedience:x
 
 consumable_shortcut ^= wand of flame:a
 consumable_shortcut ^= wand of acid:b

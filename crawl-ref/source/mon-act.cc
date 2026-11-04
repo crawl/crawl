@@ -25,6 +25,7 @@
 #include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h" // GOZAG_GOLD_AURA_KEY
+#include "god-companions.h"
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "hints.h"
@@ -74,6 +75,7 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
+#include "xom.h"
 
 static bool _handle_pickup(monster* mons);
 static bool _monster_move(monster* mons, coord_def& delta);
@@ -155,6 +157,7 @@ static void _monster_regenerate(monster* mons)
     }
 
     if (mons_class_fast_regen(mons->type)
+        || (mons->flags & MF_GUARDIAN)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(mons_class_regen_amount(mons->type));
@@ -2124,20 +2127,21 @@ void handle_monster_move(monster* mons)
     }
 
     // Return to the player's side if they've gotten too separated
-    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type))
+    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type)
+        || mons_is_xom_guardian(*mons))
     {
         const int max_dist = mons->type == MONS_HAUNTED_ARMOUR ? 5 : 8;
         if (grid_distance(you.pos(), mons->pos()) > max_dist)
         {
             coord_def spot;
             if (find_habitable_spot_near(you.pos(), mons->type, 3, spot,
-                                         -1, &you))
+                                         -1, &you, false, true))
             {
-                simple_monster_message(*mons, " returns to your side.");
                 mons->move_to(spot, MV_TRANSLOCATION);
+                simple_monster_message(*mons, " returns to your side.");
             }
             // If returning is impossible, kill it immediately.
-            else
+            else if (!mons_is_xom_guardian(*mons))
             {
                 monster_die(*mons, KILL_RESET, NON_MONSTER);
                 return;
@@ -2664,7 +2668,7 @@ static void _post_monster_move(monster* mons)
     // dormant if it is following a player who was adjacent to it at the start
     // of the player's own move)
     if (mons->type == MONS_BLAZEHEART_GOLEM)
-         _check_blazeheart_golem_link(*mons);
+        _check_blazeheart_golem_link(*mons);
 
     if (mons->type == MONS_WATER_NYMPH
         || mons->type == MONS_ELEMENTAL_WELLSPRING
@@ -3202,6 +3206,10 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_seeker(*mpushee))
         return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
+    // Monsters will not swap into living spells (which would dissipate them)
+    if (mpushee->type == MONS_LIVING_SPELL)
+        return false;
+
     // OODs should crash into things, not push them around.
     if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
         return false;
@@ -3414,7 +3422,8 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Keep helpers with somewhat chaotic movement from deliberately breaking
     // LoS with their owners.
-    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE)
+    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_RENDING_BLADE
+        || mons->type == MONS_CHAOS_BATTLESHAPE)
     {
         actor* creator = actor_by_mid(mons->summoner);
         if (creator && creator->alive_or_reviving())
@@ -4138,10 +4147,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
             _swim_or_move_energy(*mons);
             if (you.see_cell(target))
             {
-                const bool actor_visible = you.can_see(*mons);
-                mprf("%s knocks down a tree!",
-                        actor_visible?
-                        mons->name(DESC_THE).c_str() : "Something");
+                mprf("%s knocks down a tree!", mons->name(DESC_THE).c_str());
                 noisy(25, target);
             }
             else
@@ -4266,9 +4272,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
     if (delta.x || delta.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(*mons, delta);
 
-    // Battlespheres need to preserve their tracking targets after each move
-    if (mons_is_wandering(*mons)
-        && mons->type != MONS_BATTLESPHERE)
+    if (mons_is_wandering(*mons))
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
@@ -4310,8 +4314,10 @@ void seen_monsters_react()
             if (!(*mi)->alive())
                 continue;
 
-            if (!vampire_mesmerism_check(**mi))
+            if (!you.duration[DUR_DISGUISED] && !vampire_mesmerism_check(**mi))
                 monster_consider_shouting(**mi);
+
+            xom_maybe_disguise_self(*mi);
         }
 
         if (!mi->has_ench(ENCH_FRENZIED))

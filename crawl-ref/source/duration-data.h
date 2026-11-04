@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "act-iter.h"
 #include "cloud.h"
+#include "database.h"
 #include "item-name.h"
 #include "mon-death.h"
 #include "god-abil.h"
@@ -23,6 +24,7 @@
 #include "tag-version.h"
 #include "timed-effects.h"
 #include "transform.h"
+#include "xom.h"
 
 
 static void _end_invis()
@@ -104,6 +106,12 @@ static void _end_vapourise()
   mprf(MSGCH_DURATION, "Your vapourised %s dissipates without effect.",
        potion_type_name(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int())));
   you.props.erase(MISTMANE_VAPOUR_KEY);
+}
+
+static void _sage_go_berserk()
+{
+    mprf(MSGCH_DURATION, "%s", getMiscString("sage_go_berserk").c_str());
+    you.go_berserk(true, false);
 }
 
 // properties of the duration.
@@ -399,11 +407,6 @@ static const duration_def duration_data[] =
       "silenced", "silence",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your hearing returns.", []() { invalidate_agrid(); }}}, 5 },
-    { DUR_STEALTH,
-      BLUE, "Stealth",
-      "especially stealthy", "stealth",
-      "You are especially stealthy.", D_NO_FLAGS,
-      {{ "You feel less stealthy." }}},
     { DUR_AFRAID,
       RED, "Fear",
       "afraid", "",
@@ -602,11 +605,6 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_armour_class = true; // includes shields
       }}}},
-    { DUR_CLEAVE,
-      LIGHTBLUE, "Cleave",
-      "cleaving", "cleave",
-      "You are cleaving through your foes.", D_NO_FLAGS,
-      {{ "Your cleaving frenzy subsides." }}},
     { DUR_AMBROSIA, GREEN, "Ambros",
       "ambrosia-drunk", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
@@ -826,6 +824,32 @@ static const duration_def duration_data[] =
             mprf(MSGCH_DURATION, "You feel more solid again.");
           }
       }}},
+    { DUR_REACH,
+      LIGHTBLUE, "Reach+",
+      "extra reach", "reach+",
+      "Your limbs are incredibly long.", D_NO_FLAGS,
+      {{ "Your limbs return to their normal size." }}},
+    { DUR_IRRITATED,
+      LIGHTRED, "Irrate",
+      "irrate", "irrate",
+      "You are quickly growing irritated.", D_NO_FLAGS,
+      {{ "", _sage_go_berserk }}},
+    { DUR_RAMPAGE_MAX,
+      LIGHTBLUE, "Rampage+++",
+      "rampage 7", "rampage+",
+      "You rampage instantly towards enemies.", D_NO_FLAGS,
+      {{ "Your burst of speed ends." }}},
+    { DUR_PLINKING,
+      LIGHTBLUE, "Plink",
+      "plinking", "plink",
+      "You are rapidly tossing pebbles at your foes.", D_NO_FLAGS,
+    },
+    { DUR_DISGUISED,
+      LIGHTBLUE, "Disguised",
+      "perfectly disguised", "disguised",
+      "", D_NO_FLAGS,
+      {{"", [](){ xom_end_disguise(true);}}}
+    },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -916,6 +940,10 @@ static const duration_def duration_data[] =
     { DUR_INDOMITABLE, LIGHTBLUE, "Indom", "", "", "", D_NO_FLAGS},
     { DUR_EXEGESIS, WHITE, "Exegesis", "", "", "", D_NO_FLAGS, {{"", _end_exegesis}}},
     { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
+    { DUR_XOM_MANNEQUIN_TIMER, 0, "", "", "", "", D_NO_FLAGS},
+    { DUR_XOM_BATTLESHAPE_COOLDOWN, 0, "", "", "", "", D_NO_FLAGS, {{""}}},
+    { DUR_XOM_PROTEAN_COOLDOWN, YELLOW, "-Flesh", "", "", "", D_COOLDOWN,
+      {{"Your body feels full of potential once again."}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
@@ -974,5 +1002,7 @@ static const duration_def duration_data[] =
     { DUR_SLEEP_IMMUNITY, 0, "", "", "old sleep immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_VILE_CLUTCH_OLD, 0, "", "", "old vile clutch", "", D_NO_FLAGS, {{""}}},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "old spike launcher", "", D_NO_FLAGS, {{""}}},
+    { DUR_CLEAVE, 0, "", "", "old cleave", "", D_NO_FLAGS, {{""}}},
+    { DUR_STEALTH, 0, "", "", "old stealth", "", D_NO_FLAGS, {{""}}},
 #endif
 };

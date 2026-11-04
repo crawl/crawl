@@ -32,6 +32,7 @@ struct kill_monster_desc
     {
         M_NORMAL, M_ZOMBIE, M_DRAUGR, M_SIMULACRUM, M_SPECTRE,
         M_SHAPESHIFTER, // A shapeshifter pretending to be 'monnum'
+        M_MANNEQUIN
     };
 
     monster_type monnum;        // Number of the beast

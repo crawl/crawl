@@ -3214,10 +3214,11 @@ int temp_mutation_count()
  * @param all_innate Whether to count all innate mutations (default false). Includes and supercedes \c silver.
  * @param temp Whether to count temporary mutations (default false).
  * @param levels Whether to add up mutation levels, as opposed to just counting number of mutations (default true).
+ * @param only_good Whether to only count positive mutations (default false).
  *
  * @return Either the number of matching mutations, or the sum of their levels, depending on \c levels.
  */
-int player::how_mutated(bool normal, bool silver, bool all_innate, bool temp, bool levels) const
+int player::how_mutated(bool normal, bool silver, bool all_innate, bool temp, bool levels, bool only_good) const
 {
     int result = 0;
 
@@ -3225,14 +3226,17 @@ int player::how_mutated(bool normal, bool silver, bool all_innate, bool temp, bo
     {
         if (you.mutation[i])
         {
+            const mutation_type mut = static_cast<mutation_type>(i);
+            if (only_good && !is_good_mutation(mut))
+                continue;
+
             // Infernal Marks should count for silver vulnerability despite
             // being permanent mutations.
             const bool innate = all_innate
                                  || silver
-                                     && (is_makhleb_mark(static_cast<mutation_type>(i))
+                                     && (is_makhleb_mark(mut)
                                          || you.species == SP_DEMONSPAWN);
-            int mut_level = get_base_mutation_level(static_cast<mutation_type>(i),
-                                                    innate, temp, normal);
+            int mut_level = get_base_mutation_level(mut, innate, temp, normal);
 
             // Ru sacrifices count as innate mutations, but should not make
             // demonspawn extra-vulnerable to silver.
@@ -3307,7 +3311,7 @@ void check_demonic_guardian()
             return;
 
         guardian->flags |= MF_NO_REWARD;
-        guardian->flags |= MF_DEMONIC_GUARDIAN;
+        guardian->flags |= MF_GUARDIAN;
 
         // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));
@@ -3593,7 +3597,11 @@ bool add_bane(bane_type bane, string reason, int duration, int mult)
     duration = duration * mult / 100;
 
     if (you.banes[bane] == 0)
-        mprf(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
+    {
+        mprf(MSGCH_WARN, "You are stricken with the %s%s.", bane_name(bane).c_str(),
+             // Xom's meddling, most likely
+             mult <= 20 ? " (...for a very short time)" : "");
+    }
     else
         mprf(MSGCH_WARN, "Your %s grows stronger.", bane_name(bane).c_str());
 

@@ -155,6 +155,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STAMPEDE,        MB_STAMPEDE },
     { ENCH_PHASE_SHIFT,     MB_PHASE_SHIFT },
     { ENCH_DIVINE_SHIELD,   MB_DIVINE_SHIELD },
+    { ENCH_HALL_OF_MIRRORS, MB_MAYBE_FAKE },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -254,7 +255,9 @@ static bool _is_public_key(string key)
      || key == NOBODY_MEMORIES_KEY
      || key == ORIGINAL_TYPE_KEY
      || key == SPLINTERFROST_POWER_KEY
-     || key == TREE_POSITION_KEY)
+     || key == TREE_POSITION_KEY
+     || key == XOM_PAN_LORD_DESC
+     || key == SPELL_DMG_OVERRIDE_KEY)
     {
         return true;
     }
@@ -280,7 +283,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(*other))
+            && !other->is_derived())
         {
             mi.props[key] = h_pos - m->pos();
         }
@@ -329,8 +332,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 // its monster type, rather than a specific monster.
 void monster_info::_populate_as_generic()
 {
+    // Give an appriopriately 'normal' number of heads for the tile of sensed
+    // monsters. (Their name won't say how many they have, either way.)
     if (has_hydra_multi_attack())
-        num_heads = 1;
+        num_heads = type == MONS_LERNAEAN_HYDRA ? 27 : 5;
     else
         number = 0;
 
@@ -531,6 +536,8 @@ monster_info::monster_info(const monster* m, int milev)
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
 
+    number = 0;
+
     // If this monster is currently hidden to the player, treat it as an
     // arbitrary healthy example of its type.
     if (m->flags & MF_KNOWN_INVISIBLE && !you.can_see(*m))
@@ -572,7 +579,7 @@ monster_info::monster_info(const monster* m, int milev)
         is_active = !!m->ballisto_activity;
     else if (has_hydra_multi_attack())
         num_heads = m->num_heads;
-    else if (type == MONS_SEISMOSAURUS_EGG)
+    else if (type == MONS_SEISMOSAURUS_EGG || type == MONS_CHAOS_BATTLESHAPE)
         number = m->number;
     // others use number for internal information
     else
@@ -622,6 +629,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_SPECTRALISED);
     if (m->has_ench(ENCH_VAMPIRE_THRALL))
         mb.set(MB_VAMPIRE_THRALL);
+    if (testbits(m->flags, MF_GUARDIAN))
+        mb.set(MB_GUARDIAN);
 
     _add_name_info(m, milev);
     if (milev <= MILEV_NAME)
@@ -942,8 +951,8 @@ int monster_info::get_known_max_hp() const
         return props[KNOWN_MAX_HP_KEY].get_int();
 
     const int scale = 100;
-    const int base_avg_hp = mons_class_is_zombified(type) ?
-                            derived_undead_avg_hp(type, hd, scale) :
+    const int base_avg_hp = mons_class_is_derived(type) ?
+                            derived_mon_avg_hp(type, hd, scale) :
                             mons_avg_hp(type, scale);
     int mhp = base_avg_hp;
     if (props.exists(VAULT_HD_KEY))
@@ -986,7 +995,7 @@ int monster_info::regen_rate(int scale) const
     if (!can_regenerate() || is(MB_SICK) /* ? */)
         return 0;
 
-    if (mons_class_fast_regen(type))
+    if (mons_class_fast_regen(type) || is(MB_GUARDIAN))
         rate = mons_class_regen_amount(type) * scale;
     else
     {
@@ -1063,7 +1072,7 @@ string monster_info::_core_name() const
 {
     monster_type nametype = type;
 
-    if (mons_class_is_zombified(type))
+    if (mons_class_is_derived(type))
     {
         if (mons_is_unique(base_type))
             nametype = mons_species(base_type);
@@ -1156,6 +1165,18 @@ string monster_info::_core_name() const
                 }
             }
             break;
+        case MONS_CHAOS_BATTLESHAPE:
+            switch (number)
+            {
+                case 0:
+                case 1:     s = "battlepyramid";        break;
+                case 2:
+                case 3:     s = "battlecube";           break;
+                case 4:
+                case 5:     s = "battleoctahedron";     break;
+                case 6:     s = "battledodecahedron";   break;
+                case 7:     s = "battlebifrustum";      break;
+            }
         default:
             break;
         }
@@ -1188,7 +1209,7 @@ string monster_info::_apply_adjusted_description(description_level_type desc,
 string monster_info::common_name(description_level_type desc) const
 {
     const string core = _core_name();
-    const bool nocore = mons_class_is_zombified(type)
+    const bool nocore = mons_class_is_derived(type)
                           && mons_is_unique(base_type)
                           // XXX: Hack to keep zombified Gehenna SoH's name.
                           && (base_type == mons_species(base_type)
@@ -1225,13 +1246,16 @@ string monster_info::common_name(description_level_type desc) const
         && type != MONS_SENSED
         && !mons_class_is_remnant(type))
     {
-        ASSERT(num_heads > 0);
-        if (num_heads < 11)
-            ss << number_in_words(num_heads);
-        else
-            ss << std::to_string(num_heads);
+        // Invisible hydra have an unknown number of heads.
+        if (num_heads > 0 && !is(MB_KNOWN_INVIS))
+        {
+            if (num_heads < 11)
+                ss << number_in_words(num_heads);
+            else
+                ss << std::to_string(num_heads);
 
-        ss << "-headed ";
+            ss << "-headed ";
+        }
     }
 
     if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
@@ -1277,6 +1301,9 @@ string monster_info::common_name(description_level_type desc) const
     case MONS_BLOCK_OF_ICE:
         if (base_type != type)
             ss << (nocore ? "" : " ") << "shaped block of ice";
+        break;
+    case MONS_MANNEQUIN:
+        ss << " manequinn";
         break;
     default:
         break;
@@ -1348,12 +1375,12 @@ string monster_info::full_name(description_level_type desc) const
 bool monster_info::less_than_wrapper(const monster_info& m1,
                                      const monster_info& m2)
 {
-    return monster_info::less_than(m1, m2, true);
+    return monster_info::less_than(m1, m2, false);
 }
 
 // Sort monsters by (in that order): attitude, difficulty, type, visibility status
 bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
-                             bool zombified, bool fullname)
+                             bool consolidate)
 {
     // This awkward ordering (checking m2 before m1) is required to satisfy
     // std::sort's contract. Specifically, if m1 and m2 are both ancestors
@@ -1372,7 +1399,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
-    if (!zombified
+    if (consolidate
         && mons_is_base_draconian(m1.type)
         && mons_is_base_draconian(m2.type))
     {
@@ -1413,9 +1440,9 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (m1.is(MB_SPECTRALISED) != m2.is(MB_SPECTRALISED))
         return m2.is(MB_SPECTRALISED);
 
-    if (zombified)
+    if (!consolidate)
     {
-        if (mons_class_is_zombified(m1.type))
+        if (mons_class_is_derived(m1.type))
         {
             // Because of the type checks above, if one of the two is zombified, so
             // is the other, and of the same type.
@@ -1441,7 +1468,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (m1.is(MB_REMEMBERED_INVIS) != m2.is(MB_REMEMBERED_INVIS))
         return m2.is(MB_REMEMBERED_INVIS);
 
-    if (fullname || mons_is_pghost(m1.type))
+    if (!consolidate || mons_is_pghost(m1.type))
         return m1.mname < m2.mname;
 
     return false;
@@ -1778,7 +1805,7 @@ bool monster_info::can_regenerate() const
 
 int monster_info::reach_range(bool items) const
 {
-    const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
+    const monsterentry *e = get_monster_data(mons_class_is_derived(type)
                                              ? base_type : type);
     ASSERT(e);
     int range = 1;

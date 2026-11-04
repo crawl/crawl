@@ -25,6 +25,9 @@ using std::string;
 // (Can be the player, if caused by teleportitis.)
 #define TELEPORTITIS_SOURCE "TELEPORTITIS_SOURCE"
 
+// For living spells, a forcible assignment of the dice size for their damage.
+#define SPELL_DMG_OVERRIDE_KEY "spell_dmg_override"
+
 using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
@@ -426,6 +429,7 @@ private:
     // for players
     void affect_player();
     bool misses_player();
+    bool attempt_player_block();
 public:
     void affect_player_enchantment(bool resistible = true);
 private:
@@ -540,6 +544,7 @@ bool zap_has_tohit(zap_type z_type, bool is_monster);
 int zap_to_hit(zap_type z_type, int power, bool is_monster);
 dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);
+const char* zap_name(zap_type z_type);
 
 dice_def combustion_breath_damage(int pow, bool allow_random = true);
 

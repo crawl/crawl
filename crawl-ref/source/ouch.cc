@@ -482,6 +482,13 @@ void lose_level()
         player_die(KILLED_BY_DRAINING);
 }
 
+int player_drain_hp_loss(int power, bool random)
+{
+    const int scaled_power = power * get_real_hp(false, false);
+    return 1 + (random ? div_rand_round(scaled_power, 750)
+                       : div_round_near(scaled_power, 750));
+}
+
 /**
  * Drain the player.
  *
@@ -517,8 +524,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection, bool qu
 
     if (power > 0)
     {
-        const int mhp = 1 + div_rand_round(power * get_real_hp(false, false),
-                750);
+        const int mhp = player_drain_hp_loss(power, true);
         you.hp_max_adj_temp -= mhp;
         you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
                 you.hp_max_adj_temp);
@@ -809,7 +815,7 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
             if (mon == MONS_BUTTERFLY)
             {
                 mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
-                take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "butterfly on damage"), true);
+                take_note(Note(NOTE_XOM_EFFECT, -1, -1, "butterfly on damage"), true);
             }
             else
             {
@@ -819,6 +825,56 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
                                        : "jelly pops out");
             }
         }
+    }
+}
+
+static void _maybe_spawn_aspiring_flesh()
+{
+    if (you.attribute[ATTR_XOM_BLESSING] != XOM_BLESSING_PROTEAN
+        || you.duration[DUR_XOM_PROTEAN_COOLDOWN]
+        || you.hp * 10 > you.hp_max * 7)
+    {
+        return;
+    }
+
+    const int hd = 2 + you.experience_level / 2;
+    monster_type target = get_protean_shapeshift_target(hd);
+    int delay = random_range(3, 6) * BASELINE_DELAY;
+
+    int num = one_chance_in(6) ? 3 : 2;
+
+    bool created = false;
+    for (int i = 0; i < num; ++i)
+    {
+        const coord_def spot = find_newmons_square(target, you.pos(), 3, 6);
+        if (spot.origin())
+            return;
+
+        mgen_data mg = mgen_data(MONS_ASPIRING_FLESH, BEH_FRIENDLY,
+                                 spot, MHITNOT, MG_FORCE_PLACE | MG_FORCE_BEH | MG_AUTOFOE);
+
+        mg.set_summoned(&you, MON_SUMM_CHAOS, delay + random_range(90, 150), false);
+        mg.hd = hd;
+
+        monster *flesh = create_monster(std::move(mg));
+        if (flesh)
+        {
+            flesh->props[PROTEAN_TARGET_KEY] = target;
+            flesh->add_ench(mon_enchant(ENCH_PROTEAN_SHAPESHIFTING, nullptr, delay));
+
+            // Make each one shift a little later than the last
+            delay += random_range(1, 2) * BASELINE_DELAY;
+
+            created = true;
+        }
+    }
+
+    if (created)
+    {
+        mprf(MSGCH_FRIEND_SPELL,
+             "Protean flesh bursts from your body and begins taking on the form of %s!",
+             mons_type_name(target, DESC_A).c_str());
+        you.duration[DUR_XOM_PROTEAN_COOLDOWN] = random_range(120, 360);
     }
 }
 
@@ -864,7 +920,7 @@ static void _maybe_fog(int dam)
     {
         mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
-        take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "smoke on damage"), true);
+        take_note(Note(NOTE_XOM_EFFECT, -1, -1, "smoke on damage"), true);
     }
 }
 
@@ -1341,6 +1397,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     {
         if (mon_source->attitude() == ATT_MARIONETTE)
             dam = 0;
+
+        if (mon_source->has_ench(ENCH_MOSTLY_HARMLESS))
+            dam = div_rand_round(dam, 5);
     }
 
     // Multiply damage if Harm or Vitrify is in play. (Poison is multiplied earlier.)
@@ -1469,6 +1528,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         _maybe_spawn_monsters(dam, death_type, source);
         _maybe_spawn_rats(dam, death_type);
         _maybe_summon_demonic_guardian(dam, death_type);
+        _maybe_spawn_aspiring_flesh();
         _maybe_fog(dam);
         _maybe_blood_hastes_allies();
         _powered_by_pain(dam);
@@ -1511,13 +1571,9 @@ void player_die(kill_method_type death_type, mid_t source, int dam,
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == nullptr ? "" : aux;
 
-        // Xom should only kill his worshippers if they're under penance
-        // or Xom is bored.
-        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM]
-            && you.gift_timeout > 0)
-        {
+        // Xom should only kill his worshippers if they're under penance.
+        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM])
             return;
-        }
 
         // Also don't kill wizards testing Xom acts.
         if ((crawl_state.repeat_cmd == CMD_WIZARD

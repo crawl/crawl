@@ -57,6 +57,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "xom.h"
 
 /**
  * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
@@ -555,6 +556,8 @@ bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
 
+    const bool was_firewood = defender->is_firewood();
+
     // A dead defender would result in us returning true without actually
     // taking an action. But allow just passing our turn if we try to attack a
     // monster mid-revival (since they're still actually supposed to be there).
@@ -628,6 +631,9 @@ bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
     if (attacker->type == MONS_ANCESTOR_KNIGHT && attacker->get_experience_level() >= 10)
         _knight_pinning_attack(attacker);
 
+    if (attacker->type == MONS_MANNEQUIN && !was_firewood)
+        attacker->hurt(attacker, div_rand_round(attacker->max_hit_points, 15));
+
     return true;
 }
 
@@ -665,6 +671,8 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
 
     you.attribute[ATTR_SUNDERING_CHARGE]++;
 
+    xom_end_disguise();
+
     if (will_have_passive(passive_t::shadow_attacks))
         dithmenos_shadow_melee(primary_target);
 
@@ -676,6 +684,12 @@ void player_attempted_attack(bool trigger_effects, bool maintain_statuses,
 
     if (you.form == transformation::medusa && !you.triggers_done[DID_MEDUSA_STINGER])
         _do_medusa_stinger();
+
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_BATTLESHAPE
+        && !you.triggers_done[DID_BATTLESHAPE_SHOT])
+    {
+        trigger_chaos_battleshape_melee();
+    }
 
     if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP])
         you.rev_up(you.melee_attack_delay().roll());
@@ -1191,7 +1205,8 @@ bool force_player_cleave(coord_def target)
 bool attack_cleaves(const actor &attacker, const item_def *weap, int attack_num)
 {
     if (attacker.is_player()
-        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+        && (you.form == transformation::storm
+            || you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE))
     {
         return true;
     }
@@ -1355,9 +1370,9 @@ int weapon_adjust_delay(const item_def &weapon, int base, bool random)
 {
     const brand_type brand = get_weapon_brand(weapon);
     if (brand == SPWPN_SPEED)
-        return random ? div_rand_round(base * 2, 3) : (base * 2) / 3;
+        return random ? div_rand_round(base * 2, 3) : div_round_near(base * 2, 3);
     if (brand == SPWPN_HEAVY)
-        return random ? div_rand_round(base * 3, 2) : (base * 3) / 2;
+        return random ? div_rand_round(base * 3, 2) : div_round_near(base * 3, 2);
     return base;
 }
 

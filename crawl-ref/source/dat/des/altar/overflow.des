@@ -2042,7 +2042,7 @@ NAME:   kennysheep_vampire_church
 TAGS:   transparent no_monster_gen
 # This used to be a decorative vault, but nobody noticed the blood fountain
 # lua by default on a relatively uncommon vault, so now it gets some actual
-# depth-scaling monsters and a reward it in later on.
+# depth-scaling monsters and a reward in it later on.
 : if you.in_branch("Depths") then
 MONS:   vampire knight / jiangshi, vampire mage
 : elseif you.depth() > 11 then

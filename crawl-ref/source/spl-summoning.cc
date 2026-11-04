@@ -64,6 +64,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "state.h"
@@ -1182,6 +1183,49 @@ spret summon_shadow_creatures()
     return spret::success;
 }
 
+spret summon_frog()
+{
+    if (!you_can_see_habitable_spot_near(HT_AMPHIBIOUS, 4))
+    {
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt())
+        return spret::abort;
+
+    int pow = random_range(you.experience_level / 2, you.experience_level);
+    monster_type type;
+
+    if (pow >= 18)
+        type = MONS_GOLIATH_FROG;
+    else if (pow >= 12)
+        type = MONS_CANE_TOAD;
+    else if (pow >= 7)
+        type = MONS_BLINK_FROG;
+    else
+        type = MONS_BULLFROG;
+
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(),
+                 MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
+    mg.set_summoned(&you, -1, summ_dur(4));
+    mg.set_range(1, 4);
+
+    if (monster *mons = create_monster(mg))
+    {
+        mons->add_ench(mon_enchant(ENCH_REGENERATION, &you, INFINITE_DURATION));
+
+        if (pow > 22)
+            mons->add_ench(mon_enchant(ENCH_MIGHT, &you, INFINITE_DURATION));
+
+        mpr("You hear a cheerful croaking...");
+    }
+    else
+        mpr("You hear a very distant croak, but nothing seems to happen.");
+
+    return spret::success;
+}
+
 bool can_cast_malign_gateway(const actor& caster)
 {
     return count_malign_gateways(caster) < 1;
@@ -1720,6 +1764,14 @@ monster* find_battlesphere(const actor* agent)
         return nullptr;
 }
 
+monster* find_chaos_battleshape()
+{
+    if (you.props.exists(CHAOS_BATTLESHAPE_KEY))
+        return monster_by_mid(you.props[CHAOS_BATTLESHAPE_KEY].get_int());
+    else
+        return nullptr;
+}
+
 static int _battlesphere_hd(int pow, bool random = true)
 {
     if (random)
@@ -1934,24 +1986,13 @@ static void _fire_battlesphere(monster* battlesphere, bolt& beam)
     beam.fire();
 
     // Decrement # of volleys left and possibly expire the battlesphere.
-    if (--battlesphere->battlecharge == 0)
+    if (battlesphere->type == MONS_BATTLESPHERE && --battlesphere->battlecharge == 0)
         end_battlesphere(battlesphere, false);
 }
 
-bool trigger_battlesphere(actor* agent)
+static bool _target_and_fire_battlesphere(actor* agent, monster* battlesphere)
 {
-    monster* battlesphere = find_battlesphere(agent);
-
-    // If we've somehow gotten separated from the battlesphere (ie:
-    // abyss level teleport), bail out and cancel the battlesphere bond
-    if (!battlesphere)
-    {
-        agent->props.erase(BATTLESPHERE_KEY);
-        return false;
-    }
-
-    // Scan visible enemies and pick the most injured one.
-    // (Not the one with the lowest hp - the one with the most hp *missing*.)
+    // Gather valid targets and exit if there aren't any.
     vector<actor*> targets;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         if (_is_valid_battlesphere_target(agent, *ai))
@@ -1960,12 +2001,18 @@ bool trigger_battlesphere(actor* agent)
     if (targets.empty())
         return false;
 
+    // Battlespheres try to target the most injured enemy - not the one with
+    // the lowest hp, but rather the one with the most *missing* hp.
+    // Xom's battleshape fires purely at random.
     shuffle_array(targets);
-    sort(targets.begin( ), targets.end( ), [](actor* a, actor* b)
+    if (battlesphere->type == MONS_BATTLESPHERE)
     {
-        return a->stat_maxhp() - a->stat_hp()
-               > b->stat_maxhp() - b->stat_hp();
-    });
+        sort(targets.begin( ), targets.end( ), [](actor* a, actor* b)
+        {
+            return a->stat_maxhp() - a->stat_hp()
+                > b->stat_maxhp() - b->stat_hp();
+        });
+    }
 
     actor* target = targets[0];
 
@@ -1986,6 +2033,14 @@ bool trigger_battlesphere(actor* agent)
     beam.pierce      = false;
     beam.target      = target->pos();
     beam.set_agent(agent);
+
+    if (battlesphere->type == MONS_CHAOS_BATTLESHAPE)
+    {
+        beam.flavour = BEAM_CHAOS;
+        beam.ench_power = 8;
+        beam.name = "chaotic barrage";
+        beam.colour = ETC_RANDOM;
+    }
 
     coord_def fallback_pos;
     // First, just try to fire from our present position
@@ -2042,6 +2097,124 @@ bool trigger_battlesphere(actor* agent)
         battlesphere->finalise_movement();
         return true;
     }
+
+    return false;
+}
+
+bool trigger_battlesphere(actor* agent)
+{
+    monster* battlesphere = find_battlesphere(agent);
+
+    // If we've somehow gotten separated from the battlesphere (ie:
+    // abyss level teleport), bail out and cancel the battlesphere bond
+    if (!battlesphere)
+    {
+        agent->props.erase(BATTLESPHERE_KEY);
+        return false;
+    }
+
+    return _target_and_fire_battlesphere(agent, battlesphere);
+}
+
+bool trigger_chaos_battleshape_melee()
+{
+    monster* battleshape = find_chaos_battleshape();
+    if (!battleshape || battleshape->has_ench(ENCH_SPELL_CHARGED))
+        return false;
+
+    if (_target_and_fire_battlesphere(&you, battleshape))
+    {
+        if (++battleshape->number >= 7)
+            battleshape->add_ench(mon_enchant(ENCH_SPELL_CHARGED, battleshape, INFINITE_DURATION));
+
+        return true;
+    }
+
+    return false;
+}
+
+static void _chaos_battleshape_random_zaps(vector<monster*>& targs, size_t max_targs, bool is_aoe)
+{
+    bolt beam(you, ZAP_CHAOS_BATTLESHAPE_FINALE, you.experience_level);
+    beam.safe_to_user = true;
+    beam.ench_power = 25;
+    beam.animate = false;
+
+    const unsigned int num_targs = min(max_targs, targs.size());
+    shuffle_array(targs);
+
+    const int draw_delay = 150 / num_targs;
+    if (!is_aoe)
+    {
+        for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+        {
+            if (you.see_cell(targs[i]->pos()))
+                flash_tile(targs[i]->pos(), ETC_RANDOM, draw_delay, TILE_BOLT_CHAOS);
+        }
+    }
+
+    for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
+    {
+        if (!targs[i]->alive())
+            continue;
+
+        beam.source = targs[i]->pos();
+        beam.target = targs[i]->pos();
+
+        if (is_aoe)
+        {
+            bolt exp = beam;
+            exp.name = "explosive blast of chaos";
+            exp.ex_size = 1;
+            exp.animate = true;
+            exp.explode_delay = draw_delay;
+            exp.tile_explode = TILE_BOLT_CHAOS;
+            exp.explode();
+        }
+        else
+            beam.fire();
+    }
+}
+
+bool trigger_chaos_battleshape_spell(int spell_level)
+{
+    monster* battleshape = find_chaos_battleshape();
+    if (!battleshape || !battleshape->has_ench(ENCH_SPELL_CHARGED))
+        return false;
+
+    vector<monster*> targs;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+        if (!mi->is_peripheral() && could_harm_enemy(&you, *mi))
+            targs.push_back(*mi);
+
+    if (targs.empty())
+        return false;
+
+    mprf(MSGCH_FRIEND_SPELL, "%s violently unleashes its stored power!",
+         battleshape->name(DESC_THE).c_str());
+
+    bool is_aoe = false;
+    int num_targs = 3;
+    int shooting_stars = 0;
+
+    if (spell_level >= 8)
+    {
+        is_aoe = true;
+        num_targs = 7;
+        shooting_stars = 12;
+    }
+    else if (spell_level >= 5)
+    {
+        num_targs = 5;
+        shooting_stars = 6;
+    }
+
+    _chaos_battleshape_random_zaps(targs, num_targs, is_aoe);
+    schedule_stardust_fineff(battleshape, 20 + you.experience_level * 2,
+                             shooting_stars, SHOOTING_STAR_BATTLESHAPE);
+    place_cloud(CLOUD_CHAOS, battleshape->pos(), random_range(3, 5), battleshape);
+    monster_die(*battleshape, KILL_RESET, NON_MONSTER);
+    you.duration[DUR_XOM_BATTLESHAPE_COOLDOWN] = random_range(120, 200);
 
     return true;
 }
@@ -4576,6 +4749,11 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     return spret::success;
 }
 
+int phalanx_beetle_barrier_ac(int pow)
+{
+    return 400 + pow * 3;
+}
+
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
 {
     if (agent.is_player() && !player_summon_check(MONS_PHALANX_BEETLE))
@@ -4593,7 +4771,7 @@ spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
         if (agent.is_player())
         {
             mpr("You forge a skittering defender to stand by your side.");
-            you.props[PHALANX_BARRIER_POWER_KEY] = 400 + pow * 3;
+            you.props[PHALANX_BARRIER_POWER_KEY] = phalanx_beetle_barrier_ac(pow);
         }
         else if (you.can_see(agent))
         {

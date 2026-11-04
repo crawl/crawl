@@ -372,3 +372,32 @@ You hear your own voice screaming in agony!
 
 You hear your own voice wailing miserably!
 %%%%
+xom_arena_name
+
+Xom's Arena of Wonders
+
+Xom's Astounding Funhouse
+
+Xom's Carnival of Surprises
+
+Xom's Dusty Attic
+
+The Wonderful World of Xom
+
+The Crucible of Toys
+
+Xom's Toybox
+%%%%
+sage_go_berserk
+
+You have run entirely out of patience!
+
+Your sagacity is wasted on this audience!
+
+These dolts require a more hands-on lesson!
+
+No one ever listens!
+
+Reach enlightenment through violence!
+
+Time to give them a lesson they'll never forget!

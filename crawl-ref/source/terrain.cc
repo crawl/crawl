@@ -2595,7 +2595,7 @@ void ice_wall_damage(monster &mons, int delay)
     beam.thrower = KILL_YOU;
     int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
     mprf("The wall freezes %s%s%s",
-         you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
+         mons.name(DESC_THE).c_str(),
          dam ? "" : " but does no damage",
          attack_strength_punctuation(dam).c_str());
 
@@ -2642,7 +2642,7 @@ void frigid_walls_damage(int delay)
         beam.thrower = KILL_YOU;
         int dam = mons_adjust_flavoured(*mi, beam, orig_dam);
         mprf("The frigid air chills %s%s%s",
-            you.can_see(**mi) ? mi->name(DESC_THE).c_str() : "something",
+            mi->name(DESC_THE).c_str(),
             dam ? "" : " but does no damage",
             attack_strength_punctuation(dam).c_str());
 

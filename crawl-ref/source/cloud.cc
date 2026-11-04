@@ -2160,14 +2160,10 @@ bool cloud_is_removed(cloud_type cloud)
 
 static bool _is_chaos_polyable(const actor &defender)
 {
-    if (!defender.can_safely_mutate())
-        return false;  // no polymorphing undead
+    if (!defender.can_polymorph())
+        return false;
 
-    const monster* mon = defender.as_monster();
-    if (!mon)
-        return true;
-
-    return !mon->is_firewood() && !mons_invuln_will(*mon);
+    return !defender.is_firewood();
 }
 
 static bool _is_chaos_slowable(const actor &defender)
@@ -2214,7 +2210,15 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
+        "polymorph", 2, _is_chaos_polyable, BEAM_NONE,
+        [](actor* victim, actor* /*source*/) {
+            if (victim->is_monster())
+                victim->as_monster()->polymorph(PPT_SAME);
+            else
+                you.polymorph(20 + roll_dice(3, 10));
+
+            return true;
+        }
     },
     {
         "rage", 5, [](const actor &victim) {

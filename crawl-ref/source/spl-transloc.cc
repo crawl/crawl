@@ -45,6 +45,7 @@
 #include "orb.h"
 #include "output.h"
 #include "prompt.h"
+#include "random-var.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-monench.h"
@@ -929,6 +930,20 @@ spret controlled_blink(bool safe_cancel, dist *target)
     return spret::success;
 }
 
+static random_var _blink_cooldown(int pow)
+{
+    return random_var(2, 5) + div_rand_round(random_var(50 - pow), 10);
+}
+
+/**
+ * Describes the cooldown of the player spell Blink.
+ */
+string blink_cooldown_description(int pow)
+{
+    const random_var cooldown = _blink_cooldown(pow);
+    return make_stringf("%d-%d", cooldown.min(), cooldown.max());
+}
+
 /**
  * Cast the player spell Blink.
  *
@@ -948,8 +963,7 @@ spret cast_blink(int pow, bool fail)
     fail_check();
     uncontrolled_blink();
 
-    you.increase_duration(DUR_BLINK_COOLDOWN,
-                          2 + random2(3) + div_rand_round(50 - pow, 10));
+    you.increase_duration(DUR_BLINK_COOLDOWN, _blink_cooldown(pow).roll());
 
     return spret::success;
 }
@@ -2005,8 +2019,7 @@ vector<monster *> find_chaos_targets(bool just_check)
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!mons_is_tentacle_or_tentacle_segment(mi->type)
-            && !mons_class_is_stationary(mi->type)
+        if (!mi->no_tele()
             && !mi->is_peripheral()
             && !mi->wont_attack())
         {
@@ -2038,9 +2051,6 @@ spret word_of_chaos(int pow, bool fail)
     mpr("You speak a word of chaos!");
     for (auto mons : targets)
     {
-        if (mons->no_tele())
-            continue;
-
         blink_away(mons, &you, false);
         if (x_chance_in_y(pow, 500))
             mons->trap_in_web();
@@ -2414,7 +2424,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+        if (!mi->is_stationary() && !mi->stasis() && you.see_cell_no_trans(mi->pos()))
             targs.push_back(*mi);
     }
 
@@ -2452,7 +2462,7 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
         if (you.aware_of(**mi))
         {
             occupied[mi->pos()] = *mi;
-            if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+            if (!mi->is_stationary() && !mi->stasis() && you.see_cell_no_trans(mi->pos()))
                 movers.push_back(*mi);
         }
 

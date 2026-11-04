@@ -57,6 +57,8 @@ enum potion_type
     POT_DUMMY_AGILITY,
 #endif
     POT_MIST,
+    POT_BERSERK_SAGE,
+    POT_EXPEDIENCE,
     NUM_POTIONS
 };
 

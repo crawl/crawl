@@ -81,7 +81,7 @@ void player_displace_monster(monster* mons, const coord_def &loc)
         if (loc != you.pos())
             mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
         // Friendly seekers dissipate when the player swaps into them.
-        else if (mons_is_seeker(*mons))
+        else if (mons_is_seeker(*mons) || mons->type == MONS_LIVING_SPELL)
         {
             simple_monster_message(*mons, " dissipates!", false,
                                 MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -791,6 +791,33 @@ static bool _check_beholders(const coord_def& pos, bool quiet = false)
     return false;
 }
 
+static void _xom_do_spellstride(const coord_def& pos)
+{
+    if (!enough_mp(1, true))
+        return;
+
+    mgen_data mg(MONS_LIVING_SPELL, BEH_COPY, pos,
+                 MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
+
+    spell_type spell = static_cast<spell_type>(you.props[XOM_SPELLSTRIDE_SPELL].get_int());
+    mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
+
+    mg.set_summoned(&you, MON_SUMM_STARDUST, random_range(60, 100), false, false);
+    mg.set_range(1);
+    mg.hd = 1;
+
+    // These spells will do 3d[dmg] damage.
+    const int dmg = pow(you.experience_level, 1.2) * 45 / 100 + 3;
+    if (monster* mon = create_monster(mg))
+    {
+        mon->props[SPELL_DMG_OVERRIDE_KEY] = dmg;
+        mprf("You trail magic in your wake.");
+    }
+
+    pay_mp(1);
+    finalize_mp_cost();
+}
+
 vector<actor*> get_stampede_line(const coord_def& start, const coord_def& delta, bool only_known_to_player)
 {
     // Iterate to find how many connected actors are in a row (possibly only those which the player can see.)
@@ -878,6 +905,12 @@ bool stampede_step(actor& agent, const coord_def& target, bool allow_solo)
         if (move_targets[i]->alive())
             move_targets[i]->finalise_movement();
     agent.finalise_movement();
+
+    if (agent.is_player()
+        && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SPELLSTRIDE)
+    {
+        _xom_do_spellstride(old_pos);
+    }
 
     return true;
 }
@@ -1099,6 +1132,12 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
 
     if (you_worship(GOD_WU_JIAN))
         did_attack |= wu_jian_post_move_effects(false, initial_pos);
+
+    if (rampaging
+        && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SPELLSTRIDE)
+    {
+        _xom_do_spellstride(initial_pos);
+    }
 
     you.finalise_movement();
 

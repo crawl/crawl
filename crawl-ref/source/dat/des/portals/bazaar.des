@@ -2138,9 +2138,27 @@ local wand = table.concat(util.random_subset({
              "any hex wand charges:" .. crawl.random_range(12, 18),
              "wand of polymorph charges:" .. crawl.random_range(12, 18)}, 2), " | ")
 
+-- Handpicked talismans: tier 2 talismans that don't meld body armour, all
+-- tier 3 and 4 talismans, storm talismans (with a tiny chance of plain death).
+local talis =
+{
+  ["2X"] = {"mist", "jade", "medusa", "spore"},
+  ["3"] = {"eel", "fortress", "lupine", "maw", "spider", "serpent", "wellspring"},
+  ["4"] = {"blade", "dragon-coil", "granite", "hive", "riddle", "sanguine"},
+  ["5"] = {"storm"}
+}
+
+local pl_tal = util.random_choose_weighted{ {"3", 12}, {"4", 7}, {"5", 1} }
+pl_tal = util.random_from(talis[pl_tal]) .. " talisman"
+if pl_tal == "storm talisman" and crawl.one_chance_in(4) then
+  pl_tal = "talisman of death"
+end
+local rt_tal = util.random_choose_weighted{ {"2X", 4}, {"3", 8}, {"4", 6} }
+rt_tal = util.random_from(talis[rt_tal]) .. " talisman randart"
+local ch_tal = util.random_choose_weighted{ {"2X", 12}, {"3", 10}, {"4", 9}, {"5", 1} }
+ch_tal = util.random_from(talis[ch_tal]) .. " talisman chaotic randart"
+
 -- Only chaos weapons: two randarts and one good_item.
--- Unrands are chosen for chaotic / demonic flavour, inherent risks,
--- or very niche build support.
 local equip_count = 7
 local weaps = { "demon blade", "double sword", "triple sword",
                 "demon trident", "partisan", "bardiche", "demon whip",
@@ -2155,30 +2173,94 @@ equips[1] = weaps[1] .. ' ego:chaos randart plus:' .. crawl.roll_dice(3, 4)
 equips[2] = weaps[2] .. ' ego:chaos randart plus:' .. crawl.roll_dice(2, 5)
 equips[3] = weaps[3] .. ' ego:chaos good_item plus:' .. crawl.roll_dice(3, 2)
 
-if crawl.x_chance_in_y(3, 4) then
+-- 30% regular weirder unrands, 30% chaotic weapon unrand,
+-- 20% chaotic armour unrand, 20% no unrands at all.
+if crawl.x_chance_in_y(4, 5) then
   equip_count = equip_count + 1
 
+  -- This list covers items mechanically weird or risky enough to fit being
+  -- granted without any chaotic modifiers.
   local baseunlist = { "plutonium_sword", "singing_sword", "obsidian_axe",
                        "partisan_of_prune", "mace_of_variability", "firestarter",
                        "majin-bo", "robe_of_folly", "robe_of_misfortune",
                        "maxwell's_patent_armour", "orange_crystal_plate_armour",
                        "shield_of_the_gong", "tower_shield_of_ignorance",
-                       "hat_of_the_bear_spirit", "mad_mage's_maulers",
+                       "crown_of_vainglory", "hat_of_the_bear_spirit",
+                       "mad_mage's_maulers", "fungal_fisticloak",
                        "ratskin_cloak", "slick_slippers", "seven-league_boots",
-                       "skull_of_zonguldrok", "fungal_fisticloak", "crown_of_vainglory"}
+                       "skull_of_zonguldrok"}
 
-  local chaoticlist = { "spriggan's_knife", "captain's_cutlass", "gyre",
-                        "maxwell's_thermic_engine",
-                        "autumn_katana", "elemental_staff", "wrath_of_trog",
-                        "frostbite", "consecrated_labrys", "wyrmbane",
-                        "rift", "glaive_of_the_guard", "lochaber_axe",
-                        "eos", "spellbinder", "sceptre_of_torment",
-                        "punk", "storm_bow", "mule" }
+  -- This list covers all normal weapon unrands. To keep all skills equal in
+  -- droprate regardless of the number of unrands implemented, this sorts them
+  -- out into their weapon type categories.
+  local chaotic_unwpn =
+  {
+    ["mf"] = {"brilliance", "carina_at_dusk", "dark_maul", "devastator",
+              "eos", "firestarter", "mace_of_variability", "skullcrusher",
+              "snakebite", "spellbinder", "sceptre_of_torment", "undeadhunter"},
+    ["ax"] = {"arga", "consecrated_labrys", "frostbite", "obsidian_axe",
+              "woodcutter's_axe", "wrath_of_trog"},
+    ["pl"] = {"condemnation", "coolibah_bardiche", "finisher", "force_lance",
+              "glaive_of_the_guard", "lochaber_axe",
+              "partisan_of_prune", "trident_of_the_octopus_king",
+              "rift", "scythe_of_curses", "wyrmbane"},
+    ["st"] = {"elemental_staff", "lajatang_of_order", "majin-bo",
+              "staff_of_five_virtues", "staff_of_the_meek", "staff_of_olgreb"},
+    ["sb"] = {"arc_blade", "captain's_cutlass", "fimbulwinter", "gyre",
+              "spriggan's_knife", "stagehand's_sword", "vampire's_tooth"},
+    ["lb"] = {"autumn_katana", "sword_of_the_dread_knight", "hana's_scimitar",
+              "leech", "maxwell's_thermic_engine", "plutonium_sword",
+              "singing_sword", "throatcutter", "zealot's_sword"},
+    ["rg"] = {"damnation", "mule", "punk", "sniper", "storm_bow", "zephyr"}
+  }
 
-  if crawl.coinflip() then
+  -- Lists all body / aux armour unrands in the game. (No offhands; orbs don't
+  -- give a defense stat, and Xom thinks shields are more boring than orbs.)
+  local chaotic_unarm =
+  {
+    ["bd_def"] = {"arcane_splint_mail", "cigotuvi's_embrace",
+                  "forgewarden's_cuirass", "justicar's_regalia",
+                  "kryia's_mail_coat", "lear's_hauberk",
+                  "maxwell's_patent_armour", "moon_troll_leather_armour",
+                  "salamander_hide_armour", "orange_crystal_plate_armour"},
+    ["bd_any"] = {"bone_scales", "scales_of_the_dragon_king",
+                  "fire_dragon_occultist's_scales",
+                  "ice_dragon_arcanist's_scales", "robe_of_augmentation",
+                  "robe_of_clouds", "robe_of_folly", "robe_of_misfortune",
+                  "robe_of_night", "robe_of_vines", "skin_of_zhor",
+                  "swamp_witch's_dragon_scales", "victory"},
+    ["aux_rm"] = {"hat_of_the_alchemist", "hood_of_the_assassin",
+                  "hat_of_the_bear_spirit", "mask_of_the_dragon",
+                  "crown_of_dyrovepreva", "hat_of_pondering",
+                  "crown_of_vainglory", "fungal_fisticloak", "ratskin_cloak",
+                  "cloak_of_starlight", "cloak_of_the_thief", "fencer's_gloves",
+                  "delatra's_gloves", "gloves_of_the_gadgeteer",
+                  "ghost_crab_claws", "mad_mage's_maulers", "gauntlets_of_war",
+                  "mountain_boots", "slick_slippers", "seven-league_boots"},
+    ["aux_bd"] = {"lightning_scales", "black_knight's_barding"}
+  }
+
+  local wpn_type = util.random_from({"mf", "ax", "pl", "st", "sb", "lb", "rg"})
+  local arm_type = util.random_from({"bd_def", "bd_any", "aux_rm"})
+
+  -- While most of Xom's gifts should deliberately not care about the player,
+  -- the extremely restrained number of unrands provided this way are a bit
+  -- cruel to give out otherwise.
+
+  if you.race() == "Poltergeist" or you.race() == "Octopode" or you.genus() == "draconian" and crawl.x_chance_in_y(4, 5) then
+    arm_type = "aux_rm"
+  elseif you.race() == "Spriggan" or you.race() == "Oni" or you.race() == "Troll" and crawl.x_chance_in_y(4, 5) then
+    arm_type = util.random_from({"bd_any", "aux_rm"})
+  elseif (you.race() == "Naga" or you.race() == "Gale Centaur" and arm_type == "aux_rm" and crawl.one_chance_in(5)) or crawl.one_chance_in(1000) then
+    arm_type = "aux_bd"
+  end
+
+  if crawl.x_chance_in_y(3, 10) then
     table.insert(equips, util.random_from(baseunlist))
+  elseif crawl.x_chance_in_y(3, 5) then
+    table.insert(equips, "chaotic " .. util.random_from(chaotic_unwpn[wpn_type]))
   else
-    table.insert(equips, "chaotic " .. util.random_from(chaoticlist))
+    table.insert(equips, "chaotic " .. util.random_from(chaotic_unarm[arm_type]))
   end
 end
 
@@ -2248,8 +2330,8 @@ cons = table.concat(cons, " | ")
 -- TODO: implement chaotic talismans that also grant a free chaos brand, then
 -- add back a third talisman drop to the spells + talisman shop.
 kfeat('A = book shop no_mimic ' .. magi_name .. ' greed:8 count:8 use_all ; ' ..
-           use_books .. ' | ' .. manual .. ' | ' ..  ' any talisman | ' ..
-           ' any talisman randart | ' .. wand)
+           use_books .. ' | ' .. manual .. ' | ' .. pl_tal .. '  | ' ..
+           rt_tal .. ' | ' .. ch_tal .. ' | ' .. wand)
 kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:11 ' ..
            ' count:' .. equip_count .. ' use_all ; ' .. equips .. ' | ' ..
            jewel1 .. ' | ' .. jewel2 .. ' | ' .. aux)

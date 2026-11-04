@@ -1032,7 +1032,7 @@ targeter_cleave::targeter_cleave(coord_def target)
 {
     agent = &you;
     origin = you.pos();
-    bonus_reach = you.form == transformation::aqua ? 2 : 0;
+    bonus_reach = you.reach_range_bonus();
     cleave_range = you.reach_range() - bonus_reach;
     set_aim(target);
 }
@@ -2758,6 +2758,11 @@ aff_type targeter_piledriver::is_affected(coord_def loc)
             return AFF_YES;
 
     return AFF_NO;
+}
+
+bool targeter_dispersal::affects_monster(const monster_info& mon)
+{
+    return !mon.is(MB_NO_TELE);
 }
 
 targeter_teleport_other::targeter_teleport_other(const actor* act, int r) :

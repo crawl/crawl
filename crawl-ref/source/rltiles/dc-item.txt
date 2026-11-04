@@ -963,7 +963,9 @@ i-curse-jewellery SCR_CURSE_JEWELLERY
 %back scroll-brown
 i-poison SCR_POISON
 %back scroll-grey
-i-butterflies SCR_BUTTERFLIES SCR_ID_LAST
+i-butterflies SCR_BUTTERFLIES
+i-frog SCR_FROG
+i-plinking SCR_PLINKING SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY
@@ -1208,7 +1210,9 @@ i-good-mutation POT_REMOVEME9
 # (corresponds to POT_DUMMY_AGILITY)
 i-attraction POT_REMOVEME10
 # end TAG_MAJOR_VERSION
-i-mist POT_MIST POT_ID_LAST
+i-mist POT_MIST
+i-berserk-sage POT_BERSERK_SAGE
+i-expedience POT_EXPEDIENCE POT_ID_LAST
 %back none
 %rim 1
 

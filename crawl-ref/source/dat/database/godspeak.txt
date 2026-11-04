@@ -38,6 +38,26 @@ Xom grants you an implement of some kind.
 Xom smiles on you.
 
 "Catch!"
+
+"This should solve all your mortal problems."
+
+"You have earned this, mortal."
+
+Xom offers you a trinket.
+
+Xom bestows a priceless treasure upon you.
+
+Clutter rains down from above.
+
+"Surprise!"
+
+You hear rummaging in a distant attic.
+
+w:5
+"A fitting gift for my favourite toy."
+
+w:5
+"My favourite toy didn't want this, so you can have it instead."
 %%%%
 # gifting you an orb
 Xom orb gift
@@ -52,6 +72,39 @@ w:3
 ####################
 # friendly summons
 ####################
+_xom_guardian_summon_generic_
+
+"You seem to need some help staying out of trouble."
+
+Xom thinks you could use some additional protection.
+%%%%
+Xom guardian summon
+
+"This one will keep you safe."
+
+"Guard the toy, my child."
+
+w:5
+"I'm sure you two will get along fabulously."
+
+w:1
+"This was the only babysitter available on short notice."
+
+w:30
+@_xom_guardian_summon_generic_@
+%%%%
+Xom guardian summon plural
+
+"These ones will keep you safe."
+
+"Guard the toy, my children."
+
+w:5
+"I'm sure all of you will get along fabulously."
+
+w:30
+@_xom_guardian_summon_generic_@
+%%%%
 Xom single summon
 
 "Serve the mortal, my child!"
@@ -619,6 +672,22 @@ You hear Xom's maniacal laughter.
 "Suffer!"
 
 Xom's malign attention turns to you for a moment.
+
+"Remember your place, mortal."
+
+"Boring toys must be taught a lesson."
+
+Xom tests your faith.
+
+"Amuse your god!"
+
+Xom smiles daggers at you.
+
+Xom's apathy hits you like a hurricane.
+
+"You require additional motivation, mortal."
+
+"Isn't trouble so much fun?"
 %%%%
 Xom torment all
 
@@ -804,6 +873,24 @@ Xom smiles on you.
 Xom cleaving
 
 @Xom potion effect@
+%%%%
+Xom reaching
+
+"Have you ever considered the benefits of being very, very long?"
+
+"No, no, those are much too short."
+
+Xom meddles with your body plan.
+
+{{if you.has_bones() then
+    return "Xom rearranges your bones."
+else
+    return "Xom rearranges anatomy you didn't realise you had."
+end
+}}
+
+w:2
+"This is what peak performance looks like, mortal."
 %%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
@@ -1145,6 +1232,223 @@ else
     return "plaything"
 end
 }}
+%%%%
+Xom duel
+
+w:50
+Xom invites you to prove yourself in combat! (Or flee; that is also acceptable.)
+
+Xom transports you to a magical carnival.
+
+Xom sets you up on a blind date.
+
+Xom invites you to a fabulous tea party.
+
+"This ought to be fun."
+
+"Entertain your god!"
+
+"Only one may leave!"
+
+"Dance, toys, dance!"
+%%%%
+Xom arena win
+
+w:30
+Xom crowns you victorious!
+
+Xom crowns you mildly entertaining.
+
+Xom crowns you minimally acceptable.
+
+A tiny paper crown materialises on your head.
+
+Xom thinks you've had quite enough fun for the moment.
+
+"See? Making new friends is easy."
+
+Xom puts you back where you came from.
+
+Xom ushers you out before you can damage the room any further.
+
+Xom hoots with approval!
+%%%%
+Xom floor lock
+
+"This is for your own protection."
+
+"Toys shouldn't wander off."
+
+Xom decides to protect an endangered species.
+
+"I can't have my favourite toy go falling down the stairs!"
+
+w:5
+"Dancing on the stairs is bad for your health."
+%%%%
+Xom congratulations
+
+"Well done, mortal."
+
+Xom graciously unlocks the door again.
+
+"Now where did I put that key...."
+
+"Be free, my toy!"
+
+Xom has second-thoughts about your captivity.
+%%%%
+Xom sneaky congratulations
+
+"What a clever toy you are!"
+%%%%
+Xom knowledge
+
+You feel a rush of knowledge for just a moment.
+
+"Diversify thyself, my child."
+
+"Have you ever considered trying this instead?"
+
+Xom crams your mind full of knowledge.
+
+"Class is now in session."
+
+Xom inundates you with a year's worth of experiences in a single moment.
+
+You feel a glimmer of Xom's boundless wisdom(?) touch upon you.
+%%%%
+Xom eisegesis
+
+Xom teaches you a maddening secret.
+
+Overwhelming understanding seizes you.
+
+"You could use a new trick."
+
+Xom's power brushes across your mind and you reel.
+
+"Open your mind, my child."
+
+Xom blesses you with insight into chaos.
+%%%%
+Xom guardian revive
+
+"Try not to let that happen again."
+
+"Don't wander off like that."
+
+You sense Xom's disapproving frown.
+
+w:20
+"Oh no, not @guardian_name@!"
+
+"You mortals are so fragile."
+
+"Died hilariously, I hope!"
+
+"And now for the sequel!"
+
+w:50
+"Your duties are not yet fulfilled."
+
+"That wasn't supposed to happen."
+
+"Amuse me some more."
+
+"Heed your god's command, @guardian_name@."
+%%%%
+Xom spellstride
+
+Xom improves your @feet@ with @beam_type@.
+
+w:5
+"Casting spells with your hands is boring. Now you can do better, my child."
+
+"Unleash destruction with your footsteps!"
+
+"Blaze a trail of @beam_type@, my toy!"
+%%%%
+Xom mannequin
+
+"Put on a good show, my toy!"
+
+"The curtain opens on a new scene."
+
+"Show this realm the mightiest army they have ever seen!"
+
+"Sweep across this realm like an exorable tide!"
+
+"Drive your enemies before you and take their shiny things!"
+
+Xom promotes you to Maple-General.
+
+Xom gives you command of an army. (Some assembly required.)
+%%%%
+Xom mannequin gift
+
+Xom sends (wooden) servants to aid you!
+
+Xom gifts you an army! (Of sorts....)
+
+"Here, have some more understudies."
+
+Objects tumble out of Xom's toy box.
+
+"This one came highly recommended!"
+
+w:5
+"I think this one might replace you if you don't step it up!"
+%%%%
+Xom battleshape
+
+Xom sculpts chaos into a physical form.
+
+Xom lends you a pet cube.
+
+"It's time for a geometry lesson."
+
+"You look lonely; take this."
+
+w:5
+"Enjoy this weightless companion dodecahedron."
+%%%%
+Xom protean
+
+Xom blesses you with excessive genetic potential.
+
+"You could use more variety in your organs."
+%%%%
+Xom sneaky
+
+Xom teaches you the importance of not being seen.
+
+"Let's play hide and seek."
+
+"Nobody ever suspects the barrel."
+
+"They'll never see you coming."
+%%%%
+Xom mirrors
+
+"Eeny, meeny, miny, moe...."
+
+"Which is real and which is illusion?"
+
+"Have a test of your perception, my child!"
+%%%%
+Xom make traps
+
+Xom adds a little enrichment to your environment.
+
+Xom reveals the presence of traps!
+
+Xom creates an obstacle course for you.
+
+"Watch out! This place is dangerous!"
+
+w:2
+Xom draws the Minefield card.
 ######################################
 # Miscellaneous god messages.
 ######################################
@@ -1460,14 +1764,6 @@ Vehumet says: Let it end in hellfire!
 Wu Jian welcome
 
 The Council says: Follow the path of wisdom and battle!
-%%%%
-Xom bored
-
-Xom yawns.
-
-"I wonder what else is on..."
-
-@Xom welcome@
 %%%%
 Xom newgame
 

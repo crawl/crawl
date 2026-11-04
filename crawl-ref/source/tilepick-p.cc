@@ -1232,10 +1232,11 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     ptr[1] = 0;
 }
 
-bool player_uses_monster_tile()
+bool player_uses_monster_tile(bool ignore_options)
 {
-    return Options.tile_use_monster != MONS_0
+    return (!ignore_options && Options.tile_use_monster != MONS_0)
             || you.duration[DUR_EXECUTION]
+            || you.duration[DUR_DISGUISED]
             || you.form == transformation::fortress_crab
             || (you.may_pruneify() && you.helpless());
 }

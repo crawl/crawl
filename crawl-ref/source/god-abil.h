@@ -268,4 +268,7 @@ void makhleb_enter_crucible_of_flesh(int debt);
 void makhleb_handle_crucible_of_flesh();
 void makhleb_crucible_kill(monster& victim);
 
+bool xom_duel_active();
+void xom_end_duel();
+
 void simulate_time_passing(int turns);

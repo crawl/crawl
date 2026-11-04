@@ -318,6 +318,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_ENTER_ARENA,
     DNGN_ENTER_CRUCIBLE,
+    DNGN_ENTER_XOM_ARENA,
 #endif
 
     DNGN_EXIT_ZIGGURAT,
@@ -345,6 +346,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION > 34
     DNGN_EXIT_ARENA,
     DNGN_EXIT_CRUCIBLE,
+    DNGN_EXIT_XOM_ARENA,
 #endif
 #if TAG_MAJOR_VERSION == 34
 
@@ -422,6 +424,8 @@ enum dungeon_feature_type
     DNGN_DRAGON_VEIN_FIRE,
     DNGN_DRAGON_VEIN_ICE,
     DNGN_ICE_THORNS,
+    DNGN_ENTER_XOM_ARENA,
+    DNGN_EXIT_XOM_ARENA,
 #endif
 
     NUM_FEATURES

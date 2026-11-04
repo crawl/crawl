@@ -1,4 +1,5 @@
-Stone Soup 0.35 (through 0.35-a0-1245-e467b9c7cb )
+Stone Soup 0.35 (through 0.35-a0-1436-9be42e2d0b)
+
 --------------------------------------------------
 
 Highlights
@@ -43,6 +44,8 @@ Artefacts
 * The Amulet of the Four Winds has been renamed the Amulet of Tranquillity.
 * The Glaive of Prune is now the Partisan of Prune, and is otherwise unchanged
   aside from the new base weapon type.
+* The Warlock's Mirror can now also reflect explosive projectiles (like
+  fireballs).
 * The Wrath of Trog now has the sundering brand in addition to its antimagic
   brand, can sunder faster while its wielder is berserk, and preserves some of
   the wielder's sundering charge when not attacking while berserk.
@@ -65,6 +68,8 @@ Branches, Environment
     (which doesn't restrict equipment slots).
 * New terrain type: patches of mould, which automatically sprout fungus on top
   of themselves and slowly regrow it whenever it dies.
+* Mutagenic fog clouds now apply magic contamination to monsters, which will
+  explode violently after standing in them for several turns.
 * The Abyss has received multiple changes:
   * The guaranteed entrance has been moved from Depths to D:13-15, where it
     appears as part of a serial vault, with many new entry vaults added.
@@ -128,6 +133,8 @@ Character
 * Revenants now have -2 Staves and Evocations aptitude (down from -1).
 * Vine Stalkers are now fully plants, which grants them immunity to blinding and
   sleep and allows allied plants to fire through them while worshipping Fedhas.
+* Chaos Knights now start with a scroll of summoning in addition to their
+  scroll of butterflies.
 * Monks now also start with a potion of enlightenment.
 * New mutation: spark swarm, which makes fire and electric damage you deal
   have a high chance to outline foes in light.
@@ -154,6 +161,8 @@ Gods
   * Divine Vigour has now been replaced with Aura of Vigour, which now doubles
     the health of all allies in sight of the player, in addition to its previous
     effect.
+  * Elyvilon's worshippers are now prevented from directly harming neutral
+    monsters (such as those they have pacified).
 * Hepliaklqana's knight ancestor has received multiple changes.
   * At XL 15, they can bind enemies they hit with their melee attack in place.
   * At XL 19, they learn Bolster (giving them Might + Resistance) instead of
@@ -184,12 +193,48 @@ Gods
   also summon elephants, death yaks, skysharks, dire elephants, and ettins.
 * Trog now fully forbids all but gnolls training magic skills, and permits
   worshippers to read scrolls of amnesia.
-* Xom has been altered yet further:
-  - Xom gets bored somewhat faster on mostly-cleared floors, will no longer
-    provide certain beneficial strategic effects on mostly-cleared floors, and
-    inflicts more draining and Doom when bored on mostly-cleared floors.
-  - New Xom effects: mass blinkitis and blinding, mass chaos lace and vexing.
-  - Xom's hyper-buffing an ally effect is even stronger than previously.
+* Xom has been wildly reworked:
+  - Xom mood and boredom have both been removed. Nearly all Xom actions that
+    that have long-term effects (eg: mutations and item gifts) will happen only
+    as the player explores the dungeon and not randomly over time otherwise.
+   - Xom's piety stars now track tension to give an extremely loose display
+     of how likely it is for Xom to intervene in the current situation.
+   - Xom's amusement commentary are now entirely flavour messages.
+  - Xom will now periodically gift worshippers one of several chaos blessings,
+    long-term permanent buffs that rotate every few floors as the player gains
+    XP
+    - Battleshape, spawning a strange object that boosts both melee and spells.
+    - Cleaving+?, providing cleaving + previously weapon-type-locked brands.
+    - Eisegesis, letting you cast a randomly-assigned contaminating spell.
+    - Guardian, foisting upon you a reviving ally without friendly fire.
+    - Protean, spawning XL-scaled aspiring flesh when you take heavy damage.
+    - Sneaky, letting you disguise yourself to stab the unaware.
+    - Spellstride, letting you rampage to leave a trail of living spells.
+    - Troupe, letting you raise slain foes as dancing mannequins.
+  - Many new other effects:
+   - Exploration, positive: joke consumables, very long arms,
+                            random skill knowledge.
+   - Exploration, negative: chaotic floor reinforcements, Duel?,
+                            hall of mirrors, minibanes.
+   - Noncombat: Generating traps, stair kill-locks.
+   - Midcombat: Mass blinkitis & blinding, mass chaos lace & vexing.
+  - Other notable Xom effect changes:
+   - Random teleports towards monsters no longer happen randomly out of combat,
+     but only with accumulated exploration interest.
+   - Random midcombat autocast spells now scale more heavily in choice to one's
+     experience level, rather than just tension.
+   - Random temporary summons (hostile or friendly) are now somewhat weaker at
+     XL 1-7 and somewhat stronger at XL 14-21.
+   - Good mutation gifts are now mildly less likely the more good mutations
+     one has, but also more actively remove bad mutations.
+   - Xom's bazaars now contain chaotic talismans (which attach chaos brands to
+     1/6 of all attacks) and chaotic artefact armour (which have a chance
+     scaling to damage taken to randomly buff or debuff the attacker).
+   - Xom's hyper-buffing an ally effect is even stronger than previously.
+  - Xom rewards monks and faded altar petitioners first worshipping Xom with
+    joke consumables.
+  - Removed effects: Stealth doubling on entering new floors, random noise on
+    entering new floors.
 * The Shining One has received a few ally-centered changes:
   - Cleansing Flame is now harmless to all allies (instead of only holy ones).
   - Summoned allies (no matter their type) will never expire while fighting evil
@@ -215,13 +260,18 @@ Interface and Options
   inflict.
 * Examining weapons now also mentions when shields would slow down their
   attack delay.
+* Examining castable spells now estimates what skill level would be required to
+  reach a 10% failure rate (in your current equipment) and how many XL it would
+  take to train that much.
+* Examining castable spells that don't do damage now regularly describes the
+  scaling of spellpower on their effects.
 * The mon_glyph option now supports elemental colours.
 * The in-game look-up help now also includes weapon egos, armour egos, and
   missile egos.
 * Stash search (ctrl-f) now sorts by categories (putting items before features)
   and then distance, rather than solely by distance.
 * Screen flashes from casting Olgreb's Toxic Radiance, Ozocubu's Refrigeration,
-  and lost souls triggering have all been toned down.
+  slime creatures merging, and lost souls triggering have all been toned down.
 * New option: alt_shatter_animation, which provides a different visual effect
   for Shatter without any screenshake, set by default as true on Webtiles and
   false otherwise.
@@ -241,9 +291,9 @@ Items
     becomes significantly injured, they will automatically shed their tail as
     a hypnotic distraction - forcing enemies to attack it and enabling
     distraction stabs. This tail regrows with exploration, rather than time.
-  - vision talismans, providing Vision Form. This melds headwear and gloves,
-    and reduces your max HP by 10%, but provides Int+3, SInv, and the ability
-    to see glimmer clouds left behind after anybody casts spells. Stepping onto
+  - vision talismans, providing Vision Form. This melds headwear, gloves, and
+    rings, but provides +1 LOS radius, Int+3, SInv, and the ability to see
+    glimmer clouds left behind after anybody casts spells. Stepping onto
     glimmer clouds consumes them to fire a weak but irresistible and undodgeable
     projectile.
  - Tier 2:
@@ -336,6 +386,9 @@ Monsters
 * Player ghosts now can cast Construct Spike Launcher and Splinterfrost Shell.
 * Many monster glyphs have been reorganised and now use Unicode characters
   by default.
+* Player ghosts and player illusions of dual-wielders are still reduced to
+  wielding one weapon, but they now keep either their main weapon or their
+  offhand weapon instead of always keeping their main weapon.
 
 Spells
 ------

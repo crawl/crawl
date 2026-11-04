@@ -1881,14 +1881,14 @@ string mpr_monster_list(bool past, bool show_glyphs)
 
 #ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const vector<monster_info>& mons,
-                                     int& start, bool zombified = false)
+                                     int& start, bool consolidate = false)
 {
     // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
     for (end = start + 1; end < mons.size(); ++end)
     {
         // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
-        if (monster_info::less_than(mons[start], mons[end], zombified, zombified))
+        if (monster_info::less_than(mons[start], mons[end], consolidate))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
@@ -1946,7 +1946,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         {
             int desc_colour;
             string desc;
-            mons_to_string_pane(desc, desc_colour, zombified,
+            mons_to_string_pane(desc, desc_colour, !consolidate,
                                 mons, start, count);
             textcolour(desc_colour);
             if (strwidth(desc) > available && available > 1)
@@ -2003,7 +2003,7 @@ int update_monster_pane()
 
             lines_needed = mons.size();
             for (unsigned int i = 1; i < mons.size(); i++)
-                if (!monster_info::less_than(mons[i-1], mons[i], false, false))
+                if (!monster_info::less_than(mons[i-1], mons[i], true))
                     --lines_needed;
         }
 
@@ -2022,7 +2022,7 @@ int update_monster_pane()
             CGOTOXY(1, 1 + i_print, GOTO_MLIST);
             // i_mons is incremented by _print_next_monster_desc
             if (i_print >= skip_lines && i_mons < (int) mons.size())
-                _print_next_monster_desc(mons, i_mons, full_info);
+                _print_next_monster_desc(mons, i_mons, !full_info);
             else
                 CPRINTF("%s", blank.c_str());
         }
@@ -2297,14 +2297,8 @@ static string _god_asterisks(bool leading_space)
     string str;
     if (you_worship(GOD_XOM))
     {
-        const int p_rank = xom_favour_rank() - 1;
-        if (p_rank >= 0)
-        {
-            str = string(p_rank, '.') + "*"
-                  + string(NUM_PIETY_STARS - 1 - p_rank, '.');
-        }
-        else
-            str = string(NUM_PIETY_STARS, '.'); // very special plaything
+        const int pips = xom_tension_pips();
+        str = string(pips, '*') + string(NUM_PIETY_STARS - pips, '.');
     }
     else
     {
@@ -2328,16 +2322,13 @@ static string _god_asterisks(bool leading_space)
 /**
  * What colour should the god status display be?
  *
- * @param default_colour   The default colour, if not under penance or boredom.
+ * @param default_colour   The default colour, if not under penance.
  * @return                 A colour for the god status display.
  */
 static int _god_status_colour(int default_colour)
 {
     if (player_under_penance())
         return RED;
-
-    if (you_worship(GOD_XOM) && you.gift_timeout <= 1)
-        return you.gift_timeout ? RED : LIGHTRED;
 
     return default_colour;
 }

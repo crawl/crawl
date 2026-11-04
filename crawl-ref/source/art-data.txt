@@ -1551,8 +1551,8 @@ BRAND:    SPARM_REFLECTION
 VALUE:    400
 BOOL:     skip_ego
 INSCRIP:  omnireflect
-DBRAND:   Omnireflect: It can block and reflect piercing ranged attacks and
- magical attacks against the wielder's willpower.
+DBRAND:   Omnireflect: It can block and reflect piercing ranged attacks,
+ explosive projectiles, and magical attacks against the wielder's willpower.
 
 # Fedhas sprint, to allow all but coglins access to evocable invisibility.
 ENUM:     AMULET_INVISIBILITY

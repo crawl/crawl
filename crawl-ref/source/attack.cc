@@ -314,52 +314,9 @@ int attack::calc_to_hit(bool random)
  * Takes into account actor visibility/invisibility and the type of description
  * to be used (capitalization, possessiveness, etc.)
  */
-string attack::actor_name(const actor *a, description_level_type desc,
-                          bool actor_visible)
+string attack::actor_name(const actor *a, description_level_type desc)
 {
-    return actor_visible ? a->name(desc) : anon_name(desc);
-}
-
-/* Returns an actor's pronoun
- *
- * Takes into account actor visibility
- */
-string attack::actor_pronoun(const actor *a, pronoun_type pron,
-                             bool actor_visible)
-{
-    return actor_visible ? a->pronoun(pron) : anon_pronoun(pron);
-}
-
-/* Returns an anonymous actor's name
- *
- * Given the actor visible or invisible, returns the
- * appropriate possessive pronoun.
- */
-string attack::anon_name(description_level_type desc)
-{
-    switch (desc)
-    {
-    case DESC_NONE:
-        return "";
-    case DESC_YOUR:
-    case DESC_ITS:
-        return "something's";
-    case DESC_THE:
-    case DESC_A:
-    case DESC_PLAIN:
-    default:
-        return "something";
-    }
-}
-
-/* Returns an anonymous actor's pronoun
- *
- * Given invisibility (whether out of LOS or just invisible), returns the
- * appropriate possessive, inflexive, capitalised pronoun.
- */
-string attack::anon_pronoun(pronoun_type pron)
-{
-    return decline_pronoun(GENDER_NEUTER, pron);
+    return a->name(desc);
 }
 
 /* Initializes an attack, setting up base variables and values
@@ -675,7 +632,7 @@ void attack::drain_defender()
             special_damage_message =
                 make_stringf(
                     "%s %s %s%s",
-                    atk_name(DESC_THE).c_str(),
+                    attacker->name(DESC_THE).c_str(),
                     attacker->conj_verb("drain").c_str(),
                     defender_name(true).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
@@ -688,9 +645,9 @@ void attack::drain_defender_speed()
     if (needs_message)
     {
         mprf("%s %s %s vigour!",
-             atk_name(DESC_THE).c_str(),
+             attacker->name(DESC_THE).c_str(),
              attacker->conj_verb("drain").c_str(),
-             def_name(DESC_ITS).c_str());
+             defender->name(DESC_ITS).c_str());
     }
     defender->slow_down(attacker, 5 + random2(7));
 }
@@ -794,24 +751,6 @@ void attack::stab_message()
     defender->props.erase(HELPLESS_KEY);
 }
 
-/* Returns the attacker's name
- *
- * Helper method to easily access the attacker's name
- */
-string attack::atk_name(description_level_type desc)
-{
-    return actor_name(attacker, desc, attacker_visible || you.aware_of(*attacker));
-}
-
-/* Returns the defender's name
- *
- * Helper method to easily access the defender's name
- */
-string attack::def_name(description_level_type desc)
-{
-    return actor_name(defender, desc, defender_visible || you.aware_of(*defender));
-}
-
 /* TODO: Remove this!
  * Removing it may not really be practical, in retrospect. Its only used
  * below, in calc_elemental_brand_damage, which is called for both frost and
@@ -820,9 +759,9 @@ string attack::def_name(description_level_type desc)
 string attack::defender_name(bool allow_reflexive)
 {
     if (allow_reflexive && attacker == defender)
-        return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
+        return attacker->pronoun(PRONOUN_REFLEXIVE);
     else
-        return def_name(DESC_THE);
+        return defender->name(DESC_THE);
 }
 
 int attack::player_apply_misc_modifiers(int damage)
@@ -1109,7 +1048,7 @@ bool attack::attack_shield_blocked()
         pro_block /= 3;
 
     dprf(DIAG_COMBAT, "Defender: %s, Pro-block: %d, Con-block: %d",
-         actor_name(defender, DESC_PLAIN, true).c_str(), pro_block, con_block);
+         defender->name(DESC_PLAIN, true).c_str(), pro_block, con_block);
 
     if (pro_block >= con_block && !defender->shield_exhausted()
         || defender->divinely_shielded())
@@ -1461,7 +1400,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
         // XXX: assumes "what" is singular
         special_damage_message = make_stringf(
             "%s %s %s%s%s",
-            what ? what : atk_name(DESC_THE).c_str(),
+            what ? what : attacker->name(DESC_THE).c_str(),
             what ? conjugate_verb(verb, false).c_str()
                  : attacker->conj_verb(verb).c_str(),
             // Don't allow reflexive if the subject wasn't the attacker.
@@ -1589,9 +1528,17 @@ void attack::player_stab_check()
     {
         const bool devious = using_weapon()
                                 && get_weapon_brand(*weapon) == SPWPN_DEVIOUS;
-        const int distract_bonus = st == STAB_DISTRACTED && you.form == transformation::hypnogecko
-                                        ? get_form()->get_effect_chance()
-                                        : 0;
+
+        int distract_bonus = 0;
+        if (st == STAB_DISTRACTED)
+        {
+            if (you.duration[DUR_DISGUISED])
+                distract_bonus = 100;
+            else if (you.form == transformation::hypnogecko)
+                distract_bonus = get_form()->get_effect_chance();
+
+        }
+
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
                                      + you.dex() + 1
@@ -1688,4 +1635,25 @@ bool attack::paragon_defends_player()
     }
 
     return false;
+}
+
+// Returns a standard phrased string about an actor blocking a given
+// attack or projectile, and possibly reflecting it.
+string block_event_string(const actor* blocker, const string& projectile,
+                          bool reflected)
+{
+    const string source = blocker->divinely_shielded()
+        ? make_stringf("%s divine shield", blocker->name(DESC_ITS).c_str())
+        : blocker->name(DESC_THE).c_str();
+
+    const bool player = blocker->is_player() && source == "you";
+    const string suffix = reflected && player ? " ...and reflect it back!" :
+                          reflected && !player ? " ...and reflects it back!" :
+                          ".";
+
+    return make_stringf("%s %s %s%s",
+        source.c_str(),
+        player ? "block" : "blocks",
+        projectile.c_str(),
+        suffix.c_str());
 }

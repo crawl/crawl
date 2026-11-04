@@ -117,7 +117,10 @@ bool bolt::is_blockable() const
 /// Can 'omnireflection' (from the Warlock's Mirror) potentially reflect this?
 bool bolt::is_omnireflectable() const
 {
-    return !is_explosion
+    // Fireball-style explosions can be reflected *before* they explode, but by
+    // the time we're in the explosion phase, the blast has already happened,
+    // and even omnireflect can't do anything about that.
+    return !(is_explosion && in_explosion_phase)
             && origin_spell != SPELL_GLACIATE
             && flavour != BEAM_VAMPIRIC_DRAINING; // buggy :(
 }
@@ -431,6 +434,15 @@ int zap_ench_power(zap_type z_type, int pow, bool is_monster)
         return pow;
 }
 
+const char* zap_name(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return "";
+
+    return zinfo->name;
+}
+
 static int _zap_loudness(zap_type zap, spell_type spell)
 {
     const zap_info* zinfo = _seek_zap(zap);
@@ -678,6 +690,12 @@ void bolt::initialise_fire()
     // (Yes, being a kobold does very bad things to the draw strength of every
     // centaur in the dungeon, but that's just life.)
     range = min(range, (int)you.current_vision);
+
+    if (agent() && agent()->type == MONS_LIVING_SPELL
+        && agent()->props.exists(SPELL_DMG_OVERRIDE_KEY))
+    {
+        damage.size = agent()->props[SPELL_DMG_OVERRIDE_KEY].get_int();
+    }
 
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
@@ -1041,6 +1059,8 @@ int bolt::range_used(bool leg_only) const
 void bolt::finish_beam()
 {
     extra_range_used = BEAM_STOP;
+    if (real_flavour == BEAM_CHAOS)
+        flavour = real_flavour;
 }
 
 void bolt::affect_wall()
@@ -2827,6 +2847,18 @@ void bolt::affect_endpoint()
         break;
     }
 
+    case SPELL_PLINKING:
+        if (name == "tiny gold coin")
+        {
+            int gold = items(false, OBJ_GOLD, 0, 0);
+            if (gold != NON_ITEM)
+            {
+                env.item[gold].quantity = 1;
+                move_item_to_grid(&gold, pos());
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -3506,26 +3538,13 @@ int bolt::apply_to_hit_modifiers(int base_hit, const actor &targ) const
     return base_hit;
 }
 
-/* Determine whether the beam hit or missed the player, and tell them if it
- * missed.
+/* Determine whether the beam was blocked by the player, handling messaging and
+ * reflection, as appropriate.
  *
- * @return  true if the beam missed, false if the beam hit the player.
+ * @return  true if the beam was blocked.
  */
-bool bolt::misses_player()
+bool bolt::attempt_player_block()
 {
-    if ((is_explosion || aimed_at_feet)
-        && origin_spell != SPELL_CALL_DOWN_LIGHTNING
-        && origin_spell != SPELL_MOMENTUM_STRIKE)
-    {
-        return false;
-    }
-
-    int dodge = you.evasion();
-    int real_tohit  = hit;
-
-    if (real_tohit != AUTOMATIC_HIT)
-        real_tohit = apply_to_hit_modifiers(real_tohit, you);
-
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
@@ -3534,13 +3553,16 @@ bool bolt::misses_player()
         && (SH > 0 || you.duration[DUR_DIVINE_SHIELD]))
     {
         bool blocked = false;
-        if (hit == AUTOMATIC_HIT)
+        if (hit == AUTOMATIC_HIT || is_explosion)
         {
-            // 50% chance of blocking ench-type effects at 10 displayed sh
-            blocked = x_chance_in_y(SH, omnireflect_chance_denom(SH));
+            const int effective_SH = is_explosion ? SH * 2 / 5
+                                                  : SH;
+            // 50% chance of blocking ench-type effects at 10 displayed sh.
+            // 20% chance of blocking explosion-type effects at 10 displayed sh.
+            blocked = x_chance_in_y(effective_SH, omnireflect_chance_denom(SH));
 
             dprf(DIAG_BEAM, "%smnireflected: %d/%d chance",
-                 blocked ? "O" : "Not o", SH, omnireflect_chance_denom(SH));
+                 blocked ? "O" : "Not o", effective_SH, omnireflect_chance_denom(SH));
         }
         else
         {
@@ -3564,27 +3586,16 @@ bool bolt::misses_player()
                                         spell_title(origin_spell) :
                                         name;
 
-            const item_def *shield = you.shield();
+            bool reflected = false;
             if (is_reflectable(you))
             {
-                if (shield && shield_reflects(*shield))
-                {
-                    mprf("Your %s blocks the %s... and reflects it back!",
-                            shield->name(DESC_PLAIN).c_str(),
-                            refl_name.c_str());
-                }
-                else
-                {
-                    mprf("You block the %s... and reflect it back!",
-                            refl_name.c_str());
-                }
+                reflected = true;
                 reflect();
             }
             else
-            {
-                mprf("You block the %s.", name.c_str());
                 finish_beam();
-            }
+
+            mpr(block_event_string(&you, make_stringf("the %s", refl_name.c_str()), reflected));
             you.shield_block_succeeded(agent());
 
             return true;
@@ -3593,6 +3604,32 @@ bool bolt::misses_player()
         // Some training just for the "attempt".
         practise_shield_block(false);
     }
+
+    return false;
+}
+
+/* Determine whether the beam hit or missed the player, and tell them if it
+ * missed.
+ *
+ * @return  true if the beam missed, false if the beam hit the player.
+ */
+bool bolt::misses_player()
+{
+    if ((is_explosion || aimed_at_feet)
+        && origin_spell != SPELL_CALL_DOWN_LIGHTNING
+        && origin_spell != SPELL_MOMENTUM_STRIKE)
+    {
+        return false;
+    }
+
+    if (attempt_player_block())
+        return true;
+
+    int dodge = you.evasion();
+    int real_tohit  = hit;
+
+    if (real_tohit != AUTOMATIC_HIT)
+        real_tohit = apply_to_hit_modifiers(real_tohit, you);
 
     if (is_enchantment())
         return false;
@@ -4242,8 +4279,9 @@ void bolt::affect_player()
     // Special cases can be handled here.
     if (is_explosion && !in_explosion_phase)
     {
-        // Trigger the explosion.
-        finish_beam();
+        // Trigger the explosion (unless we omnireflect it)
+        if (is_tracer() || !attempt_player_block())
+            finish_beam();
         return;
     }
 
@@ -4354,7 +4392,7 @@ void bolt::affect_player()
     // poison effects etc work properly.
     check_your_resists(pre_res_dam, flavour, "", this, true);
 
-    if (real_flavour == BEAM_CHAOS && coinflip())
+    if (real_flavour == BEAM_CHAOS && x_chance_in_y(ench_power, 100))
         chaos_affects_actor(&you, agent());
 
     if (flavour == BEAM_STUN_BOLT
@@ -5192,7 +5230,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mon->is_firewood())
         you.pet_target = mon->mindex();
 
-    if (real_flavour == BEAM_CHAOS && coinflip())
+    if (real_flavour == BEAM_CHAOS && x_chance_in_y(ench_power, 100))
         chaos_affects_actor(mon, agent());
 
     // We check player Sticky Flame by name and other effects by flavour, since
@@ -5346,6 +5384,27 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->add_ench(mon_enchant(ENCH_SWIFT, &you, 200));
         mon->speed_increment -= 5;
     }
+
+    if (origin_spell == SPELL_PLINKING)
+    {
+        if (name == "orange crystal pebble")
+        {
+            mon->drain_magic(agent(), random_range(50, 70));
+            mon->confuse(agent(), 6);
+        }
+        else if (name == "tiny gold coin")
+        {
+            mon->daze(random_range(3, 5));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+            mon->speed_increment -= 10;
+            simple_monster_message(*mon, " is distracted by the glint of gold.");
+        }
+        else if (name == "fossilised glass eye")
+            mon->vitrify(agent(), random_range(30, 60));
+        else if (name == "glittering crystal")
+            mon->add_ench(mon_enchant(ENCH_BLIND, agent(), random_range(40, 60)));
+    }
 }
 
 static int _knockback_dist(spell_type origin, int pow)
@@ -5455,39 +5514,17 @@ bool bolt::attempt_block(monster* mon)
 
     mon->sense_if_invisible();
 
-    item_def *shield = mon->mslot_item(MSLOT_SHIELD);
+    bool reflected = false;
     if (is_reflectable(*mon))
     {
-        if (mon->observable())
-        {
-            if (shield && shield_reflects(*shield))
-            {
-                mprf("%s blocks the %s with %s %s... and reflects it back!",
-                     mon->name(DESC_THE).c_str(),
-                     name.c_str(),
-                     mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                     shield->name(DESC_PLAIN).c_str());
-            }
-            else
-            {
-                mprf("The %s reflects off %s %s!",
-                     name.c_str(),
-                     mon->divinely_shielded() ? "the divine shield protecting"
-                                              : "an invisible shield around",
-                     mon->name(DESC_THE).c_str());
-            }
-        }
-        else if (you.see_cell(pos()))
-            mprf("The %s bounces off of thin air!", name.c_str());
-
+        reflected = true;
         reflect();
     }
-    else if (you.see_cell(pos()))
-    {
-        mprf("%s blocks the %s.",
-             mon->name(DESC_THE).c_str(), name.c_str());
+    else
         finish_beam();
-    }
+
+    if (you.see_cell(pos()))
+        mpr(block_event_string(mon, make_stringf("the %s", name.c_str()), reflected));
 
     mon->shield_block_succeeded(agent());
     return true;
@@ -6178,7 +6215,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return obvious_effect ? MON_AFFECTED : MON_OTHER; // ?
 
     case BEAM_POLYMORPH:
-        if (mon->polymorph(0))
+        if (mon->polymorph(PPT_WAND))
             obvious_effect = true;
         return MON_AFFECTED;
 

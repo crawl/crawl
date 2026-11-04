@@ -5167,10 +5167,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         }
     }
 
-    if (props.exists(CHAOTIC_ITEM_KEY) && is_unrandom_artefact(item)
-        && item.base_type == OBJ_WEAPONS)
+    if (props.exists(CHAOTIC_ITEM_KEY))
     {
-        item.flags |= ISFLAG_CHAOTIC;
+        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
+            && is_unrandom_artefact(item))
+        {
+            item.flags |= ISFLAG_CHAOTIC;
+        }
+        // We need to manually add the artprop here (to the already rolled item)
+        else if (item.base_type == OBJ_TALISMANS && is_artefact(item))
+        {
+            item.flags |= ISFLAG_CHAOTIC;
+            artefact_set_property(item, ARTP_CHAOS_STRIKE, 1);
+        }
     }
 
     if (props.exists(NO_PICKUP_KEY))
@@ -5506,7 +5515,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             return 0;
         }
 
-        const monster_type montype = mons_class_is_zombified(type)
+        const monster_type montype = mons_class_is_derived(type)
                                      ? fixup_zombie_type(type, mspec.monbase)
                                      : type;
 
@@ -5516,7 +5525,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        if (mons_class_is_zombified(mspec.monbase))
+        if (mons_class_is_derived(mspec.monbase))
             type = pick_local_zombifiable_monster(mspec.place, mspec.monbase, coord_def());
         else
         {
@@ -5580,9 +5589,9 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     mg.pos = where;
 
-    if (mons_class_is_zombified(mg.base_type))
+    if (mons_class_is_derived(mg.base_type))
     {
-        if (mons_class_is_zombified(mg.cls))
+        if (mons_class_is_derived(mg.cls))
             mg.base_type = MONS_NO_MONSTER;
         else
             swap(mg.base_type, mg.cls);

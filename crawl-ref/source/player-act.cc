@@ -502,12 +502,20 @@ static string _foot_name_singular(bool *can_plural)
         return "tentacles";
     }
 
-    if (you.species == SP_NAGA
-        || you.species == SP_DJINNI)
+    if (you.species == SP_NAGA)
     {
         *can_plural = false;
         return "underbelly";
     }
+
+    if (you.species == SP_DJINNI)
+    {
+        *can_plural = false;
+        return "smoke trail";
+    }
+
+    if (you.species == SP_POLTERGEIST)
+        return "tendril";
 
     if (you.has_mutation(MUT_PAWS))
         return "paw";

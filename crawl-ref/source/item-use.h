@@ -39,6 +39,8 @@ void handle_post_scroll_effects(item_def* scroll, spret read_result,
                                 bool alreadyknown, bool dangerous,
                                 bool bad_effect);
 
+void do_plinking_effect();
+
 bool auto_wield();
 
 bool use_an_item(operation_types oper, item_def *target=nullptr);

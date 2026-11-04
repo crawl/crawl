@@ -1837,9 +1837,9 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     const monster orig = *mon;
 
-    // Use the original monster type as the zombified type here, to get
+    // Use the original monster type as the derived type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
+    define_derived_monster(mon, mon->type, MONS_BOUND_SOUL);
 
     if (orig.has_hydra_multi_attack())
         mons_set_starting_heads(*mon, orig.props[ORIGINAL_HEADS_KEY].get_int());
@@ -6671,9 +6671,9 @@ void okawaru_remove_finesse()
     you.duration[DUR_FINESSE] = 0;
 }
 
-// Gathers all items on the arena floor and saves them in a prop, to deposit
+// Gathers all items on an arena floor and saves them in a prop, to deposit
 // at the player's feet once the duel is over.
-static void _owakwaru_gather_arena_items()
+static void _gather_arena_items()
 {
     CrawlVector& vec = you.props[OKAWARU_DUEL_ITEMS_KEY].get_vector();
     for (int i = 0; i < MAX_ITEMS; ++i)
@@ -6706,7 +6706,7 @@ void okawaru_end_duel(bool kicked_out)
         }
     }
 
-    _owakwaru_gather_arena_items();
+    _gather_arena_items();
 
     if (you.props.exists(OKAWARU_DUEL_ORIG_HP_KEY))
         set_hp(you.props[OKAWARU_DUEL_ORIG_HP_KEY].get_int());
@@ -7454,6 +7454,28 @@ void makhleb_crucible_kill(monster& victim)
 
         return;
     }
+}
+
+// End a 'duel' and return the player to where they were
+void xom_end_duel()
+{
+    ASSERT(player_in_branch(BRANCH_XOM_ARENA));
+
+    _gather_arena_items();
+
+    god_speaks(GOD_XOM, getSpeakString("Xom arena win").c_str());
+
+    stop_delay(true);
+    down_stairs(DNGN_EXIT_XOM_ARENA);
+}
+
+bool xom_duel_active()
+{
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->hostile() && !mi->is_peripheral())
+            return true;
+
+    return false;
 }
 
 // A simplified version of Chei's time step, used for catching up off-level

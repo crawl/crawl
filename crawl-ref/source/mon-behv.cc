@@ -40,6 +40,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
+#include "xom.h"
 
 static void _guess_invis_foe_pos(monster* mon)
 {
@@ -68,6 +69,10 @@ static bool _is_valid_foe(monster* mon, unsigned short foe)
     // Ideally this is not outside special cased like this
     if (mons_is_avatar(mon->type))
         return true;
+
+    // You are utterly inconspicuous while disguised.
+    if (foe == MHITYOU && you.duration[DUR_DISGUISED] && !mon->friendly())
+        return false;
 
     if (foe == MHITNOT || foe == MHITYOU)
         return true;
@@ -563,7 +568,8 @@ void handle_behaviour(monster* mon)
                 {
                     new_beh = BEH_WANDER;
                 }
-                else if (!mon->has_ench(ENCH_DAZED))
+                else if (!mon->has_ench(ENCH_DAZED)
+                         && !you.duration[DUR_DISGUISED])
                 {
                     new_foe = MHITYOU;
                     mon->target = you.pos();
@@ -893,7 +899,10 @@ void handle_behaviour(monster* mon)
                     new_foe = MHITYOU;
                 }
                 else
+                {
                     new_beh = BEH_WANDER;
+                    mon->del_ench(ENCH_FEAR);
+                }
             }
             else
                 mon->target = foepos;
@@ -1436,6 +1445,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     {
         if (!vampire_mesmerism_check(*mon))
             monster_consider_shouting(*mon);
+
+        xom_maybe_disguise_self(mon);
     }
 
     const bool isPacified = mon->pacified();

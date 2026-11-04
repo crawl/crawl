@@ -306,45 +306,6 @@ void wizard_set_piety_to(int newpiety, bool force)
         return;
     }
 
-    if (you_worship(GOD_XOM))
-    {
-        you.raw_piety = newpiety;
-        you.redraw_title = true; // redraw piety display
-
-        int newinterest;
-        if (!force)
-        {
-            char buf[30];
-
-            // For Xom, also allow setting interest.
-            mprf(MSGCH_PROMPT,
-                 "Enter new interest (current = %d, Enter for 0): ",
-                 you.gift_timeout);
-
-            if (cancellable_get_line_autohist(buf, sizeof buf))
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-
-            newinterest = atoi(buf);
-        }
-        else
-            newinterest = newpiety;
-
-        if (newinterest >= 0 && newinterest < 256)
-            you.gift_timeout = newinterest;
-        else
-            mpr("Interest must be between 0 and 255.");
-
-        mprf("Set piety to %d, interest to %d.", you.raw_piety, newinterest);
-
-        const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-        return;
-    }
-
     if (newpiety < 1 && !force)
     {
         if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
@@ -1121,17 +1082,14 @@ void wizard_xom_acts()
 {
     char specs[80];
 
-    msgwin_get_line("What action should Xom take? (Blank = any) " ,
-                    specs, sizeof(specs));
-
-    const int severity = you_worship(GOD_XOM) ? abs(you.raw_piety - HALF_MAX_PIETY)
-                                              : random_range(0, HALF_MAX_PIETY);
+    msgwin_get_line_autohist("What action should Xom take? (Blank = any) " ,
+                             specs, sizeof(specs));
 
     if (specs[0] == '\0')
     {
         const maybe_bool nice = you_worship(GOD_XOM) ? maybe_bool::maybe :
                                 coinflip();
-        const xom_event_type result = xom_acts(severity, nice);
+        const xom_event_type result = xom_acts(nice);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS
         UNUSED(result);
@@ -1147,7 +1105,7 @@ void wizard_xom_acts()
     }
 
     dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
-    xom_take_action(event, severity);
+    xom_take_action(event, get_tension(GOD_XOM));
 }
 
 void wizard_set_zot_clock()

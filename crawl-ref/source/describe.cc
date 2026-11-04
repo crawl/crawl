@@ -503,6 +503,12 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_BANE,
             "It inflicts you with a random bane when you equip it.",
             prop_note::plain },
+        { ARTP_CHAOS_GUARD,
+            "It may inflict chaotic effects on those who attack you.",
+            prop_note::plain },
+        { ARTP_CHAOS_STRIKE,
+            "It may inflict chaos on those you attack in melee.",
+            prop_note::plain },
     };
     return data;
 }
@@ -595,6 +601,11 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     ARTP_ENHANCE_AIR,
     ARTP_ENHANCE_EARTH,
     ARTP_ENHANCE_ALCHEMY,
+
+    // List after other artprops (since it's harder to list it before all
+    // unrand-specific props).
+    ARTP_CHAOS_GUARD,
+    ARTP_CHAOS_STRIKE,
 };
 
 static vector<string> _randart_propnames(const item_def& item,
@@ -612,7 +623,10 @@ static vector<string> _randart_propnames(const item_def& item,
     if (is_unrandom_artefact(item))
     {
         entry = get_unrand_entry(item.unrand_idx);
-        if (testbits(item.flags, ISFLAG_CHAOTIC))
+
+        // Chaotic weapons get a second 'fake' brand that must be noted this
+        // way, but chaotic armour get an actual artprop that is listed normally.
+        if (testbits(item.flags, ISFLAG_CHAOTIC) && item.base_type == OBJ_WEAPONS)
             propnames.push_back("chaos,");
     }
     const bool skip_ego = is_unrandom_artefact(item)
@@ -934,7 +948,8 @@ static string _artefact_descrip(const item_def &item)
  * @returns a string including a description of its head, its body, its flight
  *          mode (if any), and how it smells or looks.
  */
-static string _describe_demon(const string& name, bool flying, colour_t colour)
+static string _describe_demon(const string& name, bool flying, colour_t colour,
+                              const string& descriptor)
 {
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_with_seed(ARRAYSZ(arr), seed, id)]
@@ -1064,7 +1079,11 @@ static string _describe_demon(const string& name, bool flying, colour_t colour)
     };
 
     ostringstream description;
-    description << "One of the many lords of Pandemonium, " << name << " has ";
+
+    if (!descriptor.empty())
+        description << "One of the " << descriptor << " lords of Pandemonium, " << name << " has ";
+    else
+        description << "One of the many lords of Pandemonium, " << name << " has ";
 
     description << article_a(HRANDOM_ELEMENT(body_types, 2));
     // ETC_RANDOM is also possible, handled later
@@ -1089,6 +1108,9 @@ static string _describe_demon(const string& name, bool flying, colour_t colour)
 
     if (colour == ETC_RANDOM)
         description << " It changes colour whenever you look at it.";
+
+    if (!descriptor.empty())
+        description << "\n\nIt seems like it would really prefer not to be here right now.";
 
     return description.str();
 }
@@ -1373,7 +1395,7 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const float cur_delay = you.attack_delay_with(&dummy).expected();
+    const float cur_delay = round(you.attack_delay_with(&dummy).expected());
 
     return make_stringf("\n    Current attack delay: %.1f.", cur_delay / 10);
 }
@@ -2434,9 +2456,10 @@ static string _warlock_mirror_reflect_desc()
     const int reflect_chance_numer = (100 - (scaled_SH % 100)) * SH * omnireflect_chance_denom(SH+1) + (scaled_SH % 100) * (SH+1) * omnireflect_chance_denom(SH);
     const int reflect_chance_denom = omnireflect_chance_denom(SH) * omnireflect_chance_denom(SH+1);
     const int reflect_chance = reflect_chance_numer / reflect_chance_denom;
-    return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
-           "% chance to reflect attacks against your willpower and other "
-           "normally unblockable effects.";
+    return "\n\nWith your current SH, it has a " + to_string(reflect_chance * 2 / 5) +
+           "% chance to reflect explosive projectiles and a " + to_string(reflect_chance) +
+           "% chance to reflect attacks against your willpower and other normally "
+           "unblockable effects.";
 }
 
 static string _armour_ego_key(special_armour_type ego)
@@ -2552,7 +2575,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
             const char* cumber_desc = evp < 100 ? "slightly " :
                                       evp > 100 ? "greatly " : "";
             description += make_stringf(
-                "It is cumbersome to wear, and %simpedes the evasion, "
+                "\n\nIt is cumbersome to wear, and %simpedes the evasion, "
                 "spellcasting ability, and attack speed of the wearer. "
                 "These penalties are reduced by the wearer's Shields skill "
                 "and Strength; mastering Shields eliminates penalties.",
@@ -4592,17 +4615,27 @@ static string _player_spell_stats(const spell_type spell)
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
 
+    const pair<string, string> effect = effect_description(spell);
     const string damage_string = spell_damage_string(spell);
-    const string max_dam_string = spell_max_damage_string(spell);
     const int acc = spell_acc(spell);
     const string defence_string = spell_defence_string(spell);
     const string resist_string = spell_resist_string(spell);
     // TODO: generalize this pattern? It's very common in descriptions
-    const int padding = (acc != -1 || !defence_string.empty()) ? 8
-                        : damage_string.size() ? 6 : 5;
+    int padding = (acc != -1 || !defence_string.empty()) ? 8
+                   : damage_string.size() ? 6 : 5;
+    padding = max(padding, static_cast<int>(effect.first.size()));
     description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
+    if (!effect.first.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, effect.first.c_str(),
+                                    effect.second.c_str());
+
+        const string max_effect = spell_max_effect_string(spell);
+        if (!max_effect.empty())
+            description += " (max power: " + max_effect + ")";
+    }
     if (damage_string != "")
     {
         description += make_stringf("\n%*s: ", padding, "Damage");
@@ -5183,8 +5216,12 @@ static void _get_spell_description(const spell_type spell,
                                 || spell == SPELL_FLASHING_BALESTRA
                                 || spell == SPELL_BECKONING_GALE ? 3 : 0);
 
-        description += "\nRange : ";
-        description += range_string(range, -1, minrange);
+        const string rangestr = range_string(range, -1, minrange);
+        if (!rangestr.empty())
+        {
+            description += "\nRange : ";
+            description += rangestr;
+        }
 
         const string defence_string = spell_defence_string(spell, true, mon_pow);
         const string resist_string = spell_resist_string(spell, true, mon_pow);
@@ -6906,7 +6943,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     pr.AddCell("Int", intelligence_description(mi.intel()));
     if (mi.is(MB_SICK) || mi.is(MB_NO_REGEN))
         pr.AddCell("Regen", "None");
-    else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION))
+    else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION) || mi.is(MB_GUARDIAN))
         pr.AddCell("Regen", make_stringf("%d/turn", mi.regen_rate(1)));
                                         // (Wait, what's a 'turn'?)
 
@@ -7156,10 +7193,18 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mon_explodes_on_death(mi.type))
         _desc_mon_death_explosion(result, mi);
 
-    if (mi.type == MONS_BATTLESPHERE)
+    if (mi.type == MONS_BATTLESPHERE || mi.type == MONS_CHAOS_BATTLESHAPE)
     {
-        const dice_def dam = battlesphere_damage_from_hd(mi.hd);
+        dice_def dam = battlesphere_damage_from_hd(mi.hd);
         result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
+        if (mi.type == MONS_CHAOS_BATTLESHAPE)
+        {
+            dam = zap_damage(ZAP_CHAOS_BATTLESHAPE_FINALE, you.experience_level, false, false);
+            result << "Chaos blast: " << dam.num << "d" << dam.size << "\n";
+
+            dam = zap_damage(ZAP_SHOOTING_STAR, 20 + you.experience_level * 2, false, false);
+            result << "Shooting stars: " << dam.num << "d" << dam.size << "\n";
+        }
     }
     else if (mi.type == MONS_BURSTSHROOM)
     {
@@ -7327,7 +7372,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.airborne(), mi.ghost_colour) << "\n";
+    {
+        string descriptor = mi.props.exists(XOM_PAN_LORD_DESC) ? mi.props[XOM_PAN_LORD_DESC].get_string()
+                                                               : "";
+        inf.body << _describe_demon(mi.mname, mi.airborne(), mi.ghost_colour, descriptor) << "\n";
+    }
         break;
 
     case MONS_MUTANT_BEAST:

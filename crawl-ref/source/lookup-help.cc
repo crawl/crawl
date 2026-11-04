@@ -663,7 +663,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
-    if (mons_class_is_zombified(m_type))
+    if (mons_class_is_derived(m_type))
         base_type = MONS_GOBLIN;
 
     monster_info fake_mon(m_type, base_type);
@@ -1098,9 +1098,9 @@ static int _describe_monster(const string &key, const string &suffix,
     ASSERT(mon_num != MONS_PROGRAM_BUG);
     // Don't attempt to get more information on ghost demon
     // monsters, as the ghost struct has not been initialised, which
-    // will cause a crash. Similarly for zombified monsters, since
+    // will cause a crash. Similarly for derived monsters, since
     // they require a base monster.
-    if (mons_is_ghost_demon(mon_num) || mons_class_is_zombified(mon_num))
+    if (mons_is_ghost_demon(mon_num) || mons_class_is_derived(mon_num))
         return _describe_generic(key, suffix, footer);
 
     monster_type base_type = MONS_NO_MONSTER;

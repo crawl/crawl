@@ -870,7 +870,8 @@ bool end_terrain_changes(const actor& source, terrain_change_type type)
     return end_terrain_changes(type, source.mid);
 }
 
-bool end_terrain_changes(terrain_change_type type, mid_t source_mid)
+bool end_terrain_changes(terrain_change_type type, mid_t source_mid,
+                         bool update_map_knowledge)
 {
     bool did_revert = false;
     for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
@@ -888,7 +889,7 @@ bool end_terrain_changes(terrain_change_type type, mid_t source_mid)
 
     if (did_revert)
     {
-        timeout_terrain_changes(0, true);
+        timeout_terrain_changes(0, true, update_map_knowledge);
         return true;
     }
 
@@ -909,7 +910,7 @@ struct terrain_change_reversion
     bool was_in_los;
 };
 
-void timeout_terrain_changes(int duration, bool force)
+void timeout_terrain_changes(int duration, bool force, bool update_map_knowledge)
 {
     if (!duration && !force)
         return;
@@ -993,7 +994,8 @@ void timeout_terrain_changes(int duration, bool force)
         // When multiple tiles are reverting at once, walls reappearing may
         // obscure otherwise-unambiguous information about terrain behind them,
         // so forcibly redraw anything the player could see at the start of them.
-        if (m_pos.was_in_los)
+        if (m_pos.was_in_los
+            || update_map_knowledge && env.map_knowledge(m_pos.pos).known())
         {
             update_terrain_knowledge(m_pos.pos);
             update_grid_colour_knowledge(m_pos.pos);
@@ -1198,7 +1200,6 @@ static void _fire_spike_launcher(actor* target, const actor* agent,
             break;
     }
 
-    flash_tile(target->pos(), CYAN);
     spike.fire();
 }
 

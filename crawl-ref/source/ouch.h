@@ -44,6 +44,7 @@ void player_die(kill_method_type death_type, mid_t source = MID_NOBODY,
                 const char *death_source_name = nullptr);
 
 void lose_level();
+int player_drain_hp_loss(int power, bool random);
 bool drain_player(int power = 25, bool announce_full = true,
                   bool ignore_protection = false, bool quiet = false);
 

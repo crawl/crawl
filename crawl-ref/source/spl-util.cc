@@ -1908,6 +1908,8 @@ bool spell_no_hostile_in_range(spell_type spell)
         return !_any_valid_targets(find_spell_targeter(spell, pow, range), range);
 
     case SPELL_POISONOUS_VAPOURS:
+    case SPELL_TELEPORT_OTHER:
+    case SPELL_DISPERSAL:
         return !_any_valid_targets(find_spell_targeter(spell, pow, range), range, true);
 
     default:

@@ -82,6 +82,7 @@ public:
     void reset();
     void barebones_init();
     void init_pandemonium_lord(bool friendly = false);
+    void init_xom_pandemonium_lord(int xl);
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);

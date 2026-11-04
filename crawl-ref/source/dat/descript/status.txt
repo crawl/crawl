@@ -452,9 +452,11 @@ combat as well as the power of your spells.
 
 You are unable to read scrolls.
 %%%%
-Cleave status
+Cleave+ status
 
-Your melee attacks cleave, hitting all adjacent targets.
+You have +5 slaying and your melee attacks cleave. Your weapon also acts as
+though it had the {{return you.xom_bonus_brand()}} brand in addition to its
+normal brand (unless that was already {{return you.xom_bonus_brand()}}).
 %%%%
 Ambros status
 
@@ -1369,3 +1371,83 @@ Mistmane status
 
 Your head is a cloud of swirling mist. Any potions you drink will be metabolised
 into clouds of baleful gas which you can expel with your melee attack.
+%%%%
+Reach+ status
+
+The reach of your melee attacks is increased by 3.
+%%%%
+Lock status
+
+All of the stairs on this floor have been sealed. You must kill a certain number
+of enemies before they will be unlocked again.
+%%%%
+Irrate status
+
+You are rapidly losing patience and will soon go berserk.
+%%%%
+Rampage+++ status
+
+When moving towards enemies in a straight line, you cover any distance in a
+single step.
+%%%%
+Eisegesis status
+
+You have been granted temporary knowledge of a single spell, which you can cast
+at the cost of magic contamination (proportional to the spell's level and
+reduced by your own experience level) using the Eisegesis ability.
+%%%%
+Guardian status
+
+Xom has granted you a persistant ally, which will accompany you between floors
+and eventually be revived after dying. It is also immune to your attacks and
+can be freely shot through.
+
+After dying a large number of times, it may lose much of its power.
+%%%%
+Spellstride status
+
+You can rampage quickly towards monsters, and when you do, you spend 1 MP per
+step to create a living beam spell in your trail.
+%%%%
+Troupe status
+
+Slaying corporeal foes yourself will cause Xom to gift you mannequins in their
+image once the battle is ended.
+%%%%
+Battleshape status
+
+A chaotic battleshape will appear next to you in combat, firing when you attack
+in melee and detonating when you cast a spell while it is fully charged. If it
+is destroyed, it will rematerialise again after a short time.
+%%%%
+Protean status
+
+When injured below 60% of your max HP, aspiring flesh will burst from your body,
+eventually transforming into short-lived but powerful allies.
+%%%%
+-Flesh status
+
+Aspiring flesh has recently burst from your body and cannot do so again for a
+short while.
+%%%%
+Sneaky status
+
+All of your stab attacks deal damage as though you were wielding a short blade
+and whenever you would be first noticed by an enemy, you will instead disguise
+yourself as an unremarkable object, allowing you to avoid detection for a brief
+while.
+%%%%
+Disguised status
+
+You are cleverly disguised and completely unnoticeable to enemies. You will
+always succeed at distraction stabs, but your disguise will end as soon as you
+attack, cast a spell, use an ability, read a scroll, or evoke an item. It will
+also end on its own after a short duration.
+
+If all enemies who were in sight when you donned the disguise are dead when it
+ends, and there is nobody else around to see you, its cooldown will be skipped.
+%%%%
+-Disguise status
+
+You have recently disguised yourself and must explore some more before being
+able to do so again.
