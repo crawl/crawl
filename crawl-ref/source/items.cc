@@ -1020,7 +1020,17 @@ static bool _id_floor_item(item_def &item)
     {
         if (item.is_identified())
             return false;
+        // Jewellery's setting may be on the unidentified-type slot.
+        const int autopickup = item.base_type == OBJ_JEWELLERY
+                               ? item_autopickup_level(item)
+                               : AP_FORCE_NONE;
         identify_item(item);
+        if (autopickup != AP_FORCE_NONE
+            && item_autopickup_level(item) == AP_FORCE_NONE)
+        {
+            set_item_autopickup(item,
+                                static_cast<autopickup_level_type>(autopickup));
+        }
         return true;
     }
 

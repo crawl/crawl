@@ -216,3 +216,49 @@ TEST_CASE("Test all_item_subtypes() does include items for each category",
     REQUIRE(all_item_subtypes(OBJ_TALISMANS).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_GEMS).size() > 0);
 }
+
+TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+                 "Unidentified jewellery autopickup setting survives floor identification",
+                 "[single-file]") {
+    for (const int subtype : { RING_PROTECTION, AMU_FIRST_AMULET })
+    {
+        item_def jewellery = simple_create_item(OBJ_JEWELLERY, subtype);
+        you.type_ids[OBJ_JEWELLERY][subtype] = false;
+        set_item_autopickup(jewellery, AP_FORCE_ON);
+        REQUIRE(item_needs_autopickup(jewellery));
+
+        const int item_idx = copy_item_to_grid(jewellery, you.pos(), -1,
+                                               false, true);
+        REQUIRE(item_idx != NON_ITEM);
+
+        id_floor_items();
+
+        const item_def *floor_item = top_item_at(you.pos());
+        REQUIRE(floor_item != nullptr);
+        REQUIRE(item_type_known(*floor_item));
+        CHECK(item_needs_autopickup(*floor_item));
+
+        destroy_item(item_idx);
+    }
+}
+
+TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+                 "Known jewellery autopickup setting takes precedence after floor identification",
+                 "[single-file]") {
+    item_def ring = simple_create_item(OBJ_JEWELLERY, RING_PROTECTION);
+    you.type_ids[OBJ_JEWELLERY][RING_PROTECTION] = false;
+    set_item_autopickup(ring, AP_FORCE_ON);
+    you.force_autopickup[OBJ_JEWELLERY][RING_PROTECTION] = AP_FORCE_OFF;
+
+    const int item_idx = copy_item_to_grid(ring, you.pos(), -1, false, true);
+    REQUIRE(item_idx != NON_ITEM);
+
+    id_floor_items();
+
+    const item_def *floor_item = top_item_at(you.pos());
+    REQUIRE(floor_item != nullptr);
+    CHECK(item_autopickup_level(*floor_item) == AP_FORCE_OFF);
+    CHECK_FALSE(item_needs_autopickup(*floor_item));
+
+    destroy_item(item_idx);
+}
