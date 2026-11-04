@@ -427,7 +427,7 @@ This creature has been briefly distracted by something else.
 out of phase monstatus
 
 This creature is slightly out of phase and has greatly increased evasion against
-those who lacks the ability to see invisible creatures. Their degree of injury
+those who lack the ability to see invisible creatures. Their degree of injury
 is also hidden.
 %%%%
 paralysed monstatus
