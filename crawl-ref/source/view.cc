@@ -770,7 +770,7 @@ void flash_tile(coord_def p, colour_t colour, int delay, tileidx_t tile)
         UNUSED(tile);
 #endif
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
-                                   static_cast<unsigned short>(colour)});
+                                   static_cast<unsigned short>(element_colour(colour, p))});
 
     if (delay > 0)
         animation_delay(delay, true);
