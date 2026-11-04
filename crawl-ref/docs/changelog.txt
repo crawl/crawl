@@ -386,6 +386,9 @@ Monsters
 * Player ghosts now can cast Construct Spike Launcher and Splinterfrost Shell.
 * Many monster glyphs have been reorganised and now use Unicode characters
   by default.
+* Player ghosts and player illusions of dual-wielders are still reduced to
+  wielding one weapon, but they now keep either their main weapon or their
+  offhand weapon instead of always keeping their main weapon.
 
 Spells
 ------
