@@ -6,10 +6,7 @@ import org.libsdl.app.SDLActivity;
  * SDLActivity for Dungeon Crawl Stone Soup
  */
 public class DungeonCrawlStoneSoup extends SDLActivity {
-
-    @Override
-    protected String[] getLibraries() {
-        return new String[] {
+    static final String[] LIBRARIES = {
                 "c++_shared",
                 "SDL2",
                 "SDL2_image",
@@ -20,7 +17,10 @@ public class DungeonCrawlStoneSoup extends SDLActivity {
                 "lua",
                 "zlib",
                 "main"
-        };
-    }
+    };
 
+    @Override
+    protected String[] getLibraries() {
+        return LIBRARIES;
+    }
 }
