@@ -230,20 +230,46 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
+const static int _tension_pips[] = { 0, 1, 5, 10, 20, 35, 50};
 static int _xom_tension_breakpoints(int tension)
 {
     return tension ==  0 ? 0 :
-           tension <=  5 ? 1 :
-           tension <= 10 ? 2 :
-           tension <= 20 ? 3 :
-           tension <= 35 ? 4 :
-           tension <= 50 ? 5
+           tension  <  5 ? 1 :
+           tension  < 10 ? 2 :
+           tension  < 20 ? 3 :
+           tension  < 35 ? 4 :
+           tension  < 50 ? 5
                          : 6;
 }
 
 int xom_tension_pips()
 {
     return _xom_tension_breakpoints(get_tension(GOD_XOM));
+}
+
+static int _chance_for_pip(int pip)
+{
+    return max(100, pip * 2950 / 6 - 250);
+}
+
+static int _action_chance_for_tension(int tension)
+{
+    const int pips = _xom_tension_breakpoints(tension);
+
+    // If we've hit max displayed tension, or are exactly on a pip, use that
+    // pip's exact action chance.
+    if (tension == _tension_pips[pips] || pips >= 6)
+        return _chance_for_pip(pips);
+    // Otherwise, linearly interpolate with the chance from the next pip.
+    else
+    {
+        const int diff = _tension_pips[pips + 1] - _tension_pips[pips];
+        const int to_next = (tension - _tension_pips[pips]) * 100 / diff;
+        const int lerp = ((_chance_for_pip(pips + 1) * to_next)
+                          + (_chance_for_pip(pips) * (100 - to_next))) / 100;
+
+        return lerp;
+    }
 }
 
 const string describe_xom_favour()
@@ -279,7 +305,7 @@ bool xom_is_nice(int tension)
         const int tension_bonus
             = (tension == -1 ? 0 : random2(tension));
 
-        const int effective_piety = HALF_MAX_PIETY + tension_bonus;
+        const int effective_piety = HALF_MAX_PIETY + tension_bonus * 5 / 4;
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
@@ -386,9 +412,8 @@ void xom_tick()
         if (!did_event && tension == 0 && you.attribute[ATTR_XOM_EXPLORE_COUNT] >= XOM_EXPLORE_THRESHOLD)
             xom_acts_exploration();
 
-        const int chance = min(_xom_tension_breakpoints(tension) + 1, 5);
-
-        if (x_chance_in_y(chance*chance, 100))
+        const int chance = _action_chance_for_tension(tension);
+        if (x_chance_in_y(chance, 10000))
             xom_acts(maybe_bool::maybe, tension);
     }
 }
