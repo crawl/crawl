@@ -380,7 +380,7 @@ void xom_tick()
 {
     // Redraw tension meter.
     you.redraw_title = true;
-    if (x_chance_in_y(2 + you.faith(), 6))
+    if (x_chance_in_y(you.time_taken, 30))
     {
         const int tension = get_tension(GOD_XOM);
 
@@ -412,7 +412,9 @@ void xom_tick()
         if (!did_event && tension == 0 && you.attribute[ATTR_XOM_EXPLORE_COUNT] >= XOM_EXPLORE_THRESHOLD)
             xom_acts_exploration();
 
-        const int chance = _action_chance_for_tension(tension);
+        int chance = _action_chance_for_tension(tension);
+        if (you.faith())
+            chance = chance * 3 / 2;
         if (x_chance_in_y(chance, 10000))
             xom_acts(maybe_bool::maybe, tension);
     }
