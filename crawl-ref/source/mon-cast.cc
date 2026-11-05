@@ -436,7 +436,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                                     && !caster.has_ench(ENCH_REGENERATION));
         },
         [](monster &caster, mon_spell_slot, bolt&) {
-            const string god = apostrophise(god_name(caster.god));
+            const string god = apostrophise(
+                                   god_has_name(caster.god) ? god_name(caster.god)
+                                                            : "something");
             const string msg = make_stringf(" invokes %s protection!",
                                             god.c_str());
             simple_monster_message(caster, msg.c_str(), false, MSGCH_MONSTER_SPELL);
