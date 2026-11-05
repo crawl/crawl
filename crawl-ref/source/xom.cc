@@ -4288,9 +4288,9 @@ static void _xom_grants_word_of_recall(int)
     string xom_speech = "grant word of recall";
 
     shout_type shouting = get_monster_data(targetable[0]->type)->shouts;
-    phrasing = speaking_keys.find(shouting)->second;
-    if (phrasing == "dramatically intoning")
+    if (shouting == S_SILENT)
         xom_speech = "grant voiceless word of recall";
+    phrasing = speaking_keys.find(shouting)->second;
 
     god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
     mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
