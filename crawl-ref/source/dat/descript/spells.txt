@@ -2525,3 +2525,5 @@ destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
 Summoned creatures are particularly vulnerable, as the enchantments binding
 them to this plane will unravel and cause them to be dismissed immediately.
+Casting this spell causes some magical contamination for the caster, enough to
+be dangerous after a few castings.
