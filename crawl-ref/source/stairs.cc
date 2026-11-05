@@ -266,6 +266,10 @@ static void _transit_xom_followers(level_id destination)
         {
             if (mons_is_xom_guardian(**mi))
             {
+                // Without this flag, the monster may only *sometimes* be placed
+                // when we enter the Abyss via banishment, which can result in
+                // them getting lost forever.
+                mi->flags |= MF_TAKING_STAIRS;
                 mi->set_transit(destination);
                 monster_die(**mi, KILL_RESET, NON_MONSTER);
             }
