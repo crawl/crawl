@@ -4211,39 +4211,6 @@ static void _xom_brain_drain(int)
     }
 }
 
-// XXX: Possibly this could be used elsewhere, like defaults for wizard spells
-// for those without speech, but we generally try to just give those custom
-// messages per-monster anyway currently.
-static const map<shout_type, string> speaking_keys = {
-    { S_SILENT,         "dramatically intoning" },
-    { S_SHOUT,          "shouting" },
-    { S_BARK,           "barking" },
-    { S_HOWL,           "howling" },
-    { S_SHOUT2,         "shouting twice-over" },
-    { S_ROAR,           "roaring" },
-    { S_SCREAM,         "screaming" },
-    { S_BELLOW,         "bellowing" },
-    { S_BLEAT,          "bleating" },
-    { S_TRUMPET,        "trumpeting" },
-    { S_SCREECH,        "screeching" },
-    { S_BUZZ,           "buzzing" },
-    { S_MOAN,           "chillingly moaning" },
-    { S_GURGLE,         "gurgling" },
-    { S_CROAK,          "croaking" },
-    { S_GROWL,          "growling" },
-    { S_HISS,           "hissing" },
-    { S_SKITTER,        "weaving" },
-    { S_FAINT_SKITTER,  "faintly weaving" },
-    { S_DEMON_TAUNT,    "sneering" },
-    { S_CHERUB,         "speaking" },
-    { S_SQUEAL,         "squealing" },
-    { S_LOUD_ROAR,      "roaring" },
-    { S_RUSTLE,         "scribing" },
-    { S_SQUEAK,         "squeaking" },
-    { S_CAW,            "cawing" },
-    { S_LAUGH,          "laughing" },
-};
-
 static bool _has_min_recall_level()
 {
     int min = you.penance[GOD_XOM] ? 3 : 5;
@@ -4290,7 +4257,7 @@ static void _xom_grants_word_of_recall(int)
     shout_type shouting = get_monster_data(targetable[0]->type)->shouts;
     if (shouting == S_SILENT)
         xom_speech = "grant voiceless word of recall";
-    phrasing = speaking_keys.find(shouting)->second;
+    phrasing = get_speaking_type(shouting);
 
     god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
     mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",

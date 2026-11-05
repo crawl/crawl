@@ -59,6 +59,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "showsymb.h"
 #include "skills.h"
 #include "species.h"
@@ -4724,51 +4725,9 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                                _get_species_insult(foe_genus, "noun"));
     }
 
-    static const char * sound_list[] =
-    {
-        "says",         // actually S_SILENT
-        "shouts",
-        "barks",
-        "howls",
-        "shouts",
-        "roars",
-        "screams",
-        "bellows",
-        "bleats",
-        "trumpets",
-        "screeches",
-        "buzzes",
-        "moans",
-        "gurgles",
-        "croaks",
-        "growls",
-        "hisses",
-        "skitters",
-        "skitters faintly",
-        "sneers",       // S_DEMON_TAUNT
-        "says",         // S_CHERUB -- they just speak normally.
-        "squeals",
-        "roars",
-        "rustles",      // dubious
-        "squeaks",
-        "caws",
-        "laughs",
-        "buggily says", // NUM_SHOUTS
-        "breathes",     // S_VERY_SOFT
-        "whispers",     // S_SOFT
-        "says",         // S_NORMAL_VOLUME
-        "shouts",       // S_LOUD
-        "screams",      // S_VERY_LOUD
-    };
-    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
+    string mon_says = get_says_type(static_cast<shout_type>(s_type));
 
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
-        msg = replace_all(msg, "@says@", "buggily says");
-    }
-    else
-        msg = replace_all(msg, "@says@", sound_list[s_type]);
+    msg = replace_all(msg, "@says@", mon_says.c_str());
 
     msg = maybe_capitalise_substring(msg);
 

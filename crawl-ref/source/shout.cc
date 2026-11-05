@@ -75,6 +75,76 @@ static const map<shout_type, string> default_msg_keys = {
     { S_LAUGH,          "__LAUGH" },
 };
 
+static const map<shout_type, string> says_keys = {
+    { S_SILENT,         "says" },
+    { S_SHOUT,          "shouts" },
+    { S_BARK,           "barks" },
+    { S_HOWL,           "howls" },
+    { S_SHOUT2,         "shouts" },
+    { S_ROAR,           "roars" },
+    { S_SCREAM,         "screams" },
+    { S_BELLOW,         "bellows" },
+    { S_BLEAT,          "bleats" },
+    { S_TRUMPET,        "trumpets" },
+    { S_SCREECH,        "screeches" },
+    { S_BUZZ,           "buzzes" },
+    { S_MOAN,           "moans" },
+    { S_GURGLE,         "gurgles" },
+    { S_CROAK,          "croaks" },
+    { S_GROWL,          "growls" },
+    { S_HISS,           "hisses" },
+    { S_SKITTER,        "skitters" },
+    { S_FAINT_SKITTER,  "skitters faintly" },
+    { S_DEMON_TAUNT,    "sneers" },
+    { S_CHERUB,         "says" },
+    { S_SQUEAL,         "squeals" },
+    { S_LOUD_ROAR,      "roars" },
+    { S_RUSTLE,         "rustles" },
+    { S_SQUEAK,         "squeaks" },
+    { S_CAW,            "caws" },
+    { S_LAUGH,          "laughs" },
+};
+
+static const map<shout_type, string> speaking_keys = {
+    { S_SILENT,         "dramatically intoning" },
+    { S_SHOUT,          "shouting" },
+    { S_BARK,           "barking" },
+    { S_HOWL,           "howling" },
+    { S_SHOUT2,         "shouting twice-over" },
+    { S_ROAR,           "roaring" },
+    { S_SCREAM,         "screaming" },
+    { S_BELLOW,         "bellowing" },
+    { S_BLEAT,          "bleating" },
+    { S_TRUMPET,        "trumpeting" },
+    { S_SCREECH,        "screeching" },
+    { S_BUZZ,           "buzzing" },
+    { S_MOAN,           "chillingly moaning" },
+    { S_GURGLE,         "gurgling" },
+    { S_CROAK,          "croaking" },
+    { S_GROWL,          "growling" },
+    { S_HISS,           "hissing" },
+    { S_SKITTER,        "weaving" },
+    { S_FAINT_SKITTER,  "faintly weaving" },
+    { S_DEMON_TAUNT,    "sneering" },
+    { S_CHERUB,         "speaking" },
+    { S_SQUEAL,         "squealing" },
+    { S_LOUD_ROAR,      "roaring" },
+    { S_RUSTLE,         "scribing" },
+    { S_SQUEAK,         "squeaking" },
+    { S_CAW,            "cawing" },
+    { S_LAUGH,          "laughing" },
+};
+
+string get_says_type(shout_type shout)
+{
+    return lookup(says_keys, shout, "buggily says");
+}
+
+string get_speaking_type(shout_type shout)
+{
+    return lookup(speaking_keys, shout, "buggily speaking");
+}
+
 /**
  * What's the appropriate DB lookup key for a given monster's shouts?
  *
