@@ -1381,7 +1381,7 @@ Lock status
 All of the stairs on this floor have been sealed. You must kill a certain number
 of enemies before they will be unlocked again.
 %%%%
-Irrate status
+Irate status
 
 You are rapidly losing patience and will soon go berserk.
 %%%%
