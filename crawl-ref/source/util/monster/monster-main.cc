@@ -608,8 +608,7 @@ static std::string _get_willpower_description(const monster & mon)
         return colour(LIGHTMAGENTA, "will(invuln)");
     if (willpower == 0)
         return "";
-    return colour(MAGENTA,
-      make_stringf("will(%d)", willpower));
+    return colour(MAGENTA, make_stringf("will(%d)", willpower));
 }
 
 int main(int argc, char* argv[])
@@ -1174,11 +1173,11 @@ int main(int argc, char* argv[])
         const auto willpower_description = _get_willpower_description(mon);
         if (!willpower_description.empty())
         {
-          if (monsterresistances.empty())
-            monsterresistances = " | Res: ";
-          else
-            monsterresistances += ", ";
-          monsterresistances += willpower_description;
+            if (monsterresistances.empty())
+                monsterresistances = " | Res: ";
+            else
+                monsterresistances += ", ";
+            monsterresistances += willpower_description;
         }
 
         const resists_t res(shapeshifter ? me->resists :
