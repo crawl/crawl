@@ -894,9 +894,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             for (int idx = start_idx; idx <= end_idx; ++idx)
             {
-                auto &old_tile = m_page.m_tiles[idx];
                 const int cnt = m_page.m_counts[idx];
-                const string enumname = old_tile->enumname(0);
+                const string enumname = m_page.m_tiles[idx]->enumname(0);
                 int old_w = 0;
                 for (int i = 0; i < cnt; ++i)
                 {
@@ -908,6 +907,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     old_w    = m_page.m_probs[idx+i];
                     add_image(img, i == 0 ? enumname.c_str() : nullptr);
                 }
+                auto& old_tile = m_page.m_tiles[idx];
                 const int enumcount = old_tile->enumcount();
                 for (int i = 1; i < enumcount; ++i)
                     m_page.add_synonym(m_last_enum, old_tile->enumname(i));
