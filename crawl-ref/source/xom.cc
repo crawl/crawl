@@ -6157,8 +6157,8 @@ static const vector<spell_type> _eisegesis_spells =
 
 static void _xom_eisegesis()
 {
-    const int spell_level = min(9, random_range(you.experience_level / 5 + 2,
-                                                you.experience_level / 3 + 3));
+    const int spell_level = max(3, min(9, random_range(
+        you.experience_level / 5 + 2, you.experience_level / 3 + 3)));
 
     vector<spell_type> choices;
     for (int i = 0; i < (int)_eisegesis_spells.size(); ++i)
