@@ -4240,6 +4240,8 @@ static const map<shout_type, string> speaking_keys = {
     { S_LOUD_ROAR,      "roaring" },
     { S_RUSTLE,         "scribing" },
     { S_SQUEAK,         "squeaking" },
+    { S_CAW,            "cawing" },
+    { S_LAUGH,          "laughing" },
 };
 
 static bool _has_min_recall_level()

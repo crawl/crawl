@@ -4751,14 +4751,14 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
         "roars",
         "rustles",      // dubious
         "squeaks",
+        "caws",
+        "laughs",
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT
         "says",         // S_NORMAL_VOLUME
         "shouts",       // S_LOUD
         "screams",      // S_VERY_LOUD
-        "caws",
-        "laughs",
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
