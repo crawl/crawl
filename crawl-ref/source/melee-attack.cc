@@ -4967,7 +4967,8 @@ void melee_attack::do_valour_beam()
     if (!found_targ)
         return;
 
-    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon_damage());
+    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon ? weapon_damage()
+                                                 : 3 + attacker->skill_rdiv(SK_UNARMED_COMBAT, 2, 3));
     beam.source = attacker->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
