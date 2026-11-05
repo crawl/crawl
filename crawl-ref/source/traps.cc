@@ -475,8 +475,8 @@ void trigger_trap(actor& triggerer)
             if (!you_trigger)
             {
                 mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
-                mons_intel(*m) >= I_HUMAN ? "invokes an devourer's trap upon you" :
-                                            "sets off an devourer's trap");
+                mons_intel(*m) >= I_HUMAN ? "invokes a devourer's trap upon you" :
+                                            "sets off a devourer's trap");
             }
             flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
             you.corrode(nullptr, "The trap's stomach acid", 6);
