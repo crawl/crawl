@@ -106,7 +106,7 @@ but almost no armour fits them.
 Oni
 
 Large, robust, and extremely fond of drinking, Oni make capable brawlers and
-spellcasters and gain extra benefits from healing potions.
+spellcasters and gain extra benefits from potions.
 %%%%
 Poltergeist
 
