@@ -1968,7 +1968,16 @@ bool melee_attack::attack()
 
     if (is_sunder && !cleaving && is_sundering_weapon() && you.can_see(*attacker))
     {
-        mprf("%s %s flashes viciously!", attacker->name(DESC_ITS).c_str(),
+        // XXX: For now, this is only Xom's cleaving blessing while unarmed.
+        //      Change this code if that ever changes.
+        if (!weapon)
+        {
+            bool is_plural = false;
+            string hands = you.hand_name(true, &is_plural);
+            mprf("Your %s flash%s viciously!", hands.c_str(), !is_plural ? "es" : "");
+        }
+        else
+            mprf("%s %s flashes viciously!", attacker->name(DESC_ITS).c_str(),
                                          weapon->name(DESC_PLAIN).c_str());
         draw_ring_animation(attacker->pos(), 2, WHITE, WHITE, true, 25, TILE_BOLT_SUNDERING);
     }
