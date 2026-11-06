@@ -14,8 +14,9 @@
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# monster_shout() in shout.cc detects buggy behaviour,
-# so showing this line would itself be a bug.
+# get_says_type(), get_speaking_type(), or monster_shout() in
+# shout.cc detect buggy behaviour, so showing this line is
+# itself a bug.
 SOUND:You hear doubly buggy behaviour!
 %%%%
 __SILENT says
