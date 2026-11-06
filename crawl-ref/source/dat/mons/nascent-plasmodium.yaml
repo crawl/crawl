@@ -1,6 +1,6 @@
 name: "nascent plasmodium"
 glyph: {char: "j", colour: blue}
-flags: [see_invis, unblindable, amorphous, no_skeleton]
+flags: [see_invis, unblindable, amorphous, no_skeleton, no_poly_to]
 resists: {poison: 1, corr: 3}
 exp: 450
 genus: jelly

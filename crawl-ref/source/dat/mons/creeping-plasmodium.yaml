@@ -1,6 +1,6 @@
 name: "creeping plasmodium"
 glyph: {char: "J", colour: etc_gold}
-flags: [see_invis, unblindable, amorphous, no_skeleton]
+flags: [see_invis, unblindable, amorphous, no_skeleton, no_poly_to]
 resists: {poison: 1, corr: 3}
 exp: 1800
 genus: jelly
