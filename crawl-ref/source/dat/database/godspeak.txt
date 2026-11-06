@@ -880,6 +880,8 @@ Xom reaching
 
 "No, no, those are much too short."
 
+"Let's see how stretchy you are!"
+
 Xom meddles with your body plan.
 
 {{if you.has_bones() then
