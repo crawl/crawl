@@ -905,6 +905,8 @@ Zola
 _arabic_female_name_
 Amala
 
+Ashraqat
+
 Ara
 
 Atia
@@ -926,8 +928,6 @@ Oma
 
 Qitarah
 
-Rabi
-
 Rana
 
 Shunnareh
@@ -948,9 +948,9 @@ Bozena
 
 Bozidara
 
-Dagmar
-
 Dusana
+
+Jadwiga
 
 Libusa
 
@@ -1657,9 +1657,9 @@ Sachi
 
 Sarina
 
-Tae
-
 Tamao
+
+Tsukiko
 
 Umi
 
@@ -1685,8 +1685,6 @@ Daichi
 
 Daisaku
 
-Eiko
-
 Eitaro
 
 Fumito
@@ -1706,6 +1704,8 @@ Haruki
 Hayata
 
 Hidetaka
+
+Hikaru
 
 Hisao
 
