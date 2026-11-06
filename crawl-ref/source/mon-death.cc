@@ -2835,6 +2835,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         dithmenos_cleanup_player_shadow(&mons);
     else if (mons.type == MONS_ORB_GUARDIAN
              && (real_death || killer == KILL_BANISHED)
+             // In rare situations, an orb guardian can die to environmental
+             // damage. Don't set off the alarm in this case.
+             && mons.damage_friendly > 0
              && level_id::current() == level_id(BRANCH_ZOT, 5)
              && !player_on_orb_run()
              && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
