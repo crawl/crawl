@@ -6169,6 +6169,8 @@ static void _xom_guardian()
                   && mons_class_intel(mon_type) == I_HUMAN
                     ? make_name()
                     : do_mon_name_replacements(getRandMonNameString("bland name"));
+    string other_name = coinflip() ? "Other " : "Not-";
+    string other_other_name = other_name + other_name;
     for (int i = 0; i < count; ++i)
     {
         if (monster *summons = create_monster(mg))
@@ -6181,7 +6183,7 @@ static void _xom_guardian()
 
             summons->mname = make_stringf("%s%s",
                                           i == 0 ? "" :
-                                          i == 1 ? "Other " : "Other Other ",
+                                          i == 1 ? other_name.c_str() : other_other_name.c_str(),
                                           name.c_str());
             summons->props[DBNAME_KEY] = mons_class_name(mon_type);
 
