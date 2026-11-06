@@ -247,6 +247,7 @@ __CROAK seen
 SOUND:@The_monster@ gives a loud, deep croak!
 
 SOUND:@The_monster@ croaks.
+%%%%
 __CROAK says
 
 croaks
