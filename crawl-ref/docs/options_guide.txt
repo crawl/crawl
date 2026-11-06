@@ -891,16 +891,15 @@ travel_avoid_terrain = (shallow water | deep water)
         This option supports list syntax.
 
 explore_greedy = true
-        Greedy explore travels to items that are eligible for
-        autopickup in addition to exploring the level, but is
-        otherwise identical to regular explore. Explore greed is
-        disabled if autopickup is off (Ctrl-A).
+        Greedy explore travels to items that are eligible for autopickup and
+        features configured by explore_greedy_visit in addition to exploring
+        the level, but is otherwise identical to regular explore. Explore
+        greed is disabled if autopickup is off (Ctrl-A).
 
-explore_greedy_visit = artefacts,glowing_items
+explore_greedy_visit = artefacts,glowing_items,shops,faded_altars
 explore_greedy_visit += stacks
         (List option)
-        Greedy exploration will visit squares with items based on
-        these conditions.
+        Greedy exploration will visit squares based on these conditions.
 
         stacks: makes explore_greedy visit all stacks even if they don't
         necessarily have target auto pickup items
@@ -911,10 +910,16 @@ explore_greedy_visit += stacks
         artefacts: makes explore_greedy visit artefacts, even
         if not in a stack
 
+        shops: makes explore_greedy visit and enter shops whose inventory
+        is not yet known
+
+        faded_altars: makes explore_greedy visit and interact with faded
+        altars whose selection of gods is not yet known
+
 explore_item_greed = 10
-        Greedy exploration treats items as if they were this much closer (or
-        further away, if negative) when deciding whether to visit a square with
-        an item or explore a new square.
+        Greedy exploration treats  targets as if they were this much
+        closer (or further away, if negative) when deciding whether to visit
+        their square or explore a new square.
 
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
