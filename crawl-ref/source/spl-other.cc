@@ -168,8 +168,9 @@ void recall_orders(monster *mons)
     mons->patrol_point = coord_def(0, 0);
     mons->travel_path.clear();
 
-    // Don't wander
-    mons->behaviour = BEH_SEEK;
+    // Don't wander (but don't automatically break fear, either).
+    if (!mons->has_ench(ENCH_FEAR))
+        mons->behaviour = BEH_SEEK;
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
