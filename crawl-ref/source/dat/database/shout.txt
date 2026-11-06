@@ -463,7 +463,7 @@ laughs
 %%%%
 __LAUGH speaking
 
-laughing
+maniacally laughing
 ############################################
 # End of default shouts
 ############################################
