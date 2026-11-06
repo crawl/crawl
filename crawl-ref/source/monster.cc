@@ -5180,6 +5180,13 @@ bool monster::can_polymorph() const
     if (type == MONS_ORC_APOSTLE)
         return false;
 
+    // Polymorping these can bypass tesseract activation, and while it is
+    // possible to track their original form, an alarm going off because you
+    // killed what appeared to be, say, a dire elephant is quite unexpected.
+    // Instead, just don't polymorph them.
+    if (type == MONS_ORB_GUARDIAN)
+        return false;
+
     return can_mutate();
 }
 
