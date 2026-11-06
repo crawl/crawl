@@ -1627,6 +1627,38 @@ xx.....O.....xx
        x
 ENDMAP
 
+NAME:   tekkud_abyss_golden
+TAGS:   transparent
+WEIGHT: 2
+KFEAT:  T = dry_fountain
+KFEAT:  s = abandoned_shop
+KFEAT:  m = iron_grate
+SUBST:  . = .:650 +:25 0:20 x
+MAP
+ xxxxxxxxxxxxxx
+xxxT..........+x
+xx.............x
+xT.xx.......xx.x
+x..xxx.....xxx.xxxxxx
+x...xxx...xxx.......xx
+x....xx...xx.........xx
+x......x.x.......xxxxxx
+x..s....x.......x.....x
+x.....xx........x.....x
+xx1..xxxx.xx.....x....x
+ @....xx...x..GG..xxxxx
+ @................x
+ @.....x...xG.s..Gx
+xxxxxx.xx.xxG....Gx
+xxxxx.............x
+xxx....x...x..GG..++  G
+xxx.G.xx...xmxxxx+'+
+xxx...xx...xm    +++x
+xxxxxxxx...x       xx
+xxxxxxxx@@@x         x
+ xxxxxxx   xG    G
+ENDMAP
+
 ###############################################################################
 # Abyss rune vaults
 #

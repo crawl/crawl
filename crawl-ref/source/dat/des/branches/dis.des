@@ -1168,7 +1168,7 @@ vlvlvlv...vlvlvlv
 ENDMAP
 
 NAME:   tekkud_dis_hexagon_chokepoint
-TAGS:   no_rotate
+TAGS:   transparent no_rotate
 DEPTH:  Dis:2-
 ORIENT: centre
 MONS:   crystal guardian, iron golem, orange crystal statue
@@ -1184,6 +1184,28 @@ vv2832..3..2382vv
    vvvv...vvvv
     vvvv.vvvv
      vvv@vvv
+ENDMAP
+
+NAME:   tekkud_dis_hell_sentinel_island
+TAGS:   transparent
+DEPTH:  Dis, !Dis:$
+MONS:   hell sentinel
+KFEAT:  ^ = trap_alarm
+NSUBST: - = 1:^'''' / *:'
+KMASK:  1^' = opaque
+KMASK:  1^' = no_monster_gen
+KMASK:  1^' = no_trap_gen
+KPROP:  l = no_cloud_gen
+MAP
+vvvvvvvvvvvv
+@.......vvvv
+vv..lll...vv
+vv.ll-ll...v
+vv.l-1'l.}.v
+vv.ll-ll...v
+vv..lll...vv
+@.......vvvv
+vvvvvvvvvvvv
 ENDMAP
 
 default-depth:
