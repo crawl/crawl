@@ -99,7 +99,7 @@ shouts
 %%%%
 __TWO_SHOUTS speaking
 
-shouts twice-over
+shouting twice-over
 %%%%
 __ROAR unseen
 
