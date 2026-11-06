@@ -1318,7 +1318,7 @@ int get_shout_noise_level(const shout_type shout)
 // "says" verb used for insults.
 static bool _shout_fits_monster(monster_type mc, int shout)
 {
-    if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS || shout == S_SILENT)
+    if (shout == S_SILENT || shout == NUM_SHOUTS || shout >= NUM_LOUDNESS)
         return false;
 
     // Chaos spawns can do anything but demon taunts, since they're
@@ -4381,7 +4381,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                           && invalid_monster_index(mons.foe)) ?
                              &you : mons.get_foe();
 
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
+    if (s_type < 0 || s_type == NUM_SHOUTS || s_type >= NUM_LOUDNESS)
         s_type = mons_shouts(mons.type);
 
     msg = maybe_pick_random_substring(msg);
