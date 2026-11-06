@@ -1303,7 +1303,7 @@ string monster_info::common_name(description_level_type desc) const
             ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
     case MONS_MANNEQUIN:
-        ss << " manequinn";
+        ss << " mannequin";
         break;
     default:
         break;
