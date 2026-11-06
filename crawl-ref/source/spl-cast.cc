@@ -3390,8 +3390,11 @@ pair<string, string> effect_description(spell_type spell, bool evoked, int pow,
         return make_pair("Bonus AC", make_stringf("%.1f", ac_bonus));
     }
     case SPELL_PASSWALL:
+    {
+        double ac_bonus = passwall_ac(pow) / 100.0;
         return make_pair("Bonus AC",
-                         make_stringf("~%d", passwall_ac(pow, false)));
+                         make_stringf("%.1f", ac_bonus));
+    }
     case SPELL_PHALANX_BEETLE:
     {
         double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;

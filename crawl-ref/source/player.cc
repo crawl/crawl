@@ -6907,7 +6907,7 @@ int player::armour_class_scaled(int scale) const
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
-        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int();
 
     if (you.duration[DUR_PHALANX_BARRIER])
         AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
