@@ -1065,7 +1065,13 @@ _bland_female_name_
 
 Abby
 
+Anne
+
 Babs
+
+Bea
+
+Becky
 
 Betsy
 
@@ -1075,7 +1081,11 @@ Carrie
 
 Deb
 
+Edith
+
 Emma
+
+Ethel
 
 Gertrude
 
@@ -1087,17 +1097,29 @@ Jen
 
 Joan
 
+Kim
+
+Lynn
+
 Mia
 
+Peg
+
 Sue
+
+Tiffany
 
 Vera
 %%%%
 _bland_male_name_
 
+Al
+
 Bill
 
 Bob
+
+Bud
 
 Cal
 
@@ -1109,17 +1131,31 @@ Doug
 
 George
 
+Ike
+
 Jeff
 
 Jim
+
+John
 
 Larry
 
 Mack
 
+Max
+
+Mike
+
 Ned
 
+Norm
+
+Paul
+
 Pete
+
+Phil
 
 Steve
 
