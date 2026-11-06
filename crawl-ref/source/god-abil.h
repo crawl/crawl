@@ -50,7 +50,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define GOZAG_GOLD_AURA_KEY "gozag_gold_aura_amount"
 #define GOZAG_GOLD_AURA_MAX 10
-#define GOZAG_POTION_PETITION_AMOUNT 400
+#define GOZAG_PURCHASE_BLESSING_COST 400
 #define GOZAG_SHOP_BASE_MULTIPLIER 100
 #define GOZAG_SHOP_MOD_MULTIPLIER 25
 #define GOZAG_BRIBE_AMOUNT 3000
@@ -189,8 +189,8 @@ void dithmenos_cache_marionette_viability();
 string dithmenos_cannot_marionette_reason();
 spret dithmenos_marionette(monster& target, bool fail);
 
-bool gozag_setup_potion_petition(bool quiet = false);
-bool gozag_potion_petition();
+bool gozag_setup_purchase_blessing(bool quiet = false);
+bool gozag_purchase_blessing();
 int gozag_price_for_shop(bool max = false);
 bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();

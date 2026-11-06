@@ -420,7 +420,7 @@ Shatter The Chains ability
 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
 %%%%
 # 哥萨戈
-Potion Petition ability
+Purchase Blessing ability
 
 向哥萨戈祈求给你出售一批药水的效用。哥萨戈会一次给出三张清单，其价格不一。
 %%%%

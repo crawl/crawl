@@ -353,7 +353,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Gozag
         {   { 0, "", "", "Gozag turns your defeated foes' bodies to gold." },
             { 0, "", "", "Your enemies may become distracted by gold." },
-            { 0, ABIL_GOZAG_POTION_PETITION, "petition Gozag for potion effects" },
+            { 0, ABIL_GOZAG_PURCHASE_BLESSING, "purchase blessings with gold" },
             { 0, ABIL_GOZAG_CALL_MERCHANT,
                  "fund merchants seeking to open stores in the dungeon" },
             { 0, ABIL_GOZAG_BRIBE_BRANCH,

@@ -4262,7 +4262,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_ELECTRIC_BLAST:
     case TILE_BOLT_ELECTRIC_ARC:
     case TILE_BOLT_IRRADIATE:
-    case TILE_BOLT_POTION_PETITION:
+    case TILE_BOLT_PURCHASE_BLESSING:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
@@ -4869,8 +4869,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return TILEG_ABILITY_DITHMENOS_NIGHTFALL;
     // Gozag
-    case ABIL_GOZAG_POTION_PETITION:
-        return TILEG_ABILITY_GOZAG_POTION_PETITION;
+    case ABIL_GOZAG_PURCHASE_BLESSING:
+        return TILEG_ABILITY_GOZAG_PURCHASE_BLESSING;
     case ABIL_GOZAG_CALL_MERCHANT:
         return TILEG_ABILITY_GOZAG_CALL_MERCHANT;
     case ABIL_GOZAG_BRIBE_BRANCH:

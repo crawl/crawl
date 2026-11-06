@@ -4,7 +4,7 @@ enum uncancellable_type
 {
     UNC_DRAW_THREE,
     UNC_STACK_FIVE,
-    UNC_POTION_PETITION,
+    UNC_PURCHASE_BLESSING,
     UNC_CALL_MERCHANT,
 
     UNC_ENCHANT_WEAPON,

@@ -612,7 +612,7 @@ Lesser Healing ability
 
 소량의 체력을 회복한다. 회복량은 기도술에 따라 적용된다.
 %%%%
-Potion Petition ability
+Purchase Blessing ability
 
 고자그에게 한 세트의 포션의 효과를 사겠다고 요청한다.
 고자그는 3가지 세트를 선보일 것이다. 세트의 가격은 각각 다르다.
