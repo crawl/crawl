@@ -18,6 +18,16 @@ __BUGGY
 # so showing this line would itself be a bug.
 SOUND:You hear doubly buggy behaviour!
 %%%%
+__SILENT says
+
+# forced to not be silent
+says
+%%%%
+__SILENT speaking
+
+# forced to not be silent
+dramatically intoning
+%%%%
 __SHOUT
 
 SOUND:You hear a shout!
@@ -25,6 +35,14 @@ SOUND:You hear a shout!
 __SHOUT seen
 
 SOUND:@The_monster@ shouts!
+%%%%
+__SHOUT says
+
+shouts
+%%%%
+__SHOUT speaking
+
+shouting
 %%%%
 __BARK unseen
 
@@ -34,6 +52,14 @@ __BARK seen
 
 SOUND:@The_monster@ barks!
 %%%%
+__BARK says
+
+barks
+%%%%
+__BARK speaking
+
+barking
+%%%%
 __HOWL unseen
 
 SOUND:You hear a howl!
@@ -41,6 +67,14 @@ SOUND:You hear a howl!
 __HOWL seen
 
 SOUND:@The_monster@ howls!
+%%%%
+__HOWL says
+
+howls
+%%%%
+__HOWL speaking
+
+howling
 %%%%
 __TWO_SHOUTS unseen
 
@@ -50,6 +84,14 @@ __TWO_SHOUTS seen
 
 SOUND:@The_monster@ shouts in stereo!
 %%%%
+__TWO_SHOUTS says
+
+shouts
+%%%%
+__TWO_SHOUTS speaking
+
+shouts twice-over
+%%%%
 __ROAR unseen
 
 SOUND:You hear a roar!
@@ -57,6 +99,14 @@ SOUND:You hear a roar!
 __ROAR seen
 
 SOUND:@The_monster@ roars!
+%%%%
+__ROAR says
+
+roars
+%%%%
+__ROAR speaking
+
+roaring
 %%%%
 __SCREAM unseen
 
@@ -66,6 +116,14 @@ __SCREAM seen
 
 SOUND:@The_monster@ gives a hideous shriek!
 %%%%
+__SCREAM says
+
+screams
+%%%%
+__SCREAM speaking
+
+screaming
+%%%%
 __BELLOW unseen
 
 SOUND:You hear a bellow!
@@ -73,6 +131,14 @@ SOUND:You hear a bellow!
 __BELLOW seen
 
 SOUND:@The_monster@ bellows!
+%%%%
+__BELLOW says
+
+bellows
+%%%%
+__BELLOW speaking
+
+bellowing
 %%%%
 __BLEAT unseen
 
@@ -82,6 +148,14 @@ __BLEAT seen
 
 SOUND:@The_monster@ bleats!
 %%%%
+__BLEAT says
+
+bleats
+%%%%
+__BLEAT speaking
+
+bleating
+%%%%
 __TRUMPET unseen
 
 SOUND:You hear a trumpeting!
@@ -89,6 +163,14 @@ SOUND:You hear a trumpeting!
 __TRUMPET seen
 
 SOUND:@The_monster@ trumpets!
+%%%%
+__TRUMPET says
+
+trumpets
+%%%%
+__TRUMPET speaking
+
+trumpeting
 %%%%
 __SCREECH unseen
 
@@ -98,6 +180,14 @@ __SCREECH seen
 
 SOUND:@The_monster@ screeches!
 %%%%
+__SCREECH says
+
+screeches
+%%%%
+__SCREECH speaking
+
+screeching
+%%%%
 __BUZZ unseen
 
 SOUND:You hear an angry buzzing noise.
@@ -105,6 +195,14 @@ SOUND:You hear an angry buzzing noise.
 __BUZZ seen
 
 SOUND:@The_monster@ buzzes angrily.
+%%%%
+__BUZZ says
+
+buzzes
+%%%%
+__BUZZ speaking
+
+buzzing
 %%%%
 __MOAN unseen
 
@@ -114,6 +212,14 @@ __MOAN seen
 
 SOUND:@The_monster@ gives a chilling moan.
 %%%%
+__MOAN says
+
+moans
+%%%%
+__MOAN speaking
+
+chillingly moaning
+%%%%
 __GURGLE unseen
 
 SOUND:You hear a horrible gurgling sound!
@@ -121,6 +227,14 @@ SOUND:You hear a horrible gurgling sound!
 __GURGLE seen
 
 SOUND:@The_monster@ gurgles horribly!
+%%%%
+__GURGLE says
+
+gurgles
+%%%%
+__GURGLE speaking
+
+gurgling
 %%%%
 __CROAK unseen
 
@@ -133,6 +247,13 @@ __CROAK seen
 SOUND:@The_monster@ gives a loud, deep croak!
 
 SOUND:@The_monster@ croaks.
+__CROAK says
+
+croaks
+%%%%
+__CROAK speaking
+
+croaking
 %%%%
 __GROWL unseen
 
@@ -142,6 +263,14 @@ __GROWL seen
 
 SOUND:@The_monster@ growls angrily.
 %%%%
+__GROWL says
+
+growls
+%%%%
+__GROWL speaking
+
+growling
+%%%%
 __HISS unseen
 
 SOUND:You hear an angry hiss.
@@ -149,6 +278,14 @@ SOUND:You hear an angry hiss.
 __HISS seen
 
 SOUND:@The_monster@ hisses angrily.
+%%%%
+__HISS says
+
+hisses
+%%%%
+__HISS speaking
+
+hissing
 %%%%
 __SKITTER unseen
 
@@ -158,6 +295,14 @@ __SKITTER seen
 
 SOUND:@The_monster_possessive@ many legs skitter.
 %%%%
+__SKITTER says
+
+skitters
+%%%%
+__SKITTER speaking
+
+weaving
+%%%%
 __FAINT_SKITTER unseen
 
 SOUND:You hear a faint skittering sound.
@@ -166,9 +311,25 @@ __FAINT_SKITTER seen
 
 SOUND:@The_monster_possessive@ many legs skitter faintly.
 %%%%
+__FAINT_SKITTER says
+
+skitters faintly
+%%%%
+__FAINT_SKITTER speaking
+
+faintly weaving
+%%%%
 __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
+%%%%
+__DEMON_TAUNT says
+
+sneers
+%%%%
+__DEMON_TAUNT speaking
+
+sneering
 %%%%
 __CHERUB unseen
 
@@ -190,6 +351,14 @@ SOUND:@The_monster_possessive@ ox head lows!
 
 SOUND:@The_monster_possessive@ human head shouts!
 %%%%
+__CHERUB says
+
+says
+%%%%
+__CHERUB speaking
+
+speaking
+%%%%
 __SQUEAL unseen
 
 SOUND:You hear an angry squeal.
@@ -197,6 +366,14 @@ SOUND:You hear an angry squeal.
 __SQUEAL seen
 
 SOUND:@The_monster@ squeals angrily.
+%%%%
+__SQUEAL says
+
+squeals
+%%%%
+__SQUEAL speaking
+
+squealing
 %%%%
 __LOUD_ROAR unseen
 
@@ -206,6 +383,14 @@ __LOUD_ROAR seen
 
 SOUND:@The_monster@ roars deafeningly!
 %%%%
+__LOUD_ROAR says
+
+roars
+%%%%
+__LOUD ROAR speaking
+
+roaring
+%%%%
 __RUSTLE unseen
 
 SOUND:You hear a loud rustle.
@@ -213,6 +398,14 @@ SOUND:You hear a loud rustle.
 __RUSTLE seen
 
 SOUND:@The_monster_possessive@ pages rustle loudly.
+%%%%
+__RUSTLE says
+
+rustles
+%%%%
+__RUSTLE speaking
+
+scribing
 %%%%
 __SQUEAK unseen
 
@@ -222,6 +415,14 @@ __SQUEAK seen
 
 SOUND:@The_monster@ squeaks loudly.
 %%%%
+__SQUEAK says
+
+squeaks
+%%%%
+__SQUEAK speaking
+
+squeaking
+%%%%
 __CAW unseen
 
 SOUND:You hear a loud caw.
@@ -230,6 +431,14 @@ __CAW seen
 
 SOUND:@The_monster@ caws.
 %%%%
+__CAW says
+
+caws
+%%%%
+__CAW speaking
+
+cawing
+%%%%
 __LAUGH unseen
 
 SOUND:You hear maniacal laughter.
@@ -237,6 +446,14 @@ SOUND:You hear maniacal laughter.
 __LAUGH seen
 
 SOUND:@The_monster@ laughs maniacally.
+%%%%
+__LAUGH says
+
+laughs
+%%%%
+__LAUGH speaking
+
+laughing
 ############################################
 # End of default shouts
 ############################################
