@@ -1456,7 +1456,7 @@ public:
     // HP of crystals
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(13).Scaling(12), skill));
+        return max(1, scaling_value(FormScaling().Base(13).Scaling(12), skill));
     }
 
     // Indomitable HP on fully charging. (...not really a 'chance')
