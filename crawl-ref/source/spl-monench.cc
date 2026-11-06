@@ -489,6 +489,7 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
         coord_def pos = empty_space[random2(empty_space.size())];
         string targ_desc = (attacker.airborne() && feat_has_solid_floor(env.grid(pos))
                             && coinflip()) ? "the ceiling"
+                            : !env.map_knowledge(pos).feat_known() ? "something"
                             : feature_description_at(pos, false, DESC_THE);
         if (you.can_see(attacker))
         {
