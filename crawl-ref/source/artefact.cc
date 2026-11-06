@@ -445,6 +445,7 @@ static void _populate_jewel_intrinsic_artps(const item_def &item,
 //       I think is still an appropriate bonus.
 static map<talisman_type, vector<intrinsic_artp>> talisman_artps = {
     { TALISMAN_INKWELL,     {{ARTP_POISON, 1}}},
+    { TALISMAN_VISION,      {{ARTP_SEE_INVISIBLE, 1}}},
     { TALISMAN_RIMEHORN,    {{ARTP_COLD, 2}}},
     { TALISMAN_SCARAB,      {{ARTP_FIRE, 2}}},
     { TALISMAN_MEDUSA,      {{ARTP_POISON, 1}}},
