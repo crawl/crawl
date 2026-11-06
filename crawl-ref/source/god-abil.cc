@@ -2412,8 +2412,7 @@ static string ashenzari_curse_knowledge_list()
 
     const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
-    return lowercase_string(comma_separated_fn(curses.begin(), curses.end(),
-                              curse_name));
+    return comma_separated_fn(curses.begin(), curses.end(), curse_name);
 }
 
 string desc_curse_skills(const CrawlVector& curse)
