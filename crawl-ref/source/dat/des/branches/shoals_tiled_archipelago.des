@@ -1,0 +1,1060 @@
+{{
+function nico_shoals_archipelago_setup(e, ununiq)
+    -- the ununiq parameter, if present, means that the primary vault in 
+    -- question will be able to appear in the same game as the other primary
+    -- vaults, but not on the same level. currently this only applies to the 
+    -- 1x1 primary vault
+    ununiq = ununiq or false
+    e.tags("transparent decor water_ok no_tide luniq_nicotiledpelago")
+    -- some of the subvaults have isolated areas that should be no_descent
+    -- rather than tag them all individually we're just vetoing the whole thing
+    e.tags("no_descent")
+    if not ununiq then
+       e.tags("uniq_nicotiledpelago")
+    end
+    e.depth("Shoals")
+    e.orient("float")
+    local glyphs = "DEFHJKLMNOPQRSZa"
+    for i = 1, string.len(glyphs), 1 do
+        e.subvault(string.sub(glyphs, i, i) .. " : nico_tilepelago" )
+    end
+    -- note that this subst is not the same as the one for the subvaults. sorry.
+    e.subst("` = _W")
+    e.clear("_")
+end
+
+function nico_shoals_architile_setup(e)
+    e.tags("unrand transparent no_dump water_ok no_tide nico_tilepelago")
+    e.depth("Shoals")
+    -- 1 = plant on dry land, 2 = plant in shallow water
+    e.kmons("1 = plant")
+    e.kmons("2 = plant")
+    e.kfeat("2 = W")
+    e.subst("` = W.")
+    e.subst("~ = Ww")
+    e.subst("- = x.")
+end
+}}
+
+NAME:   nicolae_shoals_tiled_archipelago_1x1
+: nico_shoals_archipelago_setup(_G, true)
+WEIGHT: 5
+MAP
+ ``  ``WW``
+`WW``WWWWWW`
+`WDDDDDDDDW`
+WWDDDDDDDD`
+WWDDDDDDDD`
+`WDDDDDDDDW`
+`WDDDDDDDDW`
+ `DDDDDDDDWW
+ `DDDDDDDDWW
+`WDDDDDDDDW`
+`WWWWWW``WW`
+ ``WW``  ``
+ENDMAP
+
+NAME: nicolae_shoals_tiled_archipelago_2x2
+: nico_shoals_archipelago_setup(_G)
+MAP
+ ``  ``WW``  ``WW``
+`WW``WWWWWW``WWWWWW`
+`WDDDDDDDDEEEEEEEEW`
+WWDDDDDDDDEEEEEEEE`
+WWDDDDDDDDEEEEEEEE`
+`WDDDDDDDDEEEEEEEEW`
+`WDDDDDDDDEEEEEEEEW`
+ `DDDDDDDDEEEEEEEEWW
+ `DDDDDDDDEEEEEEEEWW
+`WDDDDDDDDEEEEEEEEW`
+`WFFFFFFFFHHHHHHHHW`
+WWFFFFFFFFHHHHHHHH`
+WWFFFFFFFFHHHHHHHH`
+`WFFFFFFFFHHHHHHHHW`
+`WFFFFFFFFHHHHHHHHW`
+ `FFFFFFFFHHHHHHHHWW
+ `FFFFFFFFHHHHHHHHWW
+`WFFFFFFFFHHHHHHHHW`
+`WWWWWW``WWWWWW``WW`
+ ``WW``  ``WW``
+ENDMAP
+
+NAME:   nicolae_shoals_tiled_archipelago_3x3
+: nico_shoals_archipelago_setup(_G)
+WEIGHT: 5
+MAP
+ ``  ``WW``  ``WW``  ``WW``
+`WW``WWWWWW``WWWWWW``WWWWWW`
+`WDDDDDDDDEEEEEEEEFFFFFFFFW`
+WWDDDDDDDDEEEEEEEEFFFFFFFF`
+WWDDDDDDDDEEEEEEEEFFFFFFFF`
+`WDDDDDDDDEEEEEEEEFFFFFFFFW`
+`WDDDDDDDDEEEEEEEEFFFFFFFFW`
+ `DDDDDDDDEEEEEEEEFFFFFFFFWW
+ `DDDDDDDDEEEEEEEEFFFFFFFFWW
+`WDDDDDDDDEEEEEEEEFFFFFFFFW`
+`WHHHHHHHHJJJJJJJJKKKKKKKKW`
+WWHHHHHHHHJJJJJJJJKKKKKKKK`
+WWHHHHHHHHJJJJJJJJKKKKKKKK`
+`WHHHHHHHHJJJJJJJJKKKKKKKKW`
+`WHHHHHHHHJJJJJJJJKKKKKKKKW`
+ `HHHHHHHHJJJJJJJJKKKKKKKKWW
+ `HHHHHHHHJJJJJJJJKKKKKKKKWW
+`WHHHHHHHHJJJJJJJJKKKKKKKKW`
+`WLLLLLLLLMMMMMMMMNNNNNNNNW`
+WWLLLLLLLLMMMMMMMMNNNNNNNN`
+WWLLLLLLLLMMMMMMMMNNNNNNNN`
+`WLLLLLLLLMMMMMMMMNNNNNNNNW`
+`WLLLLLLLLMMMMMMMMNNNNNNNNW`
+ `LLLLLLLLMMMMMMMMNNNNNNNNWW
+ `LLLLLLLLMMMMMMMMNNNNNNNNWW
+`WLLLLLLLLMMMMMMMMNNNNNNNNW`
+`WWWWWW``WWWWWW``WWWWWW``WW`
+ ``WW``  ``WW``  ``WW``
+ENDMAP
+
+NAME:   nicolae_shoals_tiled_archipelago_4x4
+: nico_shoals_archipelago_setup(_G)
+WEIGHT: 1
+MAP
+ ``  ``WW``  ``WW``  ``WW``  ``WW``
+`WW``WWWWWW``WWWWWW``WWWWWW``WWWWWW`
+`WDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHW`
+WWDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHH`
+WWDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHH`
+`WDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHW`
+`WDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHW`
+ `DDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHWW
+ `DDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHWW
+`WDDDDDDDDEEEEEEEEFFFFFFFFHHHHHHHHW`
+`WJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMW`
+WWJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMM`
+WWJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMM`
+`WJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMW`
+`WJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMW`
+ `JJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMWW
+ `JJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMWW
+`WJJJJJJJJKKKKKKKKLLLLLLLLMMMMMMMMW`
+`WNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQW`
+WWNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQ`
+WWNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQ`
+`WNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQW`
+`WNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQW`
+ `NNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQWW
+ `NNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQWW
+`WNNNNNNNNOOOOOOOOPPPPPPPPQQQQQQQQW`
+`WRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaW`
+WWRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaa`
+WWRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaa`
+`WRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaW`
+`WRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaW`
+ `RRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaWW
+ `RRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaWW
+`WRRRRRRRRSSSSSSSSZZZZZZZZaaaaaaaaW`
+`WWWWWW``WWWWWW``WWWWWW``WWWWWW``WW`
+ ``WW``  ``WW``  ``WW``  ``WW``
+ENDMAP
+
+NAME:   nicolae_shoals_tiled_archipelago_circle
+: nico_shoals_archipelago_setup(_G)
+WEIGHT: 5
+MAP
+             ``  ``WW``
+            `WW``WWWWWW`
+            `WDDDDDDDDW`
+            WWDDDDDDDD`
+     ``WW`` WWDDDDDDDD`WW``  ``
+    `WWWWWW``WDDDDDDDDWWWWW``WW`
+    `WMMMMMMMMDDDDDDDDEEEEEEEEW`
+     `MMMMMMMMDDDDDDDDEEEEEEEEWW
+     `MMMMMMMMDDDDDDDDEEEEEEEEWW
+    `WMMMMMMMMDDDDDDDDEEEEEEEEW`
+    `WMMMMMMMMWWWWW``WEEEEEEEEW`
+    WWMMMMMMMM`WW`` WWEEEEEEEE`
+    WWMMMMMMMM`     WWEEEEEEEE`WW``
+`WW``WMMMMMMMMW`    `WEEEEEEEEWWWWW`
+`WLLLLLLLLWWWWW`    `WW``WFFFFFFFFW`
+WWLLLLLLLL`WW``         WWFFFFFFFF`
+WWLLLLLLLL`             WWFFFFFFFF`
+`WLLLLLLLLW`            `WFFFFFFFFW`
+`WLLLLLLLLW`            `WFFFFFFFFW`
+ `LLLLLLLLWW             `FFFFFFFFWW
+ `LLLLLLLLWW         ``WW`FFFFFFFFWW
+`WLLLLLLLLW``WW`    `WWWWWFFFFFFFFW`
+`WWWWWKKKKKKKKW`    `WHHHHHHHHW``WW`
+ ``WW`KKKKKKKKWW     `HHHHHHHHWW
+     `KKKKKKKKWW ``WW`HHHHHHHHWW
+    `WKKKKKKKKW``WWWWWHHHHHHHHW`
+    `WKKKKKKKKJJJJJJJJHHHHHHHHW`
+    WWKKKKKKKKJJJJJJJJHHHHHHHH`
+    WWKKKKKKKKJJJJJJJJHHHHHHHH`
+    `WKKKKKKKKJJJJJJJJHHHHHHHHW`
+    `WW``WWWWWJJJJJJJJW``WWWWWW`
+     ``  ``WW`JJJJJJJJWW ``WW``
+             `JJJJJJJJWW
+            `WJJJJJJJJW`
+            `WWWWWW``WW`
+             ``WW``  ``
+ENDMAP
+
+NAME: nicolae_shoals_tiled_archipelago_hex
+: nico_shoals_archipelago_setup(_G)
+MAP
+     ``  ``WW``  ``WW``
+    `WW``WWWWWW``WWWWWW`
+    `WDDDDDDDDEEEEEEEEW`
+    WWDDDDDDDDEEEEEEEE`
+    WWDDDDDDDDEEEEEEEE`
+    `WDDDDDDDDEEEEEEEEW`
+    `WDDDDDDDDEEEEEEEEW`
+     `DDDDDDDDEEEEEEEEWW
+ ``WW`DDDDDDDDEEEEEEEEWW ``
+`WWWWWDDDDDDDDEEEEEEEEW``WW`
+`WFFFFFFFFHHHHHHHHJJJJJJJJW`
+ `FFFFFFFFHHHHHHHHJJJJJJJJWW
+ `FFFFFFFFHHHHHHHHJJJJJJJJWW
+`WFFFFFFFFHHHHHHHHJJJJJJJJW`
+`WFFFFFFFFHHHHHHHHJJJJJJJJW`
+WWFFFFFFFFHHHHHHHHJJJJJJJJ`
+WWFFFFFFFFHHHHHHHHJJJJJJJJ`
+`WFFFFFFFFHHHHHHHHJJJJJJJJW`
+`WW``WKKKKKKKKLLLLLLLLWWWWW`
+ `` WWKKKKKKKKLLLLLLLL`WW``
+    WWKKKKKKKKLLLLLLLL`
+    `WKKKKKKKKLLLLLLLLW`
+    `WKKKKKKKKLLLLLLLLW`
+     `KKKKKKKKLLLLLLLLWW
+     `KKKKKKKKLLLLLLLLWW
+    `WKKKKKKKKLLLLLLLLW`
+    `WWWWWW``WWWWWW``WW`
+     ``WW``  ``WW``  ``
+ENDMAP
+
+NAME: nicolae_shoals_tiled_archipelago_lozenge
+: nico_shoals_archipelago_setup(_G)
+MAP
+     ``  ``WW``
+    `WW``WWWWWW`
+    `WDDDDDDDDW`
+    WWDDDDDDDD`
+    WWDDDDDDDD`
+    `WDDDDDDDDW`
+    `WDDDDDDDDW`
+     `DDDDDDDDWW
+ ``WW`DDDDDDDDWW ``
+`WWWWWDDDDDDDDW``WW`
+`WEEEEEEEEFFFFFFFFW`
+ `EEEEEEEEFFFFFFFFWW
+ `EEEEEEEEFFFFFFFFWW
+`WEEEEEEEEFFFFFFFFW`
+`WEEEEEEEEFFFFFFFFW`
+WWEEEEEEEEFFFFFFFF`
+WWEEEEEEEEFFFFFFFF`
+`WEEEEEEEEFFFFFFFFW`
+`WW``WHHHHHHHHWWWWW`
+ `` WWHHHHHHHH`WW``
+    WWHHHHHHHH`
+    `WHHHHHHHHW`
+    `WHHHHHHHHW`
+     `HHHHHHHHWW
+     `HHHHHHHHWW
+    `WHHHHHHHHW`
+    `WWWWWW``WW`
+     ``WW``  ``
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_atoll
+SUBST: ! = WW`
+: nico_shoals_architile_setup(_G)
+MAP
+W!`..`!W
+!.!WW!.!
+`!~ww~!`
+.WwwwwW.
+.WwwwwW.
+`!~ww~!`
+!.!WW!.!
+W!`..`!W
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_big_island
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 4=1 / 4=1. / ., W = 2=2 / 2=2W / W
+MAP
+WW````WW
+W`....`W
+`..--..`
+`.-xx-.`
+`.-xx-.`
+`..--..`
+W`....`W
+WW````WW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_boardwalk
+: nico_shoals_architile_setup(_G)
+TAGS:   uniq_nico_archisub_shops
+WEIGHT: 5
+KFEAT:  O = weapon shop
+KFEAT:  P = armour shop
+MAP
+WWWWWWWW
+WW````WW
+`.T..T.`
+..cOcc..
+..ccPc..
+`.T..T.`
+WW````WW
+WWWWWWWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_bridge
+: nico_shoals_architile_setup(_G)
+SUBST: ! = .w
+MAP
+WW~ww~WW
+``wwww~W
+``!!wwwW
+~....!w~
+~w!....~
+Wwww!!``
+W~wwww``
+WW~ww~WW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_cave_island
+: nico_shoals_architile_setup(_G)
+KITEM:  d = human skeleton
+NSUBST: q = . / x, ' = 4=1 / 4=% / d / d1%
+MAP
+WWxxxx`W
+`xx''q.W
+.q'''xx`
+`xx'''q.
+`.q''xx`
+W`xx'q.W
+WW`xqx`W
+WWW`.`WW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_collapsed
+: nico_shoals_architile_setup(_G)
+NSUBST: D = + / x, ! = xw, ' = w%, % = ..%%*
+MAP
+WW`.`WWW
+.......W
+.xDDDx.`
+.D%%%D.`
+.D%''!wW
+W!wwwwwW
+W~wwww~W
+WWW~~WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_concentric
+: nico_shoals_architile_setup(_G)
+NSUBST: L = W / s, M = W / s, N = W / s, O = W / s, r = W / s
+SUBST:  s = WWw
+MAP
+sLLLLLLs
+O......M
+O.srrs.M
+O.r..r.M
+O.r..r.M
+O.srrs.M
+O......M
+WNNNNNNW
+ENDMAP
+
+# occasionally spawns with an escape hatch for some reason, oh well
+NAME:   nicolae_shoals_archisub_dead_end_stairs
+TAGS:   uniq_nico_archisub_stairful
+WEIGHT: 5
+: nico_shoals_architile_setup(_G)
+NSUBST: S = S / *
+NSUBST: D = w / W, E = w / W, F = w / W, H = w / W, J = w / W, K = w / W
+: if you.depth() == 1 then
+SUBST:  S = )}]
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:  S = (){}[]
+: else
+SUBST:  S = ({[
+: end
+MAP
+WWWWWWWW
+WDwwwEWW
+WwD.EwFW
+Ww.SSFwW
+WwKSS.wW
+WKwJ.HwW
+WWJwwwHW
+WWWWWWWW
+ENDMAP
+
+NAME: nicolae_shoals_archisub_depths
+: nico_shoals_architile_setup(_G)
+MAP
+ww~WW~ww
+ww~WW~ww
+~~W~~W~~
+WW~ww~WW
+WW~ww~WW
+~~W~~W~~
+ww~WW~ww
+ww~WW~ww
+ENDMAP
+
+NAME:    nicolae_shoals_archisub_emergency_exit
+: nico_shoals_architile_setup(_G)
+WEIGHT:  5
+SHUFFLE: Pp/Qq
+SUBST:   P = S, p = +, Q = ', q = c, ' = 1.
+: if you.depth() == 1 then
+SUBST:   S = >
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:   S = <>
+: else
+SUBST:   S = <
+: end
+MAP
+WWWWWWWW
+WcccccWW
+Wc'''c.W
+Wc'c'c.`
+WcPcQc.`
+Wcqcpc.`
+WW.....W
+WWW```WW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_erosion
+: nico_shoals_architile_setup(_G)
+SUBST: ' = Wx
+MAP
+''''W'W'
+W''W'W''
+'WW''W''
+W'''''W'
+'W'''''W
+''W''WW'
+''W'W''W
+'W'W''''
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_eyeland
+: nico_shoals_architile_setup(_G)
+SUBST: ! = w., . = ....1
+MAP
+WWWWWWWW
+WWW``WWW
+W`....`W
+`..!!..`
+..wwww..
+`..!!..`
+W`....`W
+WWW``WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_flotsam_cove
+: nico_shoals_architile_setup(_G)
+TAGS:   uniq_nico_archisub_isolooted
+WEIGHT: 5
+KFEAT:  M = W
+KFEAT:  > = >
+KFEAT:  < = <
+KITEM:  % = %
+KITEM:  * = *
+KITEM:  | = |
+SUBST:  ! = xw, " = M'
+NSUBST: ' = 3=% / 2=* / | / '
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  > = <
+: end
+KMASK:  %*|M'<> = opaque
+MAP
+W``````W
+`-xxxx-`
+`xx'>xx`
+`!"'''x`
+!!w"''x`
+!www"xx`
+www!!x-`
+!w!!```W
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_fountainous
+: nico_shoals_architile_setup(_G)
+SUBST:  T = T:50 V U:5
+NSUBST: p = 3=1 / 2=. / 3=1., P = 3=1 / 2=. / 3=1.
+MAP
+WWWWWWWW
+WWWWWPPP
+WWW`.PTP
+W`...PPP
+ppp...`W
+pTp.`WWW
+pppWWWWW
+WWWWWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_fountainous_2
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+MAP
+WWW```WW
+WW..c..W
+W`.TcT.`
+W`ccccc`
+W`.TcT.`
+WW..c..W
+WWW```WW
+WWWWWWWW
+ENDMAP
+
+NAME: nicolae_shoals_archisub_galaxy_island
+: nico_shoals_architile_setup(_G)
+MAP
+W..`WWWW
+....`WWW
+.WW..`WW
+`W`..`WW
+WW`..`W`
+WW`..WW.
+WWW`....
+WWWW`..W
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_grassy_dune
+: nico_shoals_architile_setup(_G)
+NSUBST: 1 = 6=1 / 6=1. / .
+MAP
+WWW`..WW
+WWW.11.`
+WW`.11.W
+WW.11.`W
+W`.11.WW
+W.11.`WW
+`.11.WWW
+WW..`WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_hexislands
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 6=1 / ., W = 6=2 / W
+MAP
+WWW..WWW
+..W--W..
+.-````-.
+WW`--`WW
+WW`--`WW
+.-````-.
+..W--W..
+WWW..WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_island_hut
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+KITEM:  d = human skeleton
+NSUBST: 1 = 4=1 / 2=1. / ., d = d / %
+MAP
+WWWWWWWW
+WW`````W
+Wcccc11`
+Wcddc11`
+Wcdd+11`
+Wcccc11`
+WW`````W
+WWWWWWWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_island_store
+: nico_shoals_architile_setup(_G)
+TAGS:  uniq_nico_archisub_shops
+KFEAT: O = any shop
+MAP
+WWWwWwWW
+WWw`2`wW
+Ww`1.1`w
+WW2.O.2W
+Ww`1.1`w
+WWw`2`wW
+WWWwWwWW
+WWWWWWWW
+ENDMAP
+
+NAME: nicolae_shoals_archisub_lagoon
+: nico_shoals_architile_setup(_G)
+MAP
+WW`..`WW
+`..-xxxW
+..W`.-x`
+.`WW`.x.
+.W~~W`-.
+`W~~WW..
+WWWW`..`
+WW`..`WW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_little_island
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 3=1 / 3=1. / ., W = 3=2 / 3=2W / W
+MAP
+WWWWWWWW
+WWW``WWW
+WW`..`WW
+W`....`W
+W`....`W
+WW`..`WW
+WWW``WWW
+WWWWWWWW
+ENDMAP
+
+NAME: nicolae_shoals_archisub_lonely_sandbar
+: nico_shoals_architile_setup(_G)
+MAP
+WW`WWWWW
+W`1``WWW
+WW``1`WW
+WWWW`WWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_lowani
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 4=1 / 3=1. / ., W = 2=2 / 2=2W / W
+MAP
+W`.x`WWW
+`..WWWWW
+..`Wx.`W
+..`WW..`
+`..WW`..
+W`.xW`..
+WWWWW..`
+WWW`x.`W
+ENDMAP
+
+NAME: nicolae_shoals_archisub_many_little_islands
+: nico_shoals_architile_setup(_G)
+MAP
+```WWWWW
+`.`W```W
+```W`.`W
+WWWW```W
+W```WWWW
+W`.`W```
+W```W`.`
+WWWWW```
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_modern_art
+: nico_shoals_architile_setup(_G)
+WEIGHT: 3
+MAP
+WWWWWWWW
+WWccwwWW
+WccwcwwW
+WcwwccwW
+WwccwwcW
+WwwcwccW
+WWwwccWW
+WWWWWWWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_needle_rock
+: nico_shoals_architile_setup(_G)
+SUBST: ! = Wx
+MAP
+WWWWWWWW
+WWW!!WWW
+WW!!!!WW
+W!!xx!!W
+W!!xx!!W
+WW!!!!WW
+WWW!!WWW
+WWWWWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_overflowing
+: nico_shoals_architile_setup(_G)
+NSUBST: ! = 2=w / 3=x / xw
+MAP
+w~WWWW~w
+~w~``~w~
+W~`!!`~W
+W`!ww!`W
+W`!ww!`W
+W~`!!`~W
+~w~``~w~
+w~WWWW~w
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_pillars
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+SUBST:  c = cccccx
+MAP
+WWW``WWW
+Wcc``ccW
+Wcc..ccW
+``....``
+``....``
+Wcc..ccW
+Wcc``ccW
+WWW``WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_planted_staircase
+TAGS:   uniq_nico_archisub_stairful
+NSUBST: p = 3=p / 3=p` / `, P = 2=P / 2=P. / .
+SUBST:  p = 12, P = 1
+: nico_shoals_architile_setup(_G)
+: if you.depth() == 1 then
+SUBST:  S = )}]
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:  S = (){}[]
+: else
+SUBST:  S = ({[
+: end
+MAP
+WWpppWWW
+WpPPPpWW
+pP...PpW
+pP.S.PpW
+pP...PpW
+WpPPPpWW
+WWpppWWW
+WWWWWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_quad
+: nico_shoals_architile_setup(_G)
+SUBST:  ! = .wW
+NSUBST: . = 4=1 / 4=1. / ., W = 2=2 / 2=2W / W
+MAP
+````````
+`..!!..`
+`..!!..`
+`!!ww!!`
+`!!ww!!`
+`..!!..`
+`..!!..`
+````````
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_rock_staircase
+TAGS:  uniq_nico_archisub_stairful
+: nico_shoals_architile_setup(_G)
+SUBST: ! = .xW
+: if you.depth() == 1 then
+SUBST: S = )}]
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST: S = (){}[]
+: else
+SUBST: S = ({[
+: end
+MAP
+xxxxx!WW
+x...xx!W
+x.S..xx`
+x.....x`
+xxxx..x`
+W`...xx`
+W``.xx!W
+WW````WW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_rocky_tunnel
+: nico_shoals_architile_setup(_G)
+SUBST: ! = xw
+MAP
+WWWWxxx!
+Wxx```xx
+xx..-..!
+!..xx-.!
+!.-xx..!
+!..-..xx
+xx```xxW
+!xxxWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_ruins
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+NSUBST: D = W / c, E = W / c, F = W / c, H = W / c
+NSUBST: J = W / c, K = W / c, L = W / c, M = W / c
+SUBST:  c = cccccW
+MAP
+WDWWWWEW
+DDJJJJEE
+WMWWWWKW
+WMWccWKW
+WMWccWKW
+WMWWWWKW
+HHLLLLFF
+WHWWWWFW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_scoop_beach
+: nico_shoals_architile_setup(_G)
+NSUBST: p = 12 / x, q = 12 / x, . = % / 2=1 / 1. / .
+MAP
+WWWWpxxx
+WWppp.`W
+ppp..`WW
+x...`WWW
+x...`WWW
+qqq..`WW
+WWqqq.`W
+WWWWqxxx
+ENDMAP
+
+NAME: nicolae_shoals_archisub_seamount
+: nico_shoals_architile_setup(_G)
+MAP
+WW``WWWW
+W`--`WWW
+`-xx-`WW
+`-xxx-`W
+W`-xxx-`
+WW`-xx-`
+WWW`--`W
+WWWW``WW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_stone_staircase
+TAGS:   uniq_nico_archisub_stairful
+WEIGHT: 5
+: nico_shoals_architile_setup(_G)
+: if you.depth() == 1 then
+SUBST:  S = )}]
+: elseif you.depth() ~= dgn.br_depth(you.branch()) then
+SUBST:  S = (){}[]
+: else
+SUBST:  S = ({[
+: end
+MAP
+WWWWWWWW
+GcccccG`
+ccwwwcc`
+cw...wc.
+cw.S..+.
+cw...wc.
+ccwwwcc`
+GcccccG`
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_stuff_island
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 4=1 / 4=1. / 3=% / 3=%. / .
+MAP
+WWW`...W
+WW...-.`
+W`.--x-.
+`.-xxx.`
+..-x--.W
+.-xx-..W
+`.-...`W
+W`..`WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_sunken_hall
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+SUBST:  c = cccWWw
+MAP
+WWW``WWW
+WccccccW
+WcG`~GcW
+```WW~c`
+`c`WW~c`
+WcG`~GcW
+WccccccW
+WWW``WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_sunken_spire
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+NSUBST: c = W / cccWWw
+MAP
+WWWWWWWW
+WW```WWW
+W`ccc`WW
+`ccwcc`W
+`cwwwc`W
+`ccwcc`W
+W`ccc`WW
+WW```WWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_sunken_temple
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+KFEAT:  _ = altar_ecumenical
+SUBST:  c = cccWWw
+MAP
+WWWWWWWW
+WcccccWW
+`c~_~c`W
+`c`.`c`W
+`cV`Vc`W
+`cc`cc`W
+`G```G`W
+```W```W
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_swirlpool
+NSUBST: D = x / `, E = x / `, F = x / `, H = x / `
+NSUBST: J = x / `, K = x / `, L = x / `, M = x / `
+SUBST:  P = 1., 1 = 1112
+: nico_shoals_architile_setup(_G)
+MAP
+WWEx``WW
+WDxE`xFW
+`xDPPFxH
+``P11PHx
+xMP11P``
+MxLPPJx`
+WLx`KxJW
+WW``xKWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_thicket
+: nico_shoals_architile_setup(_G)
+SUBST: p = 12, q = W2, Q = W2x, r = WWx, s = 1x
+MAP
+WrxxxxrW
+WrxxxxrW
+WQxssxQW
+q2p11p2q
+q2p11p2q
+WQxssxQW
+WrxxxxrW
+WrxxxxrW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_two_islands
+: nico_shoals_architile_setup(_G)
+NSUBST: . = 4=1 / 4=1. / ., W = 2=2 / 2=2W / W
+MAP
+W```WWWW
+`...`WWW
+`...WWWW
+`..WWW`W
+W`WWW..`
+WWWW...`
+WWW`...`
+WWWW```W
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_two_mountains
+: nico_shoals_architile_setup(_G)
+SUBST: ! = .xW
+MAP
+W!!WWWWW
+!xx!WWWW
+!xx`WWWW
+W!`wwWWW
+WWWww`!W
+WWWW`xx!
+WWWW!xx!
+WWWWW!!W
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_vault_vault
+TAGS:   uniq_nico_archisub_isolooted
+WEIGHT: 5
+: nico_shoals_architile_setup(_G)
+KFEAT:  > = >
+KFEAT:  < = <
+KITEM:  % = %
+KITEM:  $ = $
+KITEM:  * = *
+KITEM:  | = |
+NSUBST: ' = 3=%$ / 2=* / | / '
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  > = <
+: end
+KMASK:  %*$'|<> = opaque
+MAP
+WWWGWWWW
+``WWW``W
+.GwwwG.W
+.ccwcc.W
+.c'w'c.W
+`c'''c`W
+`c'>'c`W
+WcccccWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_volcanic
+: nico_shoals_architile_setup(_G)
+WEIGHT: 5
+SUBST:  x = xxxxl, ! = ..l
+MAP
+WWWW```W
+WW``!!!`
+W`xxxl!`
+W`xllx!`
+`!xllx`W
+`!lxxx`W
+`!!!``WW
+W```WWWW
+ENDMAP
+
+NAME:   nicolae_shoals_archisub_washed
+TAGS:   uniq_nico_archisub_isolooted
+WEIGHT: 5
+: nico_shoals_architile_setup(_G)
+KFEAT:  > = >
+KFEAT:  < = <
+KITEM:  % = %
+KITEM:  * = *
+KITEM:  | = |
+NSUBST: ' = 3=% / 2=* / | / '
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  > = <
+: end
+KMASK:  %*|'<> = opaque
+MAP
+WW~ww~WW
+W~wwww~W
+Www''wwW
+Ww'>''wW
+Www''wwW
+W~wwww~W
+WW~ww~WW
+WWWWWWWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_wetlands
+SUBST: W = ```p, p = 12
+: nico_shoals_architile_setup(_G)
+MAP
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+WWWWWWWW
+ENDMAP
+
+NAME:  nicolae_shoals_archisub_x
+: nico_shoals_architile_setup(_G)
+SUBST: 1 = 111.., 2 = 222WW
+MAP
+``WWWW``
+`..22..`
+W.1111.W
+W21ww12W
+W21ww12W
+W.1111.W
+`..22..`
+``WWWW``
+ENDMAP
