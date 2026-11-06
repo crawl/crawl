@@ -1095,6 +1095,8 @@ Janice
 
 Jen
 
+Jill
+
 Joan
 
 Kim
@@ -1102,6 +1104,8 @@ Kim
 Lynn
 
 Mia
+
+Nell
 
 Peg
 
@@ -1133,6 +1137,8 @@ George
 
 Ike
 
+Jack
+
 Jeff
 
 Jim
@@ -1160,6 +1166,8 @@ Phil
 Steve
 
 Tim
+
+Tom
 %%%%
 _cantonese_female_name_
 
