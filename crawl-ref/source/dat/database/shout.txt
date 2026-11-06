@@ -166,17 +166,19 @@ __FAINT_SKITTER seen
 
 SOUND:@The_monster_possessive@ many legs skitter faintly.
 %%%%
-__SQUEAL unseen
-
-SOUND:You hear an angry squeal.
-%%%%
-__SQUEAL seen
-
-SOUND:@The_monster@ squeals angrily.
-%%%%
 __DEMON_TAUNT
 
 @The_monster@ @says@, "@demon_taunt@"
+%%%%
+__CHERUB unseen
+
+SOUND:You hear a shout.
+
+SOUND:You hear a screech.
+
+SOUND:You hear a roar.
+
+SOUND:You hear a low.
 %%%%
 __CHERUB seen
 
@@ -188,15 +190,13 @@ SOUND:@The_monster_possessive@ ox head lows!
 
 SOUND:@The_monster_possessive@ human head shouts!
 %%%%
-__CHERUB unseen
+__SQUEAL unseen
 
-SOUND:You hear a shout.
+SOUND:You hear an angry squeal.
+%%%%
+__SQUEAL seen
 
-SOUND:You hear a screech.
-
-SOUND:You hear a roar.
-
-SOUND:You hear a low.
+SOUND:@The_monster@ squeals angrily.
 %%%%
 __LOUD_ROAR unseen
 
@@ -222,21 +222,21 @@ __SQUEAK seen
 
 SOUND:@The_monster@ squeaks loudly.
 %%%%
-__CAW seen
-
-SOUND:@The_monster@ caws.
-%%%%
 __CAW unseen
 
 SOUND:You hear a loud caw.
 %%%%
-__LAUGH seen
+__CAW seen
 
-SOUND:@The_monster@ laughs maniacally.
+SOUND:@The_monster@ caws.
 %%%%
 __LAUGH unseen
 
 SOUND:You hear maniacal laughter.
+%%%%
+__LAUGH seen
+
+SOUND:@The_monster@ laughs maniacally.
 ############################################
 # End of default shouts
 ############################################
