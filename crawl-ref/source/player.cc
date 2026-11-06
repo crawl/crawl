@@ -4799,7 +4799,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     const bool was_fatal = poison_is_lethal();
 
     if (player_res_poison() < 0)
-        amount *= 2;
+        amount = amount * 3 / 2;
 
     // TODO: support being poisoned by monsters wearing "harm (ha)
     if (you.extra_harm())
