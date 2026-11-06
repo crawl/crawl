@@ -7370,11 +7370,11 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_SHADOW_TORPOR:
         case BEAM_DIGGING:
             return false;
+        case BEAM_BECKONING:
         case BEAM_INNER_FLAME:
-            // Co-aligned inner flame is fine.
+            // Co-aligned inner flame or beckoning is fine.
             return !mons_aligned(mon, agent());
         case BEAM_TELEPORT:
-        case BEAM_BECKONING:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
         case BEAM_ROOTS:
