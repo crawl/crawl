@@ -492,7 +492,7 @@ monster_type get_monster_by_name(string name, bool substring = false);
 string random_body_part_name(bool plural, int part_class);
 
 string do_mon_str_replacements(const string& msg, const monster& mons,
-                               int s_type = -1);
+                               int s_type = NUM_SHOUTS);
 string do_mon_name_replacements(const string& name);
 
 mon_body_shape get_mon_shape(const monster& mon);

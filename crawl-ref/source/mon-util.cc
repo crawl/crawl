@@ -4381,7 +4381,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                           && invalid_monster_index(mons.foe)) ?
                              &you : mons.get_foe();
 
-    if (s_type < 0 || s_type == NUM_SHOUTS || s_type >= NUM_LOUDNESS)
+    if (s_type == NUM_SHOUTS || s_type >= NUM_LOUDNESS)
         s_type = mons_shouts(mons.type);
 
     msg = maybe_pick_random_substring(msg);
