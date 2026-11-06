@@ -1953,7 +1953,8 @@ static vector<string> _desc_enfeeble_chance(const monster_info& mi, int pow)
 {
     vector<string> base_effects;
     vector<string> all_effects;
-    const int wl = mi.willpower();
+    int wl = mi.willpower();
+    wl = apply_willpower_bypass(you, wl);
 
     if (!mi.is(MB_NO_ATTACKS))
         base_effects.push_back("inflict weakness");
