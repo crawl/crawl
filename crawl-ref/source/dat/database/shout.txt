@@ -13,11 +13,19 @@
 %%%%
 __BUGGY
 
-# This line should never get displayed to the user, even if
-# get_says_type(), get_speaking_type(), or monster_shout() in
-# shout.cc detect buggy behaviour, so showing this line is
-# itself a bug.
+# The __BUGGY lines should never get displayed to the user,
+# even if get_says_type(), get_speaking_type(), or
+# monster_shout() in shout.cc detect buggy behaviour, so
+# showing them is itself a bug.
 SOUND:You hear doubly buggy behaviour!
+%%%%
+__BUGGY says
+
+doubly-buggily says
+%%%%
+__BUGGY speaking
+
+doubly-buggily speaking
 %%%%
 __SILENT says
 
