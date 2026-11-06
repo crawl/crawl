@@ -1933,9 +1933,21 @@ void gozag_incite(monster *mon)
         mon->go_berserk(true);
         success = true;
     }
-    else if (!mon->has_ench(ENCH_HASTE))
+    else
     {
-        enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+        if (!mon->has_ench(ENCH_HASTE))
+        {
+            enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+            success = true;
+        }
+        if (!mon->has_ench(ENCH_EMPOWERED_SPELLS)
+            && mon->antimagic_susceptible())
+        {
+            mon->add_ench(ENCH_EMPOWERED_SPELLS);
+            simple_monster_message(*mon, " spells are empowered.", true);
+            success = true;
+        }
+
         success = true;
     }
 

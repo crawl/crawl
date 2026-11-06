@@ -2042,14 +2042,6 @@ bool drink(item_def* potion)
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
 
-    if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
-    {
-        simple_god_message(" petitions for your drink to fail.", false,
-                           GOD_GOZAG);
-        you.turn_is_over = true;
-        return false;
-    }
-
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
     bool did_swing = false;

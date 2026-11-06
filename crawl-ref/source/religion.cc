@@ -3082,6 +3082,13 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_GOZAG:
+    {
+        const int fee = you.gold / 2;
+        if (fee > 0)
+        {
+            mprf(MSGCH_GOD, "Gozag exacts a cancellation fee of %d gold.", fee);
+            you.del_gold(fee);
+        }
         if (you.attribute[ATTR_GOZAG_SHOPS_CURRENT])
         {
             mprf(MSGCH_GOD, old_god, "Your funded stores close, unable to pay "
@@ -3096,6 +3103,7 @@ void excommunication(bool voluntary, god_type new_god)
         shopping_list.remove_gozag_shops();
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
+    }
         break;
 
     case GOD_QAZLAL:

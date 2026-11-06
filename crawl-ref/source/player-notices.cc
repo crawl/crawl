@@ -692,8 +692,10 @@ void seen_monster(monster* mons, bool do_encounter_message)
         && coinflip()
         && mons->get_experience_level() >= random2(you.experience_level))
     {
-        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
-                mons->name(DESC_THE).c_str());
+        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag grants %s a complimentary blessing in "
+                                   "exchange for %s services.",
+                mons->name(DESC_THE).c_str(),
+                mons->pronoun(PRONOUN_POSSESSIVE).c_str());
         gozag_incite(mons);
     }
 
