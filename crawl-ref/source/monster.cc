@@ -5218,7 +5218,7 @@ bool monster::cannot_move() const
 bool monster::cannot_keep_channelling() const
 {
     return is_silenced() || cannot_act() || confused() || asleep()
-            || has_ench(ENCH_FEAR);
+            || has_ench(ENCH_FEAR) || has_ench(ENCH_FRENZIED);
 }
 
 bool monster::can_burrow() const
