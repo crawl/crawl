@@ -817,10 +817,9 @@ own durability.
 Fortress Blast spell
 
 Draws upon the caster's own physical integrity to create a kinetic shockwave
-that damages foes in a large area. The caster is locked in place for several
-turns as the shockwave starts to form, and the spell will be cancelled if they
-are displaced during that time, but they may otherwise perform other actions
-freely.
+that damages foes in a large area. The caster is anchored in place for several
+turns as the shockwave starts to form, and can neither move nor be dislodged by
+external forces, though they may perform other actions freely.
 
 Spellpower causes the spell to complete more quickly, but the damage depends
 entirely upon the caster's AC.

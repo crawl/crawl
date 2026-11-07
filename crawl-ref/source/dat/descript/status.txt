@@ -1035,8 +1035,8 @@ their attacks completely blocked, and they may also be blinded by its light.
 %%%%
 Blast status
 
-You are preparing to unleash a kinetic shockwave and cannot move until this is
-complete.
+You are preparing to unleash a kinetic shockwave and cannot move or be moved
+until this is complete.
 %%%%
 Blast. status
 

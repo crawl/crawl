@@ -5245,7 +5245,7 @@ spret cast_fortress_blast(actor& caster, int pow, bool fail)
     {
         const int delay = 70 - div_rand_round(pow * 10, 25);
         you.duration[DUR_FORTRESS_BLAST_TIMER] = delay;
-        mprf("You steady yourself in place and focus your resilience into a mighty blast.");
+        mprf("You anchor yourself in place and focus your resilience into a mighty blast.");
     }
     // Todo: Add monster implementation here
 

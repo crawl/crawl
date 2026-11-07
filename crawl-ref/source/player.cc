@@ -7713,10 +7713,18 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
  */
 bool player::resists_dislodge(string event) const
 {
-    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS)
+        && !you.duration[DUR_FORTRESS_BLAST_TIMER])
+    {
         return false;
+    }
     if (!event.empty())
-        mprf("Your boots keep you from %s.", event.c_str());
+    {
+        if (you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+            mprf("Your boots keep you from %s.", event.c_str());
+        else
+            mprf("Your magic anchors you in place.");
+    }
     return true;
 }
 
