@@ -2172,7 +2172,10 @@ static void _rebrand_weapon(item_def& wpn)
         }
     }
 
-    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+    if (is_artefact(wpn))
+        set_artefact_brand(wpn, new_brand);
+    else
+        set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
 }
 
 static string _item_name(item_def &item)

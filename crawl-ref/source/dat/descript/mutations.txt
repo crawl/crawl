@@ -920,7 +920,8 @@ within melee range.
 %%%%
 artefact enchanting mutation
 
-You can use scrolls of enchant weapon and armour upon random artefacts.
+You can use scrolls of brand weapon, enchant weapon, and enchant armour upon
+random artefacts.
 
 This cannot raise their enchantment above what would normally be possible on a
 mundane item of the same type, and cannot affect especially unusual artefacts

@@ -1962,11 +1962,15 @@ bool convert2bad(item_def &item)
 
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 {
-    if (wpn.base_type != OBJ_WEAPONS)
+    if (wpn.base_type != OBJ_WEAPONS || wpn.summoned())
         return false;
 
-    if (is_artefact(wpn) || wpn.summoned())
+    if (is_artefact(wpn)
+        && (is_unrandom_artefact(wpn)
+            || !you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
+    {
         return false;
+    }
 
     if (!allow_ranged && is_range_weapon(wpn)
 #if TAG_MAJOR_VERSION == 34
