@@ -1182,9 +1182,13 @@ string monster_info::_core_name() const
         }
     }
 
-    //XXX: Hack to get poly'd TLH's name on death to look right.
-    if (is(MB_NAME_SUFFIX) && type != MONS_LERNAEAN_HYDRA)
+    //XXX: Hack to get poly'd uniques with MB_NAME_THE who leave corpses to look right.
+    if (is(MB_NAME_SUFFIX)
+        && type != MONS_LERNAEAN_HYDRA
+        && type != MONS_ENCHANTRESS)
+    {
         s += " " + mname;
+    }
     else if (is(MB_NAME_ADJECTIVE))
         s = mname + " " + s;
 
