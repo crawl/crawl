@@ -2338,6 +2338,17 @@ kfeat('B = weapon shop no_mimic ' .. equip_name .. ' greed:11 ' ..
 kfeat('C = general shop no_mimic type:Party suffix:Supplies greed:6 count:' ..
            crawl.random_range(7, 11) .. ' ; ' .. darts .. ' | ' .. cons)
 
+-- Some bazaar guards to help out versus reinforcements or hostile Xom summons,
+-- and to start connecting mannequins to shops as naturally fits best.
+
+kmons("9 = patrolling vault guard mannequin att:good_neutral / " ..
+          "patrolling guardian serpent mannequin att:good_neutral / " ..
+          "patrolling crystal guardian mannequin att:good_neutral / " ..
+          "patrolling guardian sphinx mannequin att:good_neutral")
+if you.get_base_mutation_level("hated by all") == 1 then
+  subst("9 = .")
+end
+
 -- Xom bazaars should look quite garishly variable.
 if crawl.x_chance_in_y(4, 7) then
   local feature = util.random_from({'tree', 'petrified_tree', 'demonic_tree',
@@ -2394,9 +2405,9 @@ ZZZZ""`b.'''..Obbxxxxxbb'HH......II'bbxxxxxbbJ..'''.b`""ZZZZ
 ZZZZ""`bO...XOO'bbxxxxxbbH..X--X..Ibbxxxxxbb'JJX...Jb`""ZZZZ
 ZZZZ""`bOO..OOOOObbxxxxxbb..--....bbxxxxxbbJJJJJ..JJb`""ZZZZ
 ZZZZ""`cbbbOOOOOO'bbxxxxbb..-.-...bbxxxxbb'JJJJJJbbbc`""ZZZZ
-ZZZZ""````bb'OO.OOObbxxbb...-..-...bbxxbbJJJJJJ'bb````""ZZZZ
-ZZZZ"""""``bbOOOxOO'bbbb............bbbb'JJJJJJbb``"""""ZZZZ
-ZZZZ""""""``bb'OO.OOObb..............bbJJJJJJ'bb``""""""ZZZZ
+ZZZZ""````bb'OO.OOObbxxbb...-..-..9bbxxbbJJJJJJ'bb````""ZZZZ
+ZZZZ"""""``bbOOOxOO'bbbb9...........bbbb'JJJJJJbb``"""""ZZZZ
+ZZZZ""""""``bb'OO.OOObb.............9bbJJJJJJ'bb``""""""ZZZZ
 ZZZZ"""""""``bbOOOOO.........xx.........JJJJJbb``"""""""ZZZZ
 ZZZZ""""""""``bb'OO.........y??x.........JJ'bb``""""""""ZZZZ
 ZZZZ"""""""""``bbO..X..-...x?..?y..---X...Jbb``"""""""""ZZZZ
@@ -2405,9 +2416,9 @@ ZZZZ""""""""""``bc..--....x?..>.?x..-.-...cbb``"""""""""ZZZZ
 ZZZZ"""""""""``bbN..X---...y?..?x..-..X...Kbbb``""""""""ZZZZ
 ZZZZ""""""""``bb'NN.........x??y.........KK'bbb``"""""""ZZZZ
 ZZZZ"""""""``bbNNNNN.........xx.........KKKKKbbb``""""""ZZZZ
-ZZZZ""""""``bb'NNNNNNbb..............bbKKKKKK'bbb``"""""ZZZZ
-ZZZZ"""""``bbNNNNNN'bbbb............bbbb'KKKKKKbbb````""ZZZZ
-ZZZZ""````bb'NNNNNNbbxxbb...-..-...bbxxbbKKKKKK'bbbbc`""ZZZZ
+ZZZZ""""""``bb'NNNNNNbb9.............bbKKKKKK'bbb``"""""ZZZZ
+ZZZZ"""""``bbNNNNNN'bbbb...........9bbbb'KKKKKKbbb````""ZZZZ
+ZZZZ""````bb'NNNNNNbbxxbb9..-..-...bbxxbbKKKKKK'bbbbc`""ZZZZ
 ZZZZ""`cbbbNNNNNN'bbxxxxbb...-.-..bbxxxxbb'KKKKKKbbbb`""ZZZZ
 ZZZZ""`bNN..NNNNNbbxxxxxbb....--..bbxxxxxbbKKKKK..KKb`""ZZZZ
 ZZZZ""`bN...XNN'bbxxxxxbbM..X--X..Lbbxxxxxbb'KKX...Kb`""ZZZZ
