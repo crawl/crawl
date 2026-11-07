@@ -4,6 +4,8 @@
 
 #include <cinttypes>
 #include <cmath>
+#include <cstdlib>
+#include <cstring>
 #if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 # include <unistd.h>
 #else
@@ -13,6 +15,7 @@
 #include "pcg.h"
 #include "syscalls.h"
 #include "branch-type.h"
+#include "end.h"
 #include "state.h"
 #include "store.h"
 #include "options.h"
@@ -26,6 +29,42 @@ namespace rng
     static rng_type _generator = rng::GAMEPLAY;
     // TODO: once we have c++17, convert to type optional<PcgRNG>
     static PcgRNG * _sub_generator = nullptr;
+
+    static bool _server_env_enabled(const char *name)
+    {
+        const char *value = getenv(name);
+        return value && (!strcmp(value, "1")
+                         || !strcmp(value, "true")
+                         || !strcmp(value, "yes"));
+    }
+
+    /**
+     * Replace only the per-branch LEVELGEN streams with states derived from
+     * OS entropy. The resulting states are already included in the normal RNG
+     * save vector, so save/reload remains stable without storing or exposing a
+     * separate salt. Gameplay/UI streams and the public game seed are left
+     * unchanged. Full live saves therefore contain these secret states and
+     * must not be exposed when relying on this server policy.
+     */
+    static void _reseed_levelgen_from_system_entropy()
+    {
+        uint64_t seed_key[2];
+        const bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
+        // Protected initialization must not fall back to the public seed,
+        // including in builds where assertions are disabled.
+        if (!seeded)
+            end(1, false, "Unable to obtain system entropy for protected "
+                          "level generation.");
+
+        PcgRNG master(seed_key[0], seed_key[1]);
+        for (int index = rng::LEVELGEN; index < rng::NUM_RNGS; ++index)
+        {
+            const uint64_t init_state = master.get_uint64();
+            const uint64_t sequence = master.get_uint64();
+            _global_state[index] = PcgRNG(init_state, sequence);
+        }
+        dprf("Reseeded LEVELGEN streams from server-only entropy");
+    }
 
     CrawlVector generators_to_vector()
     {
@@ -202,6 +241,11 @@ namespace rng
         dprf("Setting game seed to %" PRIu64, crawl_state.seed);
         you.game_seed = crawl_state.seed;
         rng::seed(crawl_state.seed);
+
+        // Opt-in protected generation is separate from deterministic seeded
+        // play. This does not make the GAMEPLAY stream independent of the seed.
+        if (_server_env_enabled("CRAWL_SERVER_SECRET_LEVELGEN"))
+            _reseed_levelgen_from_system_entropy();
     }
 }
 
