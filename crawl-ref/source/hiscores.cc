@@ -2871,6 +2871,22 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 {
                     desc += auxkilldata == "damnation" ? "... with " :
                          auxkilldata == "creeping frost" ? "... by " :
+                         auxkilldata == "jagged bones" ? "... with " :
+                         auxkilldata == "noxious fumes" ? "... by " :
+                         auxkilldata == "blazing flames" ? "... by " :
+                         auxkilldata == "whirling bolas" ? "... with " :
+                         auxkilldata == "ice thorns" ? "... with " :
+                         auxkilldata == "explosive embers" ? "... by " :
+                         auxkilldata == "shards of blighted ice" ? "... with " :
+                         auxkilldata == "dizzying spores" ? "... by " :
+                         auxkilldata == "falling rubble" ? "... by " :
+                         auxkilldata == "billowing rust" ? "... with " :
+                         auxkilldata == "fiery plasma" ? "... with " :
+                         auxkilldata == "living lightning" ? "... with " :
+                         auxkilldata == "shadowy lightning" ? "... by " :
+                         auxkilldata == "crushing gravity" ? "... by " :
+                         auxkilldata == "nullifying energy" ? "... with " :
+                         auxkilldata == "concentrated momentum" ? "... with " :
                             (is_vowel(auxkilldata[0])) ? "... with an "
                                                        : "... with a ";
                     desc += auxkilldata;
