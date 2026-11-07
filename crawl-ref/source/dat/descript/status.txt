@@ -1390,6 +1390,10 @@ Rampage+++ status
 When moving towards enemies in a straight line, you cover any distance in a
 single step.
 %%%%
+Plink status
+
+You are hurling pebbles at all foes in your line of fire.
+%%%%
 Eisegesis status
 
 You have been granted temporary knowledge of a single spell, which you can cast
