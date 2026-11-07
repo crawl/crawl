@@ -516,7 +516,8 @@ static void _handle_xom_mannequins(int time_taken)
             for (int i = 0; i < mon_list.size(); ++i)
             {
                 mgen_data mg = mgen_data(MONS_MANNEQUIN, BEH_COPY, you.pos(),
-                                          MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE)
+                                          MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE,
+                                          GOD_XOM)
                          .set_summoned(&you, MON_SUMM_XOM_MANNEQUIN, 0, false)
                          .set_range(1, LOS_RADIUS);
                 mg.base_type = static_cast<monster_type>(mon_list[i].get_int());
