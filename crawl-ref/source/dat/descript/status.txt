@@ -1398,7 +1398,7 @@ reduced by your own experience level) using the Eisegesis ability.
 %%%%
 Guardian status
 
-Xom has granted you a persistant ally, which will accompany you between floors
+Xom has granted you a persistent ally, which will accompany you between floors
 and eventually be revived after dying. It is also immune to your attacks and
 can be freely shot through.
 
