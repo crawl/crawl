@@ -1353,8 +1353,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT,
                                           spell, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, spell, pow,
-                                          pow >= 100 ? 1 : 0, 1);
+        return make_unique<targeter_mephitic>(&you, range, pow);
     case SPELL_RUST_BREATH:
         return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, spell, pow,
                                           pow >= 25 ? 2 : 1, 2);
