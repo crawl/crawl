@@ -4653,8 +4653,12 @@ static string _player_spell_stats(const spell_type spell)
                                                     acc_str.str().c_str());
     }
 
-    description += make_stringf("\n%*s: ", padding, "Range");
-    description += spell_range_string(spell);
+    const string range_str = spell_range_string(spell);
+    if (!range_str.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Range",
+                                    range_str.c_str());
+    }
     description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
     if (!defence_string.empty())
