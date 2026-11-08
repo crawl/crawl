@@ -1613,8 +1613,7 @@ your spells based on the number of solid feature you are currently adjacent to.
 %%%%
 stumbling bane
 
-Your evasion is decreased by 25 on any turn where you either moved or waited in
-place without doing anything else.
+Your evasion is decreased by 25 on any turn where you move or are moved.
 %%%%
 succour bane
 

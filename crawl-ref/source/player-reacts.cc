@@ -1211,6 +1211,10 @@ static void _decrement_durations()
     if (you.has_mutation(MUT_TRICKSTER))
         _handle_trickster_decay(delay);
 
+    if (you.duration[DUR_STUMBLING])
+        if (--you.duration[DUR_STUMBLING] <= 0)
+            you.redraw_evasion = true;
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))

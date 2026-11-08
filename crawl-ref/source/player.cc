@@ -851,6 +851,16 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
         if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
             player_did_deliberate_movement();
+
+        if (you.has_bane(BANE_STUMBLING))
+        {
+            // This duration is in player turns, not aut. This means it will
+            // last for the rest of the current turn, still be displayed on the
+            // UI at the start of the player's next turn, and then be removed at
+            // the end of it.
+            you.duration[DUR_STUMBLING] = you.turn_is_over ? 1 : 2;
+            you.redraw_evasion = true;
+        }
     }
 
     // Assuming that entering the same square means coming from above (flight)
@@ -2188,7 +2198,7 @@ bool player_acrobatic()
 
 void update_acrobat_status()
 {
-    if (!player_acrobatic() && !you.has_bane(BANE_STUMBLING))
+    if (!player_acrobatic())
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -2323,9 +2333,8 @@ static int _player_temporary_evasion_modifiers()
     if (acrobat_boost_active())
         evbonus += 15;
 
-    // Bane of stumbling triggers on the same conditions as acrobat (thus
-    // sharing its timer).
-    if (you.has_bane(BANE_STUMBLING) && you.duration[DUR_ACROBAT])
+    // Bane of stumbling is active on any turn you move or are moved.
+    if (you.duration[DUR_STUMBLING])
         evbonus -= 25;
 
     if (you.duration[DUR_VERTIGO])
