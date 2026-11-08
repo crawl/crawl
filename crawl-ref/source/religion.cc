@@ -1474,7 +1474,7 @@ static bool _give_sif_gift(bool forced)
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    if (!forced && (you.piety() < piety_breakpoint(5) || !one_chance_in(3)))
+    if (!forced && (you.piety() < piety_breakpoint(4) || !one_chance_in(3)))
         return false;
 
     // Sif Muna special: Keep quiet if acquirement fails
