@@ -7778,8 +7778,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         for (spell_type head_spell : *breaths)
         {
-            if (!mons->get_foe())
+            if (!mons->alive() || !mons->get_foe())
                 return;
+
             setup_mons_cast(mons, pbolt, head_spell);
             mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }
