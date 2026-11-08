@@ -5681,20 +5681,20 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         ancestor.spells.emplace_back(SPELL_DEFLECT_MISSILES, 200, MON_SPELL_WIZARD);
 
         if (HD < 10)
-            ancestor.spells.emplace_back(SPELL_SHOCK, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_SHOCK, 45, MON_SPELL_WIZARD);
         if (HD < 13)
-            ancestor.spells.emplace_back(SPELL_STONE_ARROW, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_STONE_ARROW, 45, MON_SPELL_WIZARD);
         if (HD >= 10 && HD < 16)
         {
-            ancestor.spells.emplace_back(SPELL_ICEBLAST, 35, MON_SPELL_WIZARD);
-            ancestor.spells.emplace_back(SPELL_BOLT_OF_MAGMA, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_ICEBLAST, 45, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_BOLT_OF_MAGMA, 45, MON_SPELL_WIZARD);
         }
         if (HD >= 13)
-            ancestor.spells.emplace_back(SPELL_LRD, 40, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_LRD, 50, MON_SPELL_WIZARD);
         if (HD >= 16)
-            ancestor.spells.emplace_back(SPELL_PLASMA_BEAM, 30, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_PLASMA_BEAM, 37, MON_SPELL_WIZARD);
         if (HD >= 16)
-            ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 30, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 37, MON_SPELL_WIZARD);
 
         break;
 
