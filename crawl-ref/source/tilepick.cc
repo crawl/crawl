@@ -1987,6 +1987,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_DRACONIAN_SHIFTER,           TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
         { MONS_DRACONIAN_STORMCALLER,       TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
 
+        { MONS_ELECTRIC_EEL,                TILEP_MONS_MANNEQUIN_EEL},
+
         { MONS_JUGGERNAUT,                  TILEP_MONS_MANNEQUIN_JUGGERNAUT },
         { MONS_GUARDIAN_SERPENT,            TILEP_MONS_MANNEQUIN_GUARDIAN_SERPENT },
         { MONS_MOUNTAINSHELL,               TILEP_MONS_MANNEQUIN_TURTLE },
@@ -2013,6 +2015,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_IRONBOUND_CONVOKER,          TILEP_MONS_MANNEQUIN_IRONBOUND },
         { MONS_IRONBOUND_FROSTHEART,        TILEP_MONS_MANNEQUIN_IRONBOUND },
         { MONS_IRONBOUND_PRESERVER,         TILEP_MONS_MANNEQUIN_IRONBOUND },
+
+        { MONS_VAMPIRE_MOSQUITO,            TILEP_MONS_MANNEQUIN_MOSQUITO},
 
         { MONS_MELIAI,                      TILEP_MONS_MANNEQUIN_MELIAI},
 
@@ -2075,7 +2079,7 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_FLOATING_EYE,            TILEP_MONS_MANNEQUIN_EYE },
         { MONS_FAUN,                    TILEP_MONS_MANNEQUIN_FAUN },
         { MONS_FROG,                    TILEP_MONS_MANNEQUIN_FROG },
-        { MONS_FUNGUS,                  TILEP_MONS_MANNEQUIN_FAUN },
+        { MONS_FUNGUS,                  TILEP_MONS_MANNEQUIN_FUNGUS },
         { MONS_GNOLL,                   TILEP_MONS_MANNEQUIN_GNOLL },
         { MONS_GOBLIN,                  TILEP_MONS_MANNEQUIN_GOBLIN },
         { MONS_HARPY,                   TILEP_MONS_MANNEQUIN_BIRD },

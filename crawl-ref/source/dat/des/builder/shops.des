@@ -2386,6 +2386,132 @@ vvv0S0vvv
  .  .  .
 ENDMAP
 
+# A rare shop vault with three seperate mini-shops, each of which is heavily
+# themed via talismans, spells, and occasional other equipment to let one
+# dress up as one of many monsters throughout the game, with a matching
+# mannequin behind glass positioned for each shop.
+NAME:   regret_index_costume_shops
+TAGS:   transparent no_item_gen no_monster_gen water_ok extra
+TAGS:   vaults_empty vaults_orient_s
+DEPTH:  D:7-, Snake, Shoals, Vaults, Elf
+WEIGHT: 1 (Vaults), 5
+{{
+local spider_item = "throwing net q:1"
+if items.pickable("sack of spiders") then
+  spider_item = "sack of spiders"
+end
+
+local qs_item = "ring of willpower q:1"
+if items.pickable("wand of quicksilver") then
+  qs_item = "wand of quicksilver"
+end
+
+local long_blade = "scimitar"
+if you.in_branch("D") then
+  long_blade = "long sword"
+end
+
+local costumes =
+{
+  ["angel"] =
+    {"helmet ego:light", "whip ego:holy_wrath", "ring of flight"},
+  ["bombardier beetle"] =
+    {"scarab talisman", "parchment of Sticky Flame",
+     "parchment of Brom's Barrelling Boulder"},
+  ["death yak"] =
+    {"rimehorn talisman", "parchment of Summon Ice Beast",
+     "parchment of Death Channel"},
+  ["fire giant"] =
+    {"great sword ego:flaming", "parchment of Fireball",
+     "parchment of Starburst"},
+  ["redback"] =
+    {"spider talisman", spider_item, "parchment of Olgreb's Toxic Radiance"},
+  ["storm dragon"] =
+    {"dragon-coil talisman", "parchment of Dragon's Call",
+     "parchment of Plasma Beam"},
+  ["troll"] =
+    {"troll leather armour", "amulet of regeneration", "ring of strength"},
+  ["tengu conjurer"] =
+    {"amulet of the acrobat", long_blade .. " ego:electrocution",
+     "parchment of Iskenderun's Battlesphere"},
+  ["wandering mushroom"] =
+    {"spore talisman", "parchment of confusing touch",
+     "potion of lignification q:3"},
+  ["wolf"] =
+    {"lupine talisman", "animal skin randart",
+     "parchment of Call Canine Familiar"},
+  ["vampire"] =
+    {"sanguine talisman", long_blade .. " ego:vampirism",
+     "parchment of vampiric draining"},
+  -- These only spawn past D, due to their higher item quality.
+  ["crystal guardian"] =
+    {"crystal plate armour", "orb ego:glass",
+     "parchment of Lehudib's Crystal Spear"},
+  ["deep elf elementalist"] =
+    {"scarf ego:repulsion", "parchment of Lee's Rapid Deconstruction",
+     "parchment of Hoarfrost Cannonade"},
+  ["electric eel"] =
+    {"eel talisman", "lightning rod", "parchment of Arcjolt"},
+  ["lich"] =
+    {"talisman of death", "potion of invisibility q:3",
+     "parchment of Orb of Destruction"},
+  ["quicksilver dragon"] =
+    {"quicksilver dragon scales", qs_item,
+     "parchment of Yara's Violent Unravelling"},
+  ["sphinx marauader"] =
+    {"riddle talisman", "manual of Hexes", "barding"}
+}
+
+local set = {"angel", "bombardier beetle", "death yak", "fire giant",
+             "redback", "troll", "tengu", "storm dragon",
+             "wandering mushroom", "wolf", "vampire"}
+local late_set = {"crystal guardian", "deep elf elementalist", "electric eel",
+                  "lich", "quicksilver dragon", "sphinx marauder"}
+if not you.in_branch("D") then
+  for _, v in ipairs(late_set) do
+     table.insert(set, v)
+  end
+end
+
+local pick = util.random_subset(set, 3)
+local s_setup = "general shop type:Costume suffix:Stall count:3 use_all ;"
+
+-- XXX: Maybe these should all deploy one shopkeeper's name, collecting some
+-- mythological list of non-divine shapechangers like nicolae_shop_dragon_depot?
+kmons('1 = ' .. pick[1] .. ' mannequin')
+kmons('2 = ' .. pick[2] .. ' mannequin')
+kmons('3 = ' .. pick[3] .. ' mannequin')
+kfeat('A = ' .. s_setup .. costumes[pick[1]][1] .. " | " ..
+       costumes[pick[1]][2] .. " | " .. costumes[pick[1]][3])
+kfeat('B = ' .. s_setup .. costumes[pick[2]][1] .. " | " ..
+       costumes[pick[2]][2] .. " | " .. costumes[pick[2]][3])
+kfeat('C = ' .. s_setup .. costumes[pick[3]][1] .. " | " ..
+       costumes[pick[3]][2] .. " | " .. costumes[pick[3]][3])
+
+if you.in_branch("Shoals") then
+  ftile("123' = floor_sprouting_ruin")
+else
+  tile("n = dngn_transparent_stone_yellow")
+end
+if you.in_branch("Vaults") then
+  clear("c")
+  subst("z = x")
+else
+  subst("z = c")
+end
+}}
+KMASK: 123' = opaque
+KPROP: 123' = no_tele_into
+MAP
+    ccccc
+   cc'2'cc
+  ccnnnnncc
+ cc'n.B.n'cc
+cc1nn...nn3cc
+c'nnA...Cnn'c
+zzz...@...zzz
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
