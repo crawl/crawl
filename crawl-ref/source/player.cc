@@ -6885,7 +6885,7 @@ int player::armour_class_scaled(int scale) const
         AC += 100 * player_icemail_armour_class();
 
     if (has_mutation(MUT_TRICKSTER))
-        AC += 100 * trickster_bonus();
+        AC += trickster_bonus();
 
     if (duration[DUR_FIERY_ARMOUR])
         AC += 700;
@@ -9705,9 +9705,10 @@ bool ench_triggers_trickster(enchant_type ench)
     }
 }
 
+// The max AC Trickster can give (multiplied by 100)
 static int _trickster_max_boost()
 {
-    return 6 + you.experience_level * 4 / 5;
+    return (6 + you.experience_level * 4 / 5) * 100;
 }
 
 // Increment AC boost when applying a negative status effect to a monster.
@@ -9722,7 +9723,7 @@ void trickster_trigger(const monster& victim, enchant_type ench)
         return;
     }
 
-    const int min_bonus = 3 + you.experience_level / 6;
+    const int min_bonus = (3 + you.experience_level / 6) * 100;
 
     if (!you.props.exists(TRICKSTER_POW_KEY))
     {
@@ -9735,23 +9736,28 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     int& bonus = you.props[TRICKSTER_POW_KEY].get_int();
     if (bonus < min_bonus)
         bonus = min_bonus;
-    else if (bonus >= 15)
-        bonus += random2(2);
+    // Make it harder to increase the AC bonus, the more bonus you already have
+    // (down to 0.33 AC per debuff when approaching the max bonus)
     else
-        bonus += 1;
+    {
+        const int delta = _trickster_max_boost() - min_bonus;
+        bonus += 100 - min(67, max(0, (bonus - min_bonus) * 100 / delta));
+    }
 
-    const int max = _trickster_max_boost() + 10;
+    // The bonus AC can exceed the max bonus internally to make it decay slower
+    // when highly stacked (but the AC is still capped at _trickster_max_boost())
+    const int max = _trickster_max_boost() + 1000;
     if (bonus > max)
         bonus = max;
 
     // Give a few turns before the effect starts to decay.
-    if (you.duration[DUR_TRICKSTER_GRACE] < 60)
-        you.duration[DUR_TRICKSTER_GRACE] = random_range(60, 90);
+    if (you.duration[DUR_TRICKSTER_GRACE] < 50)
+        you.duration[DUR_TRICKSTER_GRACE] = random_range(50, 80);
 
     you.redraw_armour_class = true;
 }
 
-// Returns the current AC bonus from Trickster
+// Returns the current AC bonus from Trickster (multiplied by 100)
 int trickster_bonus()
 {
     if (!you.props.exists(TRICKSTER_POW_KEY))

@@ -825,8 +825,8 @@ static void _handle_trickster_decay(int delay)
 
     int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
 
-    // Decay at a rate of ~1 AC per 30 aut.
-    const int reduction = div_rand_round(3, delay);
+    // Decay at a rate of 0.8 AC per turn.
+    const int reduction = delay * 8;
     stacks -= reduction;
     if (stacks <= 0)
     {
