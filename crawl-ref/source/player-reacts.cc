@@ -1195,7 +1195,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        mprf(MSGCH_DURATION, "You feel your defences recover.");
         you.duration[DUR_MEDUSA_COOLDOWN] = 0;
     }
 

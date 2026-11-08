@@ -709,7 +709,7 @@ static const duration_def duration_data[] =
     { DUR_HIVE_COOLDOWN,
         YELLOW, "-Swarm",
         "on swarm cooldown", "swarm cooldown",
-        "Your swarm has recently come to your defense.", D_NO_FLAGS},
+        "Your swarm has recently come to your defence.", D_NO_FLAGS},
     { DUR_STARDUST_COOLDOWN,
         YELLOW, "-Star",
         "on stardust cooldown", "stardust cooldown",

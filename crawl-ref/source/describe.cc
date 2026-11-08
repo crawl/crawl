@@ -7481,7 +7481,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << "you have merely inferred " << mi.pronoun(PRONOUN_POSSESSIVE)
                  << " position. " << uppercase_first(mi.pronoun(PRONOUN_POSSESSIVE))
                  << " current health and status is unknown to you and your"
-                    " accuracy and defense against " << mi.pronoun(PRONOUN_POSSESSIVE)
+                    " accuracy and defence against " << mi.pronoun(PRONOUN_POSSESSIVE)
                  << " attacks is reduced. </magenta>";
     }
     else if (mi.is(MB_REMEMBERED_INVIS))
