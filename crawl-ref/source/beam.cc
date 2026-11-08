@@ -3840,10 +3840,14 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CHARM:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(5 + random2(3));
+    {
+        const string msg = make_stringf("lash out against %s attempt to control you!",
+                                        agent() ? agent()->name(DESC_ITS).c_str() : "the");
+        you.vex(agent(), random_range(3, 5),
+                agent() ? agent()->name(DESC_A).c_str() : "something", msg);
         obvious_effect = true;
-        break;     // charming - confusion?
+    }
+        break;
 
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
