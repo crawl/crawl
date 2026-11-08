@@ -7781,8 +7781,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             if (!mons->alive() || !mons->get_foe())
                 return;
 
-            if (_target_and_justify_spell(*mons, pbolt, head_spell, false))
-                mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
+            setup_mons_cast(mons, pbolt, head_spell);
+            mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }
 
         return;
