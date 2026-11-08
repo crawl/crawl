@@ -1901,7 +1901,7 @@ void celebrant_bloodrite_fineff::fire()
     int shots_fired = 0;
     int repeats = 0;
 
-    bolt beam(you, ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2));
+    bolt beam(you, ZAP_BLOOD_ARROW, 5 + you.skill(SK_INVOCATIONS, 2));
     beam.draw_delay   = 10;
 
     // Fire once at every visible target. If that doesn't hit the minimum number

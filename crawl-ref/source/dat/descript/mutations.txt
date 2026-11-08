@@ -1402,7 +1402,7 @@ Enemies who die to this explosion will always explode themselves.
 %%%%
 Mark of the Celebrant mutation
 
-Whenever you fall below 50% of your maximum HP, you perform an infernal rite,
+Whenever you fall below 1/3rd of your maximum HP, you perform an infernal rite,
 unleashing a flurry of blood arrows aimed at nearby enemies. You will fire at
 least one arrow for every valid target, but may fire additional ones if few are
 present. Invocations increases the damage of these arrows, and Makhleb will

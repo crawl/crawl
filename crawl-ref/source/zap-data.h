@@ -2385,7 +2385,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
 {
     ZAP_BLOOD_ARROW,
     "blood arrow",
-    new dicedef_calculator<4, 3, 27, 100>,
+    new dicedef_calculator<4, 3, 26, 100>,
     new tohit_calculator<20, 1, 7>,
     nullptr,
     nullptr,
