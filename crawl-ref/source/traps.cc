@@ -234,9 +234,8 @@ static passage_type _find_other_passage_side(coord_def& to)
 static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { blind_player(random_range(15, 20)); }, 4 },
     { [] { contaminate_player(1500 + random2avg(1800, 2), false); }, 4 },
-    { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
     { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
-    { [] { you.petrify(nullptr); }, 1 },
+    { [] { you.petrify(nullptr); }, 2 },
     { [] { you.increase_duration(DUR_LOWERED_WL, 5 + random2(15), 20,
                 "Your willpower is stripped away!"); }, 4 },
     { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
