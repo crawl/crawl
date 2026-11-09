@@ -330,12 +330,9 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     while (!f.eof())
         script += f.get_line() + "\n";
 
-    if (script[0] == 0x1b)
-        abort();
-
     // prefixing with @ stops lua from adding [string "%s"]
-    return luaL_loadbuffer(ls, &script[0], script.length(),
-                           ("@" + file).c_str());
+    return luaL_loadbufferx(ls, script.c_str(), script.length(),
+                            ("@" + file).c_str(), "t");
 }
 
 int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
