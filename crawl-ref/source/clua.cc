@@ -19,7 +19,6 @@
 #include "unicode.h"
 #include "version.h"
 
-#define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
 // 64-bit luajit does not support custom allocators. Only checking
@@ -1238,12 +1237,8 @@ static int _clua_guarded_pcall(lua_State *ls)
     const int nargs = lua_gettop(ls);
     const int err = lua_pcall(ls, nargs - 1, LUA_MULTRET, 0);
 
-    if (err)
-    {
-        const char *errs = lua_tostring(ls, 1);
-        if (!errs || strstr(errs, BUGGY_SCRIPT_ERROR))
-            luaL_error(ls, errs? errs : BUGGY_PCALL_ERROR);
-    }
+    if (err && crawl_state.lua_script_killed)
+        lua_error(ls);
 
     lua_pushboolean(ls, !err);
     lua_insert(ls, 1);
