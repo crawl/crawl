@@ -833,10 +833,11 @@ void CLua::init_lua()
 static int lua_loadstring(lua_State *ls)
 {
     const auto lua = luaL_checkstring(ls, 1);
-    if (lua[0] == 0x1b)
-        abort();
     lua_settop(ls, 0);
-    if (luaL_loadstring(ls, lua))
+    // only allow text and not bytecode as bytecode isn't validated and can
+    // crash when run if the user suplies bad bytecode
+    int err = luaL_loadbufferx(ls, lua, strlen(lua), lua, "t");
+    if (err)
     {
         lua_pushnil(ls);
         lua_insert(ls, 1);
