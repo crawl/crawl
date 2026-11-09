@@ -1164,8 +1164,14 @@ static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
     UNUSED(dbg);
 
+    // XXX: this won't kill the script early in local tiles unless the script
+    // is pumping the sdl event queue (e.g. by calling crawl.getch). However,
+    // it should still eventually be killed.
     if (crawl_state.seen_hups)
+    {
+        crawl_state.lua_script_killed = true;
         luaL_error(ls, "Aborting clua code on SIGHUP");
+    }
 
     CLua *lua = lua_call_throttle::find_clua(ls);
 
