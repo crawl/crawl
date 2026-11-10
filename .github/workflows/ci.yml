@@ -16,7 +16,7 @@ jobs:
     name: Code Linting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history - Checkconventioncommit needs to know which commits are being merged
       - name: Checkwhite
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -120,7 +120,7 @@ jobs:
             tag_upgrade: false
             build_all: BUILD_ALL=1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -128,7 +128,7 @@ jobs:
         if: github.event.release.tag_name != null
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* # will break on a lightweight tag
       - name: Set up Python 3.13
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install requirements.txt
@@ -140,7 +140,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}
           restore-keys: |
@@ -217,7 +217,7 @@ jobs:
           - build_type: tiles
             build_opts: LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
           submodules: false
@@ -227,7 +227,7 @@ jobs:
         run: ./deps.py --build-opts "${{ matrix.build_opts }}" --appimage
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: appimage-${{ matrix.build_type }}
           restore-keys: |
@@ -255,7 +255,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
           submodules: false
@@ -328,7 +328,7 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@2026.09.13.1
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -384,7 +384,7 @@ jobs:
           echo $PATH
           which python
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: macos-clang-${{ matrix.build_type }}
           restore-keys: |
@@ -416,7 +416,7 @@ jobs:
           - console
           - installer
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -429,7 +429,7 @@ jobs:
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Set up Python 3.13
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install requirements.txt
@@ -441,7 +441,7 @@ jobs:
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: key2-mingw64-${{ matrix.build_type }}
           restore-keys: |
@@ -502,7 +502,7 @@ jobs:
           - Win32
           # TODO: consider ARM64?
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -532,7 +532,7 @@ jobs:
       # https://github.com/actions/runner-images/blob/13666fe26513ca5e0e21f412b5d4c7fa0e8eb5a9/images/windows/Windows2025-Readme.md?plain=1#L254
       # But isn't in the path, so fix that:
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
       # Steps 5&6 from INSTALL.md's Visual Studio Section
       # See https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference?view=vs-2022
       - name: Build
@@ -549,11 +549,11 @@ jobs:
     name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install requirements.txt
@@ -565,7 +565,7 @@ jobs:
         run: ./deps.py --coverage --build-opts TILES=1
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: catch2
           restore-keys: |
@@ -586,7 +586,7 @@ jobs:
           --ignore-errors source
           --rc branch_coverage=1
       - name: Send coverage data to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.info
@@ -605,9 +605,9 @@ jobs:
         # TODO: 3.12 is currently broken because of requirements.txt brittleness
         python-version: [3.11, 3.13]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies (py3)
@@ -644,11 +644,11 @@ jobs:
           - ""
           - FULLDEBUG=1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install requirements.txt
@@ -660,7 +660,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
           restore-keys: |
@@ -685,7 +685,7 @@ jobs:
     env:
       NDK_CCACHE: ccache
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -696,16 +696,16 @@ jobs:
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '21'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: 9.5.0 # compatible with Android Gradle plugin 9.3.1
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: android
           restore-keys: |
@@ -735,11 +735,11 @@ jobs:
           - gcc
           - clang
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install requirements.txt
@@ -751,7 +751,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }}
         working-directory: .github/workflows
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: build-monster-${{ matrix.compiler }}
           restore-keys: |
@@ -769,7 +769,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       # Produce FAQ.html et cetera
       - name: Generate non-Lua docs
         run: make -j$(nproc) docs
@@ -782,7 +782,7 @@ jobs:
           args: --config crawl-ref/source/util/config.ld --dir $GITHUB_WORKSPACE/crawl-ref/docs/lua/ .
       - name: Upload static files as artifact
         id: deployment
-        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        uses: actions/upload-pages-artifact@v5 # or specific "vX.X.X" version tag for this action
         with:
           path: crawl-ref/docs/
   deploy_docs:
@@ -802,7 +802,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   notify_irc:
     name: "Notify #crawl-dev of build failure"
