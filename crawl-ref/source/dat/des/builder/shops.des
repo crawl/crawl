@@ -2463,7 +2463,7 @@ local costumes =
 }
 
 local set = {"angel", "bombardier beetle", "death yak", "fire giant",
-             "redback", "troll", "tengu conjurer", "storm dragon",
+             "redback", "storm dragon", "troll", "tengu conjurer",
              "wandering mushroom", "wolf", "vampire"}
 local late_set = {"crystal guardian", "deep elf elementalist", "electric eel",
                   "lich", "quicksilver dragon", "sphinx marauder"}
