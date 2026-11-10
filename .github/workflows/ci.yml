@@ -16,7 +16,7 @@ jobs:
     name: Code Linting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history - Checkconventioncommit needs to know which commits are being merged
       - name: Checkwhite
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -120,7 +120,7 @@ jobs:
             tag_upgrade: false
             build_all: BUILD_ALL=1
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -217,7 +217,7 @@ jobs:
           - build_type: tiles
             build_opts: LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
           submodules: false
@@ -255,7 +255,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
           submodules: false
@@ -328,7 +328,7 @@ jobs:
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@2026.09.13.1
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -416,7 +416,7 @@ jobs:
           - console
           - installer
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -502,7 +502,7 @@ jobs:
           - Win32
           # TODO: consider ARM64?
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Fix tags for release # work around https://github.com/actions/checkout/issues/882
@@ -549,7 +549,7 @@ jobs:
     name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
@@ -605,7 +605,7 @@ jobs:
         # TODO: 3.12 is currently broken because of requirements.txt brittleness
         python-version: [3.11, 3.13]
     steps:
-    - uses: actions/checkout@v7
+    - uses: actions/checkout@v5
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v7
       with:
@@ -644,7 +644,7 @@ jobs:
           - ""
           - FULLDEBUG=1
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
@@ -685,7 +685,7 @@ jobs:
     env:
       NDK_CCACHE: ccache
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
           submodules: true
@@ -735,7 +735,7 @@ jobs:
           - gcc
           - clang
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # all history
       - name: Set up Python 3.13
@@ -769,7 +769,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v5
       # Produce FAQ.html et cetera
       - name: Generate non-Lua docs
         run: make -j$(nproc) docs
