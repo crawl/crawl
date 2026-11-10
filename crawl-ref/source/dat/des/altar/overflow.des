@@ -5169,6 +5169,37 @@ T.T
 T.T
 ENDMAP
 
+NAME:    dolorous_ogre_chaos_knights_in_training
+TAGS:    transparent no_monster_gen no_trap_gen extra patrolling
+DEPTH:   D:3-
+WEIGHT:  1
+KMONS:   1 = generate_awake ogre god:xom ; giant club ego:chaos | \
+             giant spiked club ego:chaos w:5 pre_id
+KMONS:   2 = generate_awake ogre
+KFEAT:   F = cache_of_baked_goods
+KFEAT:   G = cache_of_fruit
+KFEAT:   H = cache_of_meat
+: if you.depth() < 5 then
+NSUBST:  J = 1:1 / *:2
+: elseif you.depth() < 7 then
+NSUBST:  J = 2:1 / *:2
+: elseif you.depth() < 10 then
+NSUBST:  J = 3:1 / *:2
+: end
+SHUFFLE: FGH
+KPROP:   . = bloody / nothing w:5
+COLOUR:  X = red / lightred / brown
+: standard_overflow_setup(_G, { { "xom", "_" } }, true)
+MAP
+X===X
+X...X
+XUJUX
+XJ_JX
+XUJUX
+XFGHX
+XXXXX
+ENDMAP
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_generic
