@@ -2458,12 +2458,12 @@ local costumes =
   ["quicksilver dragon"] =
     {"quicksilver dragon scales", qs_item,
      "parchment of Yara's Violent Unravelling"},
-  ["sphinx marauader"] =
+  ["sphinx marauder"] =
     {"riddle talisman", "manual of Hexes", "barding"}
 }
 
 local set = {"angel", "bombardier beetle", "death yak", "fire giant",
-             "redback", "troll", "tengu", "storm dragon",
+             "redback", "troll", "tengu conjurer", "storm dragon",
              "wandering mushroom", "wolf", "vampire"}
 local late_set = {"crystal guardian", "deep elf elementalist", "electric eel",
                   "lich", "quicksilver dragon", "sphinx marauder"}
