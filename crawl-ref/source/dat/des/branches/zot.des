@@ -3543,14 +3543,12 @@ MONS:    nonbase draconian w:20 / protean progenitor / killer klown / \
          death cob / curse toe w:5 / ancient lich / dread lich / \
          electric golem / orb of appropriateness w:5
 KFEAT:   V = v
-SHUFFLE: EF
-SUBST:   E : "
-SHUFFLE: ABCDF, GH / GH / GH / HG
+SHUFFLE: DE, ABCD, GH / GH / GH / HG
 NSUBST:  1 = 3:1 / 2:2 / 2:112 / 1:122, 0 = 3:1 / 2:2 / 2:112 / 1:122
 NSUBST:  3 = 3:3 / 2:4 / 2:334 / 1:344, 6 = 3:5 / 2:6 / 2:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 ':2
 SUBST:   2 = 2:2 ':1, 3 = 3:4 ':1, 4 = 4:6 ':1, 5 = 5:6 ':1, 6 = 6:5 ':1
-SUBST:   A : V:4 ":1, B : V:7 ":3, C : V:1 ":4, DF = ", H = .
+SUBST:   A : V:4 ":1, B : V:7 ":3, C : V:1 ":4, DE = ", H = .
 SUBST:   G : V:7 G:2 .:1, - : +', + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[
@@ -3570,11 +3568,11 @@ xx...G...Vv4$v$4vV...G...xx
 x..VVVV...Vv'v'vV...VVVV..x
 @.VvvvvV.'1V"""V1'.VvvvvV.@
 @Vvv3v0vV1'""A""'1Vv0v3vvV@
-Vvv'*v$4vV"BC{DB"Vv4$v*'vvV
-Vv6*|+%$'""DEFEC""'$%+|*6vV
-Vvvv-v-vv"A{F<F{A"vv-v-vvvV
-Vv6*|+%$'""CEFED""'$%+|*6vV
-Vvv'*v$4vV"BD{CB"Vv4$v*'vvV
+Vvv'*v$4vV""B{C""Vv4$v*'vvV
+Vv6*|+%$'""CDEDB""'$%+|*6vV
+Vvvv-v-vv"A{E<E{A"vv-v-vvvV
+Vv6*|+%$'""BDEDC""'$%+|*6vV
+Vvv'*v$4vV""C{B""Vv4$v*'vvV
 @Vvv3v0vV1'""A""'1Vv0v3vvV@
 @.VvvvvV.'1V"""V1'.VvvvvV.@
 x..VVVV...Vv'v'vV...VVVV..x

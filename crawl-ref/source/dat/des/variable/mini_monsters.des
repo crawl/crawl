@@ -10259,12 +10259,12 @@ NAME:   hellmonk_guarded_unrand_vitality_bloodlust
 TAGS:   no_monster_gen
 DEPTH:  D:7-
 WEIGHT: 3
-MONS:   deep troll, deep troll shaman
+MONS:   troll, deep troll, deep troll shaman
 ITEM:   amulet_of_vitality no_pickup / necklace_of_bloodlust no_pickup
 : if you.depth() < 13 then
-NSUBST: 1 = 1:1 / 2:. / * =  1..
+NSUBST: 1 = 1:2 / 1:1 / 2:. / * = 12.
 : else
-NSUBST: 1 = 1:2 / * = 1.
+NSUBST: 1 = 1:3 / * = 2.
 : end
 COLOUR: x. = lightred
 TILE:   x = wall_pebble_red

@@ -3394,7 +3394,6 @@ ENDMAP
 
 NAME: nicolae_ru_awakened_eye
 TAGS: transparent decor no_pool_fixup
-KFEAT: _ = altar_ru
 : standard_overflow_setup(_G, { { "ru", "_" } }, true)
 MAP
     .......
@@ -4446,9 +4445,9 @@ ENDMAP
 
 NAME:  nicolae_vehumet_first_one's_free
 TAGS:  transparent decor
-KITEM: p = parchment of freeze / parchment of foxfire / parchment of shock / \
-           parchment of poisonous vapours / parchment of magic dart / \
-           parchment of kiss of death / parchment of sandblast
+: kitem("p = parchment of " .. util.random_from {"Freeze", "Foxfire",
+:                             "Ice Thorns", "Kiss of Death", "Magic Dart",
+:                             "Poisonous Vapours", "Sandblast", "Shock"})
 : single_cloud(_G, "M", "flame", true)
 : single_cloud(_G, "N", "freezing vapour", true)
 : standard_overflow_setup(_G, { { "vehumet", "_" } }, true)
@@ -4556,10 +4555,10 @@ KPROP:  F = no_tele_into
     repeated=false,
     data={
       venoms={
-        "spectral demonic crawler name:centipede name_species name_replace name_descriptor",
+        "spectral assassin centipede",
         "spectral black mamba",
         "spectral scorpion",
-        "spectral frilled lizard",
+        "spectral wolf spider",
         "spectral cane toad"
       }
     }

@@ -2437,22 +2437,23 @@ ENDMAP
 ###############################################################################
 # A set of vaults converted from the ultimately-dispersed Forest.
 
-NAME:   grunt_forest_stairs_clearing
-DEPTH:  Lair:2-, !Lair:$
-MONS:   wolf, black bear, polar bear, spriggan
-KMONS:  P = plant / bush
-NSUBST: t = 2:t / * = t.
-NSUBST: Q = 3:1 / 1:2 / 1:3 / 1:4 / *:.
+NAME:    grunt_forest_stairs_clearing
+DEPTH:   Lair:2-, !Lair:$
+MONS:    wolf, black bear, polar bear, spriggan
+KMONS:   B = plant / bush
+SHUFFLE: opqrstOPQR
+SUBST:   o = ., O : t., p : t., P : t., q : t., Q : t., r : t., R : t., s = t
+NSUBST:  0 = 3:1 / 1:2 / 1:3 / 1:4 / *:.
 MAP
-.tt...tt.
-t..Q.Q..t
-t.t.Q.t.t
-.Q.P.P.Q.
-..Q.).Q..
-.Q.P.P.Q.
-t.t.Q.t.t
-t..Q.Q..t
-.tt...tt.
+.op...qr.
+R..0.0..O
+Q.s.0.t.P
+.0.B.B.0.
+..0.).0..
+.0.B.B.0.
+P.t.0.s.Q
+O..0.0..R
+.rq...po.
 ENDMAP
 
 # A secluded grove.
@@ -2460,21 +2461,19 @@ NAME:   forest_entry_grove
 DEPTH:  Lair:2-, !Lair:$
 MONS:   centaur w:4 / spriggan
 MONS:   wolf, black bear, polar bear / raven w:2
-KMONS:  P = plant / bush
 KFEAT:  d = cache_of_baked_goods
-NSUBST: Q = 2:1 / *:.
-NSUBST: R = 3:2 / 1:3 / 1:4 / *:.
+NSUBST: 0 = 2:1 / *:., z = 3:2 / 1:3 / 1:4 / *:.
 MAP
    xxxxxxxxx
   xxxttttxxxx
  xxxttttttttxx
 xxtttt.d.tttxxx
-xttt..Q.Q..ttxx
-xttt.Q.R.Q.tttx
+xttt..0.0..ttxx
+xttt.0.R.0.tttx
 xtt.........ttx
-xtt.R..)..R.ttx
-xtt..R...R..ttx
-xttt..R.R..tttx
+xtt.z..)..z.ttx
+xtt..z...z..ttx
+xttt..z.z..tttx
 xttt.......tttx
 xxtttt...ttttxx
  xxxtt..ttxxxx
@@ -2482,93 +2481,96 @@ xxtttt...ttttxx
    xxtt@@ttx
 ENDMAP
 
-NAME:   grunt_forest_small_clearing_treed
-TAGS:   transparent patrolling
-MONS:   plant / bush
-NSUBST: t = 2:t / * = t..
-SUBST:  T = t, * = **t
-KPROP:  * = no_tele_into
-KMASK:  * = opaque
+NAME:    grunt_forest_small_clearing_treed
+TAGS:    transparent patrolling
+MONS:    plant / bush
+SHUFFLE: opqrOPQR
+SUBST:   oO = ., p : t., P : t., q : t., Q : t., rR = t
+SUBST:   * = **t
+KPROP:   * = no_tele_into
+KMASK:   * = opaque
 MAP
- tt@@@tt
-t.......t
-t.1...1.t
-@..TTT..@
-@..T*T..@
-@..GTT..@
-t.1...1.t
-t.......t
- tt@@@tt
+ op@@@qr
+R.......O
+Q.1...1.P
+@..ttt..@
+@..t*t..@
+@..Gtt..@
+P.1...1.Q
+O.......R
+ rq@@@po
 ENDMAP
 
 # Previously large_clearing_fruit, _statues, _slash, _guards
 NAME:    grunt_forest_large_clearings
 TAGS:    transparent no_pool_fixup
 WEIGHT:  15
-KMONS:   p = plant / bush
+KMONS:   B = plant / bush
 MONS:    wolf, black bear / polar bear, spriggan / centaur w:4
 KMONS:   4 = spriggan rider / faun w:4
 KMONS:   9 = 9
 KITEM:   94 = *
 KFEAT:   94 = W
 KFEAT:   C = cache_of_fruit
-SHUFFLE: wW'"-9 / ''GG'4 / 'C'0'% / ```C1G
-SUBST:   t = t.., '. = p:49 .:405, W = WW., "w = wwwW
+SHUFFLE: wW'"-9 / ''GG'4 / 'C'0'% / ```C1G, opqrsOPQRS
+SUBST:   oOp = ., P : t.., q : t.., Q : t.., r : t.., RsS = t
+SUBST:   '. = B:49 .:405, - = W, "w = wwwW
 NSUBST:  1 = 3:1 / 2:2 / 1:3 / *:.
 TILE:    G = dngn_statue_elephant / dngn_statue_hydra / \
              dngn_statue_dragon / dngn_statue_snail / dngn_statue_cat w:5
 MAP
-      tt@@@tt
-    ttt.....ttt
-  ttt.........ttt
-  tww...........t
- ttwww..........tt
- t..www..'.......t
-tt...w"w....'....tt
-t.....ww-.-.......t
+      SS@@@oo
+    RRS.....opp
+  QQR.........pqq
+  Qww...........q
+ PPwww..........rr
+ P..www..'.......r
+OO...w"w....'....ss
+O.....ww-.-.......s
 @......-.W--......@
 @....'..W9W..'....@
 @......--W.-......@
-t.......-.-ww.....t
-tt....'....w"w...tt
- t.......'..www..t
- tt..........wwwtt
-  t...........wwt
-  ttt.........ttt
-    ttt.....ttt
-      tt@@@tt
+s.......-.-ww.....O
+ss....'....w"w...OO
+ r.......'..www..P
+ rr..........wwwPP
+  q...........wwQ
+  qqp.........RQQ
+    ppo.....SRR
+      oo@@@SS
 ENDMAP
 
-NAME:   grunt_forest_large_clearing_hut
-TAGS:   transparent
-MONS:   plant / bush
-KMONS:  2 = spriggan / centaur w:2
-KFEAT:  2 = cache_of_baked_goods
-SUBST:  t = t..
-SUBST:  . = 1 .:90
-COLOUR: -*29 = lightgrey
-FTILE:  + = floor_sprouting_stone
-FTILE:  -*29 = floor_sprouting_squares
+NAME:    grunt_forest_large_clearing_hut
+TAGS:    transparent
+MONS:    plant / bush
+KMONS:   2 = spriggan / centaur w:2
+KFEAT:   2 = cache_of_baked_goods
+SHUFFLE: opqrsOPQRS
+SUBST:   oOp = ., P : t.., q : t.., Q : t.., r : t.., RsS = t
+SUBST:   . = 1 .:90
+COLOUR:  -*29 = lightgrey
+FTILE:   + = floor_sprouting_stone
+FTILE:   -*29 = floor_sprouting_squares
 MAP
-      tt@@@tt
-    ttt.....ttt
-  ttt.........ttt
-  t.............t
- tt.............tt
- t...............t
-tt...............tt
-t......ccccc......t
+      SS@@@oo
+    RRS.....opp
+  QQR.........pqq
+  Q.............q
+ PP.............rr
+ P...............r
+OO...............ss
+O......ccccc......s
 @......c-9*c......@
 @......+-*2c......@
 @......c-9*c......@
-t......ccccc......t
-tt...............tt
- t...............t
- tt.............tt
-  t.............t
-  ttt.........ttt
-    ttt.....ttt
-      tt@@@tt
+s......ccccc......O
+ss...............OO
+ r...............P
+ rr.............PP
+  q.............Q
+  qqp.........RQQ
+    ppo.....SRR
+      oo@@@SS
 ENDMAP
 
 ###############################################################################
