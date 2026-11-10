@@ -3594,7 +3594,7 @@ void game_options::set_longwalk_range(const string &field)
     }
 }
 
-void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
+void base_game_options::set_option_fragment(const string &s, bool runscripts)
 {
     if (s.empty())
         return;
@@ -3604,14 +3604,15 @@ void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
     {
         // Boolean option.
         if (s[0] == '!')
-            read_option_line(s.substr(1) + " = false", true);
+            read_option_line(s.substr(1) + " = false", runscripts);
         else
-            read_option_line(s + " = true", true);
+            read_option_line(s + " = true", runscripts);
     }
     else
     {
         // key:val option.
-        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1), true);
+        read_option_line(s.substr(0, st) + " = " + s.substr(st + 1),
+                         runscripts);
     }
 }
 
@@ -3898,7 +3899,10 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     {
         // does this need the ability to escape `,` for some reason?
         _base_split_parse(state.raw_field, ",",
-                [this](const string & s, bool b) { set_option_fragment(s, b); });
+                [this, runscripts](const string & s, bool /*prepend*/)
+                {
+                    set_option_fragment(s, runscripts);
+                });
         return;
     }
     else if (state.key == "lua_max_memory")

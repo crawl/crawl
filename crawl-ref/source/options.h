@@ -401,7 +401,7 @@ protected:
     string unalias(const string &key) const;
     string expand_vars(const string &field) const;
     void add_alias(const string &alias, const string &name);
-    void set_option_fragment(const string &s, bool prepend);
+    void set_option_fragment(const string &s, bool runscripts);
 };
 
 /// This class implements most of crawl's options as well as their state.
