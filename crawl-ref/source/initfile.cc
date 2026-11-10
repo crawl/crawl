@@ -2342,7 +2342,7 @@ void read_init_file(bool runscripts)
     for (const string &extra : SysEnv.extra_opts_first)
     {
         Options.line_num++;
-        Options.read_option_line(extra, true);
+        Options.read_option_line(extra, runscripts);
     }
 
     // Load init.txt.
@@ -2400,7 +2400,7 @@ void read_init_file(bool runscripts)
     for (const string &extra : SysEnv.extra_opts_last)
     {
         Options.line_num++;
-        Options.read_option_line(extra, true);
+        Options.read_option_line(extra, runscripts);
     }
 
     Options.filename     = init_file_name;
