@@ -258,7 +258,7 @@ static string _habitat_debug_name(habitat_type ht)
         result += "malign_gateway|";
     if (ht & HT_WALLS_ONLY)
         result += "walls|";
-    if (ht >= (HT_WALLS_ONLY << 1))
+    if (static_cast<int>(ht) >= (HT_WALLS_ONLY << 1))
         result += "INVALID|";
     if (result.empty())
         return "none";

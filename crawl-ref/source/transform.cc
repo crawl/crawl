@@ -67,8 +67,6 @@ constexpr int SLOTF(equipment_slot s) {
     return 1 << s;
 }
 
-static constexpr int EQF_NONE = 0;
-
 // Weapons and offhand items
 static constexpr int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
                                 | SLOTF(SLOT_WEAPON_OR_OFFHAND);
