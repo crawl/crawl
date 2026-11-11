@@ -83,6 +83,8 @@ azurite
 
 baby blue
 
+balge yellow
+
 banana yellow
 
 beetroot red
@@ -684,6 +686,8 @@ steel blue
 strawberry red
 
 strontium yellow
+
+sunflower yellow
 
 tamarind
 
