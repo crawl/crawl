@@ -1517,11 +1517,34 @@ w:5
 #####
 
 %%%%
+Ashenzari pray
+
+You meditate on the difference between things seen and unseen.
+
+w:1
+You try to imagine Ashenzari shackled to the sky, but only give yourself a headache.
+
+%%%%
 Ru pray
 
 You take a moment to contemplate the folly of creation.
 
 You close your eyes. For a moment, the world falls away from you, then returns.
+
+%%%%
+Beogh pray
+
+You shout a glorious oath to Beogh, as orcs often do.
+
+%%%%
+Cheibriados pray
+
+You meditate at the altar for what feels like an eternity.
+
+%%%%
+Dithmenos pray
+
+You close your eyes for a moment and bask in ultimate shadow.
 
 %%%%
 ######################################
