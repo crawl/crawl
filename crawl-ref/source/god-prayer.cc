@@ -235,21 +235,17 @@ void try_god_conversion(god_type god)
     }
     else
     {
-
         string key = god_name(you.religion) + " pray";
-
 
         string result = getSpeakString(key);
 
         if (!result.empty()){
-            //mprf(MSGCH_GOD,"Found key %s", key.c_str());
-
             mprf(MSGCH_GOD,"%s", result.c_str());
         }
         else{
-        mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
-             you.cannot_speak() ? "silent " : "",
-             god_name(god).c_str());
+            mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
+                 you.cannot_speak() ? "silent " : "",
+                 god_name(god).c_str());
         }
     }
 }
