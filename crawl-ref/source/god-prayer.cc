@@ -235,10 +235,14 @@ void try_god_conversion(god_type god)
     }
     else
     {
-        // Already worshipping this god - just print a message.
+
+        mprf(MSGCH_GOD,"You are a message written by Rosstin");
+
+/*        // Already worshipping this god - just print a message.
         mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
              you.cannot_speak() ? "silent " : "",
              god_name(god).c_str());
+*/    
     }
 }
 
