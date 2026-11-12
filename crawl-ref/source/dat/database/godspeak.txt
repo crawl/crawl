@@ -1547,6 +1547,17 @@ Dithmenos pray
 You close your eyes for a moment and bask in ultimate shadow.
 
 %%%%
+Elyvilon pray
+You pray that the [sick|dying] find peace in Elyvilion's embrace.
+
+You offer a prayer of comfort for the [weak|downtrodden|helpless] to Elyvilon.
+
+%%%%
+Fedhas pray
+
+You prepare an infusion of [apple|apricot|banana|choko|grape] and [lemon|orange|pear|snozzcumber|strawberry] to nourish the altar's flora.
+
+%%%%
 ######################################
 # Welcome messages on game restoration
 ######################################
