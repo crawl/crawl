@@ -236,13 +236,21 @@ void try_god_conversion(god_type god)
     else
     {
 
-        mprf(MSGCH_GOD,"You are a message written by Rosstin");
+        string key = god_name(you.religion) + " pray";
 
-/*        // Already worshipping this god - just print a message.
+
+        string result = getSpeakString(key);
+
+        if (!result.empty()){
+            //mprf(MSGCH_GOD,"Found key %s", key.c_str());
+
+            mprf(MSGCH_GOD,"%s", result.c_str());
+        }
+        else{
         mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
              you.cannot_speak() ? "silent " : "",
              god_name(god).c_str());
-*/    
+        }
     }
 }
 

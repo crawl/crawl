@@ -1510,6 +1510,19 @@ w:40
 
 w:5
 "Everything deserves to die!"
+
+
+#####
+# God pray messages
+#####
+
+%%%%
+Ru pray
+
+You take a moment to contemplate the folly of creation.
+
+You close your eyes. For a moment, the world falls away from you, then returns.
+
 %%%%
 ######################################
 # Welcome messages on game restoration
