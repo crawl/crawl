@@ -235,13 +235,18 @@ void try_god_conversion(god_type god)
     }
     else
     {
+
+        // look up a special god pray string if it exists
         string key = god_name(you.religion) + " pray";
 
         string result = getSpeakString(key);
 
         if (!result.empty()){
+            result = maybe_pick_random_substring(result);
+
             mprf(MSGCH_GOD,"%s", result.c_str());
         }
+        // if no special string exists, print the generic string
         else{
             mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
                  you.cannot_speak() ? "silent " : "",
