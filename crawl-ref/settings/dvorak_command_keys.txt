@@ -18,6 +18,15 @@ bindkey = [G] CMD_RUN_UP_RIGHT
 bindkey = [X] CMD_RUN_DOWN_LEFT
 bindkey = [B] CMD_RUN_DOWN_RIGHT
 
+bindkey = [^D] CMD_ATTACK_LEFT
+bindkey = [^H] CMD_ATTACK_DOWN
+bindkey = [^T] CMD_ATTACK_UP
+bindkey = [^N] CMD_ATTACK_RIGHT
+bindkey = [^F] CMD_ATTACK_UP_LEFT
+bindkey = [^G] CMD_ATTACK_UP_RIGHT
+bindkey = [^X] CMD_ATTACK_DOWN_LEFT
+bindkey = [^B] CMD_ATTACK_DOWN_RIGHT
+
 bindkey = [d] CMD_TARGET_LEFT
 bindkey = [h] CMD_TARGET_DOWN
 bindkey = [t] CMD_TARGET_UP
@@ -71,25 +80,28 @@ bindkey = [J] CMD_INTERLEVEL_TRAVEL
 # e(X)amine map -> (L)ook at map
 bindkey = [L] CMD_DISPLAY_MAP
 
-# ^D, add macro -> ^M for macro
-bindkey = [^M] CMD_MACRO_ADD
+# ^D, macro menu -> ^M for macro
+bindkey = [^M] CMD_MACRO_MENU
 # ^F, search stashes -> ^K for no reason
 bindkey = [^K] CMD_SEARCH_STASHES
 # ^G, interlevel travel -> ^J for no reason
 bindkey = [^J] CMD_INTERLEVEL_TRAVEL
+# ^T, ignore inVisible -> ^V
+bindkey = [^V] CMD_IGNORE_INVISIBLE
 # ^X, list items and feature -> (^L)ist items and features
 bindkey = [^L] CMD_FULL_VIEW
 
 # map (G)oto level -> J for no reason
 bindkey = [J] CMD_MAP_GOTO_LEVEL
 
+
+# ^B, banish monster -> ^A (abyss)
+bindkey = [^A] CMD_TARGET_WIZARD_BANISH_MONSTER
 # target wizard (D)ebug monster -> J rather than K because small k is used for
 # firing
 bindkey = [J] CMD_TARGET_WIZARD_DEBUG_MONSTER
 # target wizard make (F)riendly -> make the monster (L)oyal
 bindkey = [L] CMD_TARGET_WIZARD_MAKE_FRIENDLY
-# target wizard (G)ain level -> make the monster go (U)p a level
-bindkey = [U] CMD_TARGET_WIZARD_GAIN_LEVEL
 
 # FIXME: Consider mapping vi keys for the doll editor. It doesn't use
 # diagonals, so it might not be worth the effort.
