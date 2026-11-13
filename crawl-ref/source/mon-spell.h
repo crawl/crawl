@@ -1996,6 +1996,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BOREAS,
+      {
+       { SPELL_STAMPEDE, 120, MON_SPELL_NATURAL },
+       { SPELL_DEFLECT_MISSILES, 100, MON_SPELL_MAGICAL },
+       { SPELL_SLEETSTRIKE, 26, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('d') Draconians.
     { MST_BAI_SUZHEN,
       {

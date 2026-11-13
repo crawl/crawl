@@ -2740,6 +2740,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return base + 1;
             return base;
 
+        case MONS_BOREAS:
+            if (mon.is(MB_STAMPEDE))
+                return TILEP_MONS_BOREAS_STAMPEDE;
+            return base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
@@ -3113,7 +3118,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_SUNDERING_READY, TILEI_SUNDERING },
     { MB_MUTE, TILEI_MUTE },
     { MB_EXPOSED, TILEI_EXPOSED },
-    { MB_STAMPEDE, TILEI_STAMPEDE },
     { MB_KNOWN_INVIS, TILEI_UNSEEN_INVIS_KNOWN },
     { MB_INVISIBLE, TILEI_SEEN_INVIS },
     { MB_DIVINE_SHIELD, TILEI_DIVINE_SHIELD },
@@ -3142,6 +3146,8 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
         icons.insert(TILEI_PHASE_SHIFT);
     if (mons.is(MB_FULLY_CHARGED) && !mons_is_jade_crystal(mons.type))
         icons.insert(TILEI_FULLY_CHARGED);
+    if (mons.is(MB_STAMPEDE) && mons.type != MONS_BOREAS)
+        icons.insert(TILEI_STAMPEDE);
     return icons;
 }
 

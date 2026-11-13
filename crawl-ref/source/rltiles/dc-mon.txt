@@ -1219,8 +1219,10 @@ orb_guardian MONS_ORB_GUARDIAN
 %sdir mon/unique
 nessos MONS_NESSOS
 nessos_bowless MONS_NESSOS_BOWLESS
-%sdir mon/demihumanoids/taurs
 %rim 0
+boreas MONS_BOREAS
+boreas_stampede MONS_BOREAS_STAMPEDE
+%sdir mon/demihumanoids/taurs
 # 'melee' tiles must be immediately following the normal ones
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
