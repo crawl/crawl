@@ -599,7 +599,7 @@ static void _wanderer_random_evokable()
 }
 
 // Create a random low-level talisman in the inventory.
-static void _wanderer_random_talisman(bool has_spells)
+static void _wanderer_good_talisman(bool has_spells)
 {
     talisman_type selected_talisman =
         random_choose_weighted(10, TALISMAN_PROTEAN,
@@ -621,6 +621,14 @@ static void _wanderer_random_talisman(bool has_spells)
     }
     else
         newgame_make_item(OBJ_TALISMANS, selected_talisman);
+}
+
+static void _wanderer_decent_talisman(bool has_spells)
+{
+    if (has_spells && coinflip())
+        newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_INKWELL, TALISMAN_VISION));
+    else
+        newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_QUILL, TALISMAN_GECKO));
 }
 
 static void _give_wanderer_aux_armour(int plus = 0)
@@ -756,8 +764,18 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill, set<skill_t
         break;
 
     case SK_SHAPESHIFTING:
-        // Random low-level talisman
-        _wanderer_random_talisman(_wanderer_has_spell_skill(gift_skills));
+        // Random tier 2 talisman or baubles, plus a tier 1 talisman or consumables
+        _wanderer_good_talisman(_wanderer_has_spell_skill(gift_skills));
+        if (coinflip())
+            _wanderer_decent_talisman(_wanderer_has_spell_skill(gift_skills));
+        else
+        {
+            _decent_potion_or_scroll();
+            if (coinflip())
+                newgame_make_item(OBJ_POTIONS, POT_LIGNIFY);
+            else
+                newgame_make_item(OBJ_POTIONS, POT_MUTATION);
+        }
         break;
 
     default:
@@ -831,14 +849,12 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         break;
 
     case SK_SHAPESHIFTING:
-        if (_wanderer_has_spell_skill(gift_skills) && coinflip())
-            newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_INKWELL, TALISMAN_VISION));
-        else if (one_chance_in(4))
+        if (coinflip())
+            _wanderer_decent_talisman(_wanderer_has_spell_skill(gift_skills));
+        else if (coinflip())
             newgame_make_item(OBJ_BAUBLES, BAUBLE_CENTIPEDE, random_range(2, 4));
-        else if (one_chance_in(3))
-            newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(2, 5));
         else
-            newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_QUILL, TALISMAN_GECKO));
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(2, 5));
         break;
 
     case SK_STEALTH:
