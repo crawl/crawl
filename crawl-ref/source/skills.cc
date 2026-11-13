@@ -30,6 +30,7 @@
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "random.h"
 #include "religion.h"
@@ -1667,6 +1668,12 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
             mprf("You have finished your manual of %s and %stoss it away.",
                  skill_name(exsk),
                  exsk == SK_THROWING ? "skilfully " : "");
+            if (Options.reskill_after_manuals)
+            {
+                skill_menu();
+                redraw_screen();
+                update_screen();
+            }
         }
     }
 
