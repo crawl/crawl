@@ -217,6 +217,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_LONGBOW:
         tile = TILEP_HAND1_ORCBOW;
         break;
+
+    // Unrand only
+    case WPN_TARGE:
+        tile = TILEP_HAND1_CLUB_SLANT;
+        break;
 #if TAG_MAJOR_VERSION == 34
     case WPN_BLOWGUN:
 #endif

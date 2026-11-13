@@ -839,6 +839,11 @@ static const weapon_def Weapon_prop[] =
         SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS,
         DAMV_NON_MELEE, 0, 13, 200, RANGED_BRANDS },
 
+    // unrand only
+    { WPN_TARGE,   "targe",    12, -4, 15,
+        SK_SHIELDS, SIZE_MEDIUM, NUM_SIZE_LEVELS,
+        DAMV_CRUSHING, 0, 0, 0, {} },
+
 };
 
 struct staff_def

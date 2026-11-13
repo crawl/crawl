@@ -733,6 +733,7 @@ coolibah COOLIBAH
 five_virtues FIVE_VIRTUES
 stagehand STAGEHAND
 hana HANA
+targe TARGE
 
 %sdir player/hand1
 # blades

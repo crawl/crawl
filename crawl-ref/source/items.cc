@@ -3758,6 +3758,9 @@ colour_t item_def::weapon_colour() const
             return RED;
         case SK_STAVES:
             return GREEN;
+        // unrand targe only
+        case SK_SHIELDS:
+            return BROWN;
         default:
             die("Unknown weapon attack skill %d", item_attack_skill(*this));
             // XXX: give more info!
