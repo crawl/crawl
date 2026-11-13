@@ -1,6 +1,6 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
         "contrib/jquery.cookie", "contrib/jquery.tablesorter",
-        "contrib/jquery.waitforimages", "contrib/inflate"],
+        "contrib/jquery.waitforimages"],
 function (exports, $, key_conversion, chat, comm) {
 
     // Need to keep this global for backwards compatibility :(
@@ -1534,22 +1534,6 @@ function (exports, $, key_conversion, chat, comm) {
         log("Blob construction not supported, disabling compression");
     }
 
-    function inflate_works_on_ua()
-    {
-        if (!blob_construction_supported)
-            return false;
-        var b = $.browser;
-        if (b.chrome && b.version.match("^14\."))
-            return false; // doesn't support binary frames
-        if (b.chrome && b.version.match("^19\."))
-            return false; // buggy Blob builder
-        if (b.safari)
-            return false;
-        if (b.opera)
-            return false; // errors in inflate.js (?)
-        return true;
-    }
-
     function bind_document_events()
     {
         $(document).on("keypress.client", handle_keypress);
@@ -1680,18 +1664,6 @@ function (exports, $, key_conversion, chat, comm) {
 
         do_layout();
 
-        var inflater = null;
-
-        if ("Uint8Array" in window &&
-            "Blob" in window &&
-            "FileReader" in window &&
-            "ArrayBuffer" in window &&
-            inflate_works_on_ua() &&
-            !$.cookie("no-compression"))
-        {
-            inflater = new Inflater();
-        }
-
         if ("MozWebSocket" in window)
         {
             window.WebSocket = MozWebSocket;
@@ -1700,10 +1672,7 @@ function (exports, $, key_conversion, chat, comm) {
         if ("WebSocket" in window)
         {
             // socket_server is set in the client.html template
-            if (inflater)
-                socket = new WebSocket(socket_server);
-            else
-                socket = new WebSocket(socket_server, "no-compression");
+            socket = new WebSocket(socket_server);
             socket.binaryType = "arraybuffer";
 
             socket.onopen = function ()
@@ -1718,30 +1687,6 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
-                if (inflater && msg.data instanceof ArrayBuffer)
-                {
-                    var data = new Uint8Array(msg.data.byteLength + 4);
-                    data.set(new Uint8Array(msg.data), 0);
-                    data.set([0, 0, 255, 255], msg.data.byteLength);
-                    var decompressed = inflater.append(data);
-                    if (decompressed === -1)
-                    {
-                        console.error("Decompression error!");
-                        var x = inflater.append(data);
-                    }
-                    decode_utf8(decompressed, function (s) {
-                        if (window.log_messages === 2)
-                            console.log("Message: " + s);
-                        if (window.log_message_size)
-                        {
-                            console.log("Message size: " + s.length
-                                + " (compressed " + msg.data.byteLength + ")");
-                        }
-                        enqueue_messages(s);
-                    });
-                    return;
-                }
-
                 if (window.log_messages === 2)
                     console.log("Message: " + msg.data);
                 if (window.log_message_size)
