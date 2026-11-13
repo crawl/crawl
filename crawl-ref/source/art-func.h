@@ -1654,6 +1654,7 @@ static void _VICTORY_world_reacts(item_def *item)
 
 static void _VICTORY_equip(item_def *item, bool */*show_msgs*/, bool /*unmeld*/)
 {
+    item->props[VICTORY_STAT_KEY].get_int() = 0;
     _VICTORY_world_reacts(item);
 }
 
