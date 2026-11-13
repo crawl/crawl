@@ -853,6 +853,11 @@ static const duration_def duration_data[] =
     { DUR_STUMBLING, 0, "",
       "stumbling", "stumbling",
       "You are stumbling and have reduced evasion.", D_NEGATIVE },
+    { DUR_BOREAL_BULWARK_COOLDOWN,
+        YELLOW, "-2ndWind",
+        "on second wind cooldown", "second wind cooldown",
+        "You have recently used your second wind",
+        D_COOLDOWN, {{"You feel your endurance being bolstered by the wind."}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

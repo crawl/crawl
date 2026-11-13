@@ -2078,6 +2078,71 @@ Blorkula the Orcula killed
 A faint prismatic mist rises from Blorkula's broken form and then dissipates.
 ## END Blorkula the Orcula ##
 %%%%
+############ BOREAS ### A prideful scion of the North Wind
+Boreas
+
+@The_monster@ says, "Swear fealty to me and I may show you leniency. Or I may not."
+
+@The_monster@ says, "If Zot does not daunt me, then what shall you accomplish?"
+
+@The_monster@ says, "So long as the wind still blows, I stand!"
+
+@The_monster@ says, "I will claim all that belongs to me."
+
+@The_monster@ says, "The North Wind endures."
+
+@The_monster@ says, "Kings and commoners alike take shelter from me!"
+
+w:30
+@The_monster@ says, "{{
+  if you.race() ~= "Gale Centaur" then
+    return "Know your place!"
+  elseif you.mutation("North Wind's embodiment") > 0 then
+    return "Kin? You are barely a mongrel compared to me."
+  elseif you.mutation("South Wind's embodiment") > 0 then
+    return "Is this the best the South Wind can send against me? You matter not."
+  elseif you.mutation("East Wind's embodiment") > 0 then
+    return "Is this the best the East Wind can send against me? You matter not."
+  elseif you.mutation("West Wind's embodiment") > 0 then
+    return "Is this the best the West Wind can send against me? You matter not."
+  end
+}}" @player_only@
+
+w:30
+@The_monster@ says, "{{
+  if you.race() ~= "Gale Centaur" then
+    return "Winter drives all other seasons before it."
+  elseif you.mutation("North Wind's embodiment") > 0 then
+    return "My Winter will swallow yours."
+  elseif you.mutation("South Wind's embodiment") > 0 then
+    return "Even Summer's warmth cannot stave off Winter forever."
+  elseif you.mutation("East Wind's embodiment") > 0 then
+    return "It is the nature of Fall to be conquered by Winter."
+  elseif you.mutation("West Wind's embodiment") > 0 then
+    return "My Winter will outlast your Spring."
+  end
+}}" @player_only@
+
+@The_monster@ says, {{
+  if you.zot_orb_monster() == "orbs of winter" then
+    return '"Winter dwells within the realm of Zot and Winter bows to me!"'
+  else
+    return '"The Orb belongs to me by right."'
+  end
+}}
+%%%%
+Boreas killed
+
+@The_monster@ rasps with @possessive@ dying breath, "{{
+  if you.mutation("North Wind's embodiment") > 0 then
+    return "Father... why would you choose... them?"
+  elseif you.race() == "Gale Centaur" then
+    return "I spit... on your blood...."
+  else
+    return "May you never again know warmth...."
+  end
+}}" @player_only@
+%%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
 

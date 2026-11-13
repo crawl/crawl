@@ -1152,6 +1152,7 @@ kite_shield_storm_queen KITE_SHIELD_STORM_QUEEN
 
 tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
 tower_shield_louise TOWER_SHIELD_LOUISE
+boreal_bulwark BOREAL_BULWARK
 
 %sdir player/hand2/doll_only
 

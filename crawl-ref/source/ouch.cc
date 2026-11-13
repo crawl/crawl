@@ -1174,6 +1174,20 @@ static void _handle_indomitable(int dam)
     you.duration[DUR_INDOMITABLE] += dam * 70;
 }
 
+static void _handle_boreal_bulwark()
+{
+    if (!you.unrand_equipped(UNRAND_BOREAL_BULWARK)
+        || you.duration[DUR_BOREAL_BULWARK_COOLDOWN]
+        || you.hp * 10 >= you.hp_max * 4)
+    {
+        return;
+    }
+
+    you.duration[DUR_INDOMITABLE] += you.hp_max * 33;
+    you.duration[DUR_BOREAL_BULWARK_COOLDOWN] = random_range(550, 750);
+    mprf(MSGCH_DURATION, "You feel a bracing wind giving you strength to keep fighting!");
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1522,6 +1536,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         }
 
         _handle_indomitable(dam);
+        _handle_boreal_bulwark();
         _handle_poor_constitution(dam);
         _maybe_ru_retribution(dam, source);
         _maybe_inflict_anguish(dam, source);

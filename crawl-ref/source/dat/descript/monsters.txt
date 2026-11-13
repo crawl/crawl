@@ -79,6 +79,15 @@ He wields magic tinged with every hue of the rainbow, and has mastered the art
 of dividing his own form among its many colours to avoid killing blows - though
 even he must rest a while before doing so a second time.
 %%%%
+Boreas
+
+A muscular gale centaur, armoured from head to flank in heavy steel. He claims
+direct lineage from the North Wind itself and the blustering squall which
+wreathes him cows most who'd dare to doubt.
+
+Prideful and fierce in equal measure, any obstacle between him and the Orb
+exists only to be trampled over.
+%%%%
 Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will

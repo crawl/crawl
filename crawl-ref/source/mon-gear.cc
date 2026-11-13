@@ -1067,6 +1067,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { SPWPN_CHAOS,           1 }, },
         } },
         { MONS_CERULEAN_IMP,  { { { WPN_SPEAR, 1 } }, {}, { { SPWPN_NORMAL, 1 } } } },
+        { MONS_BOREAS,
+            { { { WPN_SCIMITAR,         10 },
+                { WPN_MORNINGSTAR,      20 },
+        } } },
     };
 
     static const weapon_list ORC_KNIGHT_BOWS =
@@ -1900,6 +1904,12 @@ static void _give_shield(monster* mon, int level)
                                        level * 2 + 1, 1);
         break;
 
+    case MONS_BOREAS:
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_TOWER_SHIELD, level);
+        if (one_chance_in(20) && !get_unique_item_status(UNRAND_BOREAL_BULWARK))
+            make_item_unrandart(*shield, UNRAND_BOREAL_BULWARK);
+        break;
+
     case MONS_DEMONSPAWN_CORRUPTER:
     case MONS_DEMONSPAWN_SOUL_SCHOLAR:
         if (one_chance_in(3))
@@ -2081,6 +2091,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_VAULT_WARDEN:
     case MONS_ANCIENT_CHAMPION:
     case MONS_MINOTAUR:
+    case MONS_BOREAS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;
@@ -2396,6 +2407,10 @@ static void _give_extra_equipment(monster* mon, int level)
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BARDING, level);
         }
+        break;
+
+    case MONS_BOREAS:
+        give_specific_item(mon, items(false, OBJ_ARMOUR, ARM_BARDING, 0, SPARM_FLYING));
         break;
 
     case MONS_ERICA:
