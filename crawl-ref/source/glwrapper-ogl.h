@@ -30,9 +30,7 @@ public:
     virtual void delete_textures(size_t count, unsigned int *textures) override;
     virtual void generate_textures(size_t count, unsigned int *textures) override;
     virtual void bind_texture(unsigned int texture) override;
-    virtual void load_texture(unsigned char *pixels, unsigned int width,
-                              unsigned int height, MipMapOptions mip_opt,
-                              int xoffset=-1, int yoffset=-1) override;
+    virtual void load_texture(LoadTextureArgs texture) override;
     int logical_to_device(int n) const override;
     int device_to_logical(int n, bool round=true) const override;
 protected:
