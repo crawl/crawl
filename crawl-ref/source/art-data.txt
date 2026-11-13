@@ -2133,6 +2133,18 @@ DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
  a greater chance to produce spectral mist.
 MAX_LEVEL: 11
 
+NAME:    Boreal Bulwark
+OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
+INSCRIP: SecondWind
+COLOUR:  LIGHTBLUE
+TILE:    urand_boreal_bulwark
+TILE_EQ: BOREAL_BULWARK
+COLD:    1
+SLAY:    -4
+BOOL:    rampage
+DESCRIP: SecondWind: When you are badly injured, it rapidly regenerates a
+ percentage of your health.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

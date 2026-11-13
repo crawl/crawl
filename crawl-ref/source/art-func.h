@@ -1905,3 +1905,21 @@ static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
         lose_piety(piety_loss);
     }
 }
+
+static void _BOREAL_BULWARK_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld && you.has_mutation(MUT_NORTH_WIND))
+    {
+        const string msg = make_stringf("You feel a strange kinship with the steel in your %s.",
+                                        you.hand_name(true).c_str());
+        _equip_mpr(show_msgs, msg.c_str());
+    }
+
+    you.duration[DUR_BOREAL_BULWARK_COOLDOWN] = random_range(550, 750);
+    mprf(MSGCH_DURATION, "You feel a cold wind start to gather around you.");
+}
+
+static void _BOREAL_BULWARK_unequip(item_def */*item*/, bool */*show_msgs*/)
+{
+    you.duration[DUR_BOREAL_BULWARK_COOLDOWN] = 0;
+}

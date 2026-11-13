@@ -6197,6 +6197,19 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (x_chance_in_y(scan_artefacts(ARTP_SILENCE), 100))
         silence_monster(*this, oppressor, (4 + random2(7) * BASELINE_DELAY));
 
+    if (mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED
+        && unrand_equipped(UNRAND_BOREAL_BULWARK)
+        && !has_ench(ENCH_REGENERATION)
+        && !has_ench(ENCH_ORB_COOLDOWN))
+    {
+        if (you.can_see(*this))
+        {
+            mprf("A bracing wind gives %s the strength to keep fighting!",
+                 name(DESC_THE).c_str());
+            add_ench(mon_enchant(ENCH_REGENERATION, this, random_range(80, 110)));
+            add_ench(mon_enchant(ENCH_ORB_COOLDOWN, this, random_range(550, 750)));
+        }
+    }
 
     if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE
