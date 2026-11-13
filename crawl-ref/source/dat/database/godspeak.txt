@@ -1510,6 +1510,95 @@ w:40
 
 w:5
 "Everything deserves to die!"
+
+
+##############################################
+# God pray messages - these appear when you pray at the altar of a god you already worship
+##############################################
+
+%%%%
+Ashenzari pray
+
+You meditate on the difference between things seen and unseen.
+
+You pray to Ashenzari for the [foresight|insight] to see through [the lies of this world|trickery|treachery].
+
+You pray to Ashenzari to clear your mind of distractions.
+
+w:1
+You try to imagine Ashenzari shackled to the sky, but only give yourself a headache.
+
+%%%%
+Ru pray
+
+You take a moment to contemplate the folly of creation.
+
+You close your eyes. For a moment, the world falls away from you, then returns.
+
+%%%%
+Beogh pray
+
+You shout a glorious oath to Beogh, as orcs often do.
+
+%%%%
+Cheibriados pray
+
+You meditate at the altar for what feels like an eternity.
+
+%%%%
+Dithmenos pray
+
+You close your eyes for a moment and bask in ultimate shadow.
+
+%%%%
+Elyvilon pray
+You pray that the [sick|dying] find peace in Elyvilion's embrace.
+
+You offer a prayer of comfort for the [weak|downtrodden|helpless] to Elyvilon.
+
+%%%%
+Fedhas pray
+
+You prepare [a salad|a smoothie|an infusion|a fermentation] of [dried|fresh|pickled|salted|spiced] [apple|apricot|banana|choko|grape] [seeds|rinds|pulp|flesh] and [dried|fresh|pickled|salted|spiced] [apple|apricot|banana|choko|grape] [seeds|rinds|pulp|flesh] to nourish the altar's blossoming flora.
+
+%%%%
+Gozag pray
+
+You take a moment to reverently tally your expenditures.
+
+%%%%
+Hepliaklqana pray
+
+You utter a prayar of thanks to your ancestors.
+
+You commune with your ancestor spirits for a moment.
+
+%%%%
+Ignis pray
+
+You light a votive candle to Ignis.
+
+%%%%
+Jiyva pray
+
+You commune with the quivering altar for a brief moment.
+
+%%%%
+Kikubaaqudgha pray
+
+You offer up the sacrifice of a small insect in devotion to Kikubaaqudgha.
+
+%%%%
+Lugonu pray
+
+You etch a sigil of the Abyss into a bare corner of the altar.
+
+In the palace of your own mind, you construct a mental pillar of corruption in devotion to Lugonu.
+
+w:1
+You gaze into the altar... and the altar gazes back!
+
+
 %%%%
 ######################################
 # Welcome messages on game restoration
