@@ -3362,7 +3362,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (god_forbids_item(item, temp))
             return true;
 
-        return !is_throwable(&you, item);
+        if (temp && !form_can_wield())
+            return true;
+
+        return !is_throwable(&you, item, !temp);
 
     case OBJ_ARMOUR:
         if (!can_equip_item(item, temp))
