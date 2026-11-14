@@ -123,7 +123,7 @@ static const char *skill_titles[NUM_SKILLS][7] =
     // or, in U's case, invocations skill.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate",     "Invo"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Ex Machina",  "Evo"},
-    {"Shapeshifting",  "Changeling",    "Mimic",           "Metamorph",       "Skinwalker",     "Shapeless @Genus@", "Shft"},
+    {"Shapeshifting",  "Changeling",    "Metamorph",       "Talismancer",     "Shapeless @Genus@",  "Protean", "Shft"},
 };
 
 static const char *martial_arts_titles[6] =
@@ -2353,6 +2353,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_STEALTH:
             if (species == SP_DEMIGOD && skill_rank == 5)
                 result = "Thief of Divinity";
+            break;
+
+        case SK_SHAPESHIFTING:
+            if (species == SP_FELID && skill_rank == 5)
+                result = "Copycat";
             break;
 
         case SK_INVOCATIONS:
