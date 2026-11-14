@@ -2607,21 +2607,32 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
 /** What is the player's current title.
  *
- *  @param the whether to prepend a definite article.
+ *  @param use_prefix whether to prepend the title's prefix (usually 'the'),
+ *                    along with leading spacing.
  *  @returns the title.
  */
-string player_title(bool the)
+string player_title(bool use_prefix)
 {
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     const string title =
             skill_title_by_rank(best, get_skill_rank(you.skills[best]));
-    const string article = !the ? ""
-                                : title == "Petite Mort" ? "La "
-                                : title == "Ex Machina" ? ""
-                                : title == "Hundred Blades" ? "of a "
-                                : title.rfind("Who", 0 == 0) == 0 ? ", "
-                                : "the ";
-    return article + title;
+    const string prefix = !use_prefix ? "" : player_title_prefix(title);
+    return prefix + title;
+}
+
+// Note: Must including leading spacing, where appropriate, for proper UI formatting.
+string player_title_prefix(const string& title)
+{
+    if (title == "Petite Mort")
+        return " La ";
+    else if (title == "Ex Machina")
+        return " ";
+    else if (title == "Hundred Blades")
+        return " of a ";
+    else if (title.rfind("Who", 0) == 0)
+        return ", ";
+    else
+        return " the ";
 }
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
