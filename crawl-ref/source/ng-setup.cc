@@ -33,6 +33,7 @@
 #include "throw.h"
 #include "transform.h"
 #include "unwind.h"
+#include "xom.h"
 
 #define MIN_START_STAT       3
 
@@ -276,6 +277,7 @@ void give_items_skills(const newgame_def& ng)
         // hostile actions at the very start of the game.
         you.gift_timeout = 4;
         you.attribute[ATTR_XOM_BLESSING_TIMER] = 35;
+        you.props[XOM_EARLY_JOIN_KEY] = true;
 
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;

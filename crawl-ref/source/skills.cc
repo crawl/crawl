@@ -39,6 +39,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "unwind.h"
+#include "xom.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -2076,6 +2077,39 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+// A unique title depending on the day that the current game was started.
+// (With titles rotating each day, in a 27 day cycle.)
+static const char *xom_title[27] =
+{
+    "Xom's Canvas",
+    "Aleatoric Ace",
+    "Hand of Misfortune",
+    "Avatar of the Absurd",
+    "Heavens' Harlequin",
+    "Bringer of Disorder",
+    "Hopelessly Reckless",
+    "Calamity-Blessed",
+    "Living Farce",
+    "Champion of Folly",
+    "Lord of Playthings",
+    "Circus Champion",
+    "Prime Anarchist",
+    "Unburdened By Reality",
+    "Connoisseur of Chaos",
+    "Procedurally Generated",
+    "Crown Chesspiece",
+    "Profoundly Silly",
+    "Dismantled Masterpiece",
+    "Ringmaster's Favourite",
+    "Divine Plaything",
+    "Riotous Rainbow",
+    "Extremely Free Spirit",
+    "Stunt@genus@",
+    "Godsjester",
+    "Whimsical Wunderkind",
+    "Survivor of Endless Pranks",
+};
+
 /**
  * Special conduct skill title tracking, extending the range of skill titles
  * beyond what's covered in skill_title_by_rank. These titles are used only if
@@ -2295,6 +2329,18 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         break;
     default:
         break;
+    }
+
+    // Those who joined Xom by XL 8 and never left get a title that varies based
+    // on the day the game was started. (This isn't really a 'challenge' in the
+    // same sense as most of these, but is in this function because it is
+    // player-centric and doesn't work for ghosts.)
+    if (you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1
+        && best_skill == SK_FIGHTING && skill_rank == 5
+        && you.props.exists(XOM_EARLY_JOIN_KEY))
+    {
+        const int day = (you.birth_time / 86400) % 27;
+        return xom_title[day];
     }
 
     return title;
@@ -2629,7 +2675,10 @@ string player_title_prefix(const string& title)
         return " ";
     else if (title == "Hundred Blades")
         return " of a ";
-    else if (title.rfind("Who", 0) == 0)
+    else if (title == "Xom's Canvas"
+             || title == "Unburdened By Reality"
+             || title == "Survivor of Endless Pranks"
+             || title.rfind("Who", 0) == 0)
         return ", ";
     else
         return " the ";

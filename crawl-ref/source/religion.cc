@@ -3871,6 +3871,9 @@ static void _join_xom()
     you.gift_timeout = 4;
 
     you.attribute[ATTR_XOM_BLESSING_TIMER] = 80;
+
+    if (you.experience_level <= 8)
+        you.props[XOM_EARLY_JOIN_KEY] = true;
 }
 
 /// What special things happen when you join a god?
