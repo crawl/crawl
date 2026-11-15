@@ -4576,6 +4576,11 @@ void inscribe_item(item_def &item)
     quiver::set_needs_redraw();
 }
 
+static bool _divine_casting()
+{
+    return you.divine_exegesis || you.chaos_eisegesis;
+}
+
 /**
  * List the simple calculated stats of a given spell, when cast by the player
  * in their current condition.
@@ -4602,7 +4607,7 @@ static string _player_spell_stats(const spell_type spell)
 
 
     string failure;
-    if (you.divine_exegesis)
+    if (_divine_casting())
         failure = "0%";
     else if (spell_can_be_enkindled(spell) && you.has_mutation(MUT_MNEMOPHAGE)
              && !you.duration[DUR_ENKINDLED])
@@ -5034,12 +5039,15 @@ static string _player_spell_desc(spell_type spell)
 
     ostringstream description;
 
-    description << "Miscasting this spell causes magic contamination"
-                << (fail_severity(spell) ?
-                    " and also " + _miscast_damage_string(spell) : "")
-                << ".\n";
+    if (!_divine_casting())
+    {
+        description << "Miscasting this spell causes magic contamination"
+                    << (fail_severity(spell) ?
+                        " and also " + _miscast_damage_string(spell) : "")
+                    << ".\n";
 
-    description << _spell_fail_training_desc(spell);
+        description << _spell_fail_training_desc(spell);
+    }
 
     if (spell == SPELL_BATTLESPHERE)
     {
@@ -5109,8 +5117,11 @@ static string _player_spell_desc(spell_type spell)
                     << " supports the use of this spell.\n";
     }
 
-    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell))
+    if (you.has_mutation(MUT_MNEMOPHAGE) && spell_can_be_enkindled(spell)
+        && !_divine_casting())
+    {
         description << "This spell is empowered while you are enkindled.\n";
+    }
 
     if (!you_can_memorise(spell))
     {
