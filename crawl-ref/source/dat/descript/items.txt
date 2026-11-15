@@ -1878,7 +1878,7 @@ vision talisman
 A small charm bearing the likeness of an eye. It gives the wearer supernatural
 sight, allowing them to perceive the clouds of magical residue left behind
 whenever beings cast spells. Touching those clouds allows them to convert that
-leftover magic into unnerring projectiles against nearby foes.
+leftover magic into unerring projectiles against nearby foes.
 
 This third eye even allows one to see from further distances than would
 otherwise be possible{{
