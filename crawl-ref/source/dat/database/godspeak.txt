@@ -1522,7 +1522,7 @@ _player_arms_
 
 {{
 if you.race() == "Felid" and you.mutation('missing a hand')>0 then
-	return "paw"
+        return "paw"
 elseif you.race() == "Felid" and you.mutation('missing a hand')==0 then
     return "paws"
 elseif you.race() == "Octopode" and you.mutation('missing a hand')>0 then
@@ -1548,7 +1548,7 @@ _player_finger_
 
 {{
 if you.race() == "Felid" then
-	return "paw"
+        return "paw"
 elseif you.race() == "Octopode" then
     return "tentacle"
 else
@@ -1561,9 +1561,9 @@ _player_blood_
 
 {{
 if you.race() == "Gargoyle" then
-	return "stone dust"
+        return "stone dust"
 elseif you.race() == "Djinni" then
-	return "flame"
+        return "flame"
 elseif you.race() == "Revenant" or you.race() == "Poltergeist" or you.race() == "Mummy" or you.race() == "Vine Stalker" then
     return "ichor"
 else
@@ -1577,9 +1577,9 @@ _player_eyes_
 
 {{
 if you.mutation('missing an eye')==0 then
-	return "eyes"
+        return "eyes"
 elseif you.mutation('missing an eye')>0 then
-	return "eye"
+        return "eye"
 end
 }}
 
@@ -1756,7 +1756,7 @@ You recite a passage on [temperance|prudence|courage|frugality|chastity|acceptan
 
 You cleanse your @_player_arms_@, and thank Zin for bringing hygiene to @player_genus@kind.
 
-You pray that others would [know their place before|keep themselves pure before|pay their proper tithes to] Zin. 
+You pray that others would [know their place before|keep themselves pure before|pay their proper tithes to] Zin.
 
 w:1
 You reverently sprinkle a few droplets of water onto the altar, to keep it pure from corruption.
