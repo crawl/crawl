@@ -233,25 +233,64 @@ void try_god_conversion(god_type god)
         // makes it not take a turn after all.
         god_pitch(god);
     }
+    // already worshipping this god. print a special or generic message
     else
     {
-
-        // look up a special god pray string if it exists
-        string key = god_name(you.religion) + " pray";
-
-        string result = getSpeakString(key);
-
-        if (!result.empty()){
-            result = maybe_pick_random_substring(result);
-
-            mprf(MSGCH_GOD,"%s", result.c_str());
+        if(you_worship(GOD_QAZLAL)){
+            if(you.cannot_speak()){
+                mprf(MSGCH_GOD,"You speak your faith in the echoes of the roaring storm around you.");
+            }
+            else if(you.has_mutation(MUT_BOOMING_VOICE)){
+                mprf(MSGCH_GOD,"Your booming voice articulates your faith to Qazlal clearly over the roaring storm.");
+            }else{
+                mprf(MSGCH_GOD,"Your oath of devotion is drowned out by the roar of thunder.");
+            }
         }
-        // if no special string exists, print the generic string
+        else if(you_worship(GOD_TROG)){
+
+            const item_def* const weapon = you.weapon();
+            const string wepname = weapon ? weapon->name(DESC_YOUR)
+                                      : ("your " + you.hand_name(true));
+
+
+            mprf(MSGCH_GOD,"You bang your %s against the altar rhythmically, and let out a howl!", wepname.c_str());
+        }
+        else if(you_worship(GOD_WU_JIAN)){
+
+            const string wuadj = (you.piety() >= piety_breakpoint(5)) ? "flawless" :
+                                 (you.piety() >= piety_breakpoint(4)) ? "near-flawless" :
+                                 (you.piety() >= piety_breakpoint(3)) ? "impressive":
+                                 (you.piety() >= piety_breakpoint(2)) ? "passable":
+                                 (you.piety() >= piety_breakpoint(1)) ? "lacking" :
+                                 (you.piety() >= piety_breakpoint(0)) ? "laughable"
+                                                                : "disgraceful";
+
+
+            mprf(MSGCH_GOD,"You assume a fighting stance in front of the altar. The Council judges your posture %s.", wuadj.c_str());
+        }
         else{
-            mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
-                 you.cannot_speak() ? "silent " : "",
-                 god_name(god).c_str());
+
+            // look up a special god pray string if it exists
+            string key = god_name(you.religion) + " pray";
+
+            string result = getSpeakString(key);
+
+            if (!result.empty()){
+                result = maybe_pick_random_substring(result);
+
+                result = replace_all(result, "@player_genus@",
+                species::name(you.species, species::SPNAME_GENUS));
+
+                mprf(MSGCH_GOD,"%s", result.c_str());
+            }
+            // if no special string exists, print the generic string
+            else{
+                mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
+                     you.cannot_speak() ? "silent " : "",
+                     god_name(god).c_str());
+            }
         }
+
     }
 }
 
