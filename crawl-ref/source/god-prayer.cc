@@ -236,17 +236,17 @@ void try_god_conversion(god_type god)
     // already worshipping this god. print a special or generic message
     else
     {
-        if(you_worship(GOD_QAZLAL)){ // Qazlal messages care about sound
-            if(you.cannot_speak()){
+        if (you_worship(GOD_QAZLAL)){ // Qazlal messages care about sound
+            if (you.cannot_speak()){
                 mprf(MSGCH_GOD,"You speak your faith in the echoes of the roaring storm around you.");
             }
-            else if(you.has_mutation(MUT_BOOMING_VOICE)){
+            else if (you.has_mutation(MUT_BOOMING_VOICE)){
                 mprf(MSGCH_GOD,"Your booming voice articulates your faith to Qazlal clearly over the roaring storm.");
             }else{
                 mprf(MSGCH_GOD,"Your oath of devotion is drowned out by the roar of thunder.");
             }
         }
-        else if(you_worship(GOD_TROG)){ // Trog message cares about your weapon
+        else if (you_worship(GOD_TROG)){ // Trog message cares about your weapon
 
             const item_def* const weapon = you.weapon();
             const string wepname = weapon ? weapon->name(DESC_YOUR)
@@ -254,7 +254,7 @@ void try_god_conversion(god_type god)
 
             mprf(MSGCH_GOD,"You bang your %s against the altar rhythmically, and let out a howl!", wepname.c_str());
         }
-        else if(you_worship(GOD_WU_JIAN)){ // Wu Jian fighting posture improves with piety
+        else if (you_worship(GOD_WU_JIAN)){ // Wu Jian fighting posture improves with piety
 
             const string wuadj = (you.piety() >= piety_breakpoint(5)) ? "flawless" :
                                  (you.piety() >= piety_breakpoint(4)) ? "near-flawless" :
