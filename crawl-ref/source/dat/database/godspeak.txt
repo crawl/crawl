@@ -1516,6 +1516,39 @@ w:5
 # God pray messages - these appear when you pray at the altar of a god you already worship
 ##############################################
 
+
+%%%%
+_player_arms_
+
+{{
+if you.race() == "Felid" and you.mutation('missing a hand')>0 then
+	return "paw"
+elseif you.race() == "Felid" and you.mutation('missing a hand')==0 then
+    return "paws"
+elseif you.race() == "Octopode" you.mutation('missing a hand')>0 then
+    return "tentacle"
+elseif you.race() == "Octopode" not you.mutation('missing a hand')==0 then
+    return "tentacles"
+elseif you.race() == "Formicid" then
+    return "limbs"
+elseif you.mutation('missing a hand')>0
+    return "arm"
+elseif you.mutation('missing a hand')==0
+    return "arms"
+end
+}}
+
+%%%%
+_player_eyes_
+
+{{
+if you.mutation('missing an eye')==0 then
+	return "eyes"
+elseif you.mutation('missing an eye')>0 then
+	return "eye"
+end
+}}
+
 %%%%
 Ashenzari pray
 
@@ -1529,16 +1562,9 @@ w:1
 You try to imagine Ashenzari shackled to the sky, but only give yourself a headache.
 
 %%%%
-Ru pray
-
-You take a moment to contemplate the folly of creation.
-
-You close your eyes. For a moment, the world falls away from you, then returns.
-
-%%%%
 Beogh pray
 
-You shout a glorious oath to Beogh, as orcs often do.
+You shout a glorious oath of loyalty to all orcs, as orcs often do.
 
 %%%%
 Cheibriados pray
@@ -1548,7 +1574,7 @@ You meditate at the altar for what feels like an eternity.
 %%%%
 Dithmenos pray
 
-You close your eyes for a moment and bask in ultimate shadow.
+You close your @_player_eyes_@ for a moment and bask in ultimate shadow.
 
 %%%%
 Elyvilon pray
@@ -1559,12 +1585,14 @@ You offer a prayer of comfort for the [weak|downtrodden|helpless] to Elyvilon.
 %%%%
 Fedhas pray
 
-You prepare [a salad|a smoothie|an infusion|a fermentation] of [dried|fresh|pickled|salted|spiced] [apple|apricot|banana|choko|grape] [seeds|rinds|pulp|flesh] and [dried|fresh|pickled|salted|spiced] [apple|apricot|banana|choko|grape] [seeds|rinds|pulp|flesh] to nourish the altar's blossoming flora.
+You prepare [a salad|a smoothie|an infusion|a fermentation] of [dried|fresh|pickled|salted|spiced|chopped|diced|minced|sautéd] [apple|apricot|banana|choko|grape|orange|strawberry|rambutan|lemon|sultana|lychee] [seeds|rinds|pulp|flesh] and [dried|fresh|pickled|salted|spiced|chopped|diced|minced|sautéd] [apple|apricot|banana|choko|grape|orange|strawberry|rambutan|lemon|sultana|lychee] [seeds|rinds|pulp|flesh] to nourish the altar's blossoming flora.
 
 %%%%
 Gozag pray
 
 You take a moment to reverently tally your expenditures.
+
+You take a moment to contemplate the divine mathematics of compound interest.
 
 %%%%
 Hepliaklqana pray
@@ -1597,6 +1625,19 @@ In the palace of your own mind, you construct a mental pillar of corruption in d
 
 w:1
 You gaze into the altar... and the altar gazes back!
+
+%%%%
+Makhleb pray
+
+You prick your
+
+%%%%
+Ru pray
+
+You take a moment to contemplate the [folly/absurdity/falsity] of creation.
+
+w:1
+You close your @_player_eyes_@. For a moment, the world falls away from you, then returns.
 
 
 %%%%
