@@ -236,7 +236,7 @@ void try_god_conversion(god_type god)
     // already worshipping this god. print a special or generic message
     else
     {
-        if(you_worship(GOD_QAZLAL)){
+        if(you_worship(GOD_QAZLAL)){ // Qazlal messages care about sound
             if(you.cannot_speak()){
                 mprf(MSGCH_GOD,"You speak your faith in the echoes of the roaring storm around you.");
             }
@@ -246,16 +246,15 @@ void try_god_conversion(god_type god)
                 mprf(MSGCH_GOD,"Your oath of devotion is drowned out by the roar of thunder.");
             }
         }
-        else if(you_worship(GOD_TROG)){
+        else if(you_worship(GOD_TROG)){ // Trog message cares about your weapon
 
             const item_def* const weapon = you.weapon();
             const string wepname = weapon ? weapon->name(DESC_YOUR)
                                       : ("your " + you.hand_name(true));
 
-
             mprf(MSGCH_GOD,"You bang your %s against the altar rhythmically, and let out a howl!", wepname.c_str());
         }
-        else if(you_worship(GOD_WU_JIAN)){
+        else if(you_worship(GOD_WU_JIAN)){ // Wu Jian fighting posture improves with piety
 
             const string wuadj = (you.piety() >= piety_breakpoint(5)) ? "flawless" :
                                  (you.piety() >= piety_breakpoint(4)) ? "near-flawless" :
@@ -265,10 +264,9 @@ void try_god_conversion(god_type god)
                                  (you.piety() >= piety_breakpoint(0)) ? "laughable"
                                                                 : "disgraceful";
 
-
             mprf(MSGCH_GOD,"You assume a fighting stance in front of the altar. The Council judges your posture %s.", wuadj.c_str());
         }
-        else{
+        else{ // other god messages in godspeak.txt
 
             // look up a special god pray string if it exists
             string key = god_name(you.religion) + " pray";
