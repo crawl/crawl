@@ -1586,6 +1586,7 @@ void shop()
     {
         const int cost = item_price(item, shop);
         culled |= shopping_list.cull_identical_items(item, cost);
+        maybe_mark_set_known(item.base_type, item.sub_type);
     }
     if (culled)
         more(); // make sure all messages appear before menu
