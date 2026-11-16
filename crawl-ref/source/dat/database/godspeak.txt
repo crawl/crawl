@@ -1614,7 +1614,7 @@ You assemble an umbral puppet from the shadows of the altar, and it scurries int
 
 %%%%
 Elyvilon pray
-You pray that the [sick|dying] find peace in Elyvilion's embrace.
+You pray that the [sick|dying] find peace in Elyvilon's embrace.
 
 You offer a prayer of comfort for the [weak|downtrodden|helpless] to Elyvilon.
 
