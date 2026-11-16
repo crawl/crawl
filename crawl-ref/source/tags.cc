@@ -3379,6 +3379,9 @@ static void _tag_read_you(reader &th)
 
     you.experience                = unmarshallInt(th);
     you.total_experience = unmarshallInt(th);
+    // Needed to fix an introduced underflow bug
+    if (you.total_experience > std::numeric_limits<int>::max())
+        you.total_experience = 0;
     you.gold                      = unmarshallInt(th);
     you.exp_available             = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34

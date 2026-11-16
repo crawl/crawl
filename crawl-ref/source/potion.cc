@@ -561,6 +561,8 @@ public:
         else
             mpr("A flood of memories washes over you.");
 
+        const unsigned int old_total_exp = you.total_experience;
+        const int old_exp_available = you.exp_available;
         // these are included in default force_more_message
         const int exp = (80 + you.skill_cost_level * pow / 3)
                         * calc_skill_cost(you.skill_cost_level) * 10;
@@ -573,7 +575,8 @@ public:
             skill_menu(SKMF_EXPERIENCE, exp);
 
         // Don't make !xp slow down future normal training
-        you.total_experience -= exp;
+        you.total_experience = old_total_exp;
+        you.exp_available = old_exp_available;
 
         // the player might meet training targets and need to choose
         // skills
