@@ -2577,7 +2577,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                 if (get_num_apostles() > 1)
                     mpr("Your apostles are already by your side.");
                 else
-                    mpr("Your apostles is already by your side.");
+                    mpr("Your apostle is already by your side.");
             }
             return false;
         }
