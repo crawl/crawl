@@ -225,8 +225,10 @@ bool companions_are_adjacent()
     for (auto &entry : companion_list)
     {
         if (const monster* mon = monster_by_mid(entry.first))
+        {
             if (!adjacent(mon->pos(), you.pos()))
                 return false;
+        }
         else if (companion_is_elsewhere(entry.first, true))
             return false;
     }
