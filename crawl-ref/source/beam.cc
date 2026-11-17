@@ -700,7 +700,7 @@ void bolt::initialise_fire()
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || ranged_atk);
-    ASSERTM(range >= 0, "beam '%s', source '%s', has range -1",
+    ASSERTM(aimed_at_feet || range > 0, "beam '%s', source '%s', has range < 1",
             name.c_str(),
             (source_id == MID_PLAYER ? "player" :
                           monster_by_mid(source_id) ?
