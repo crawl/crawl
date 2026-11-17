@@ -3039,7 +3039,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_GLOWING, TILEI_GLOWING },
     { MB_CONFUSED, TILEI_CONFUSED },
     { MB_BURNING, TILEI_STICKY_FLAME },
-    { MB_INNER_FLAME, TILEI_INNER_FLAME },
     { MB_BERSERK, TILEI_BERSERK },
     { MB_FRENZIED, TILEI_FRENZIED },
     { MB_SLOWED, TILEI_SLOWED },
@@ -3148,6 +3147,13 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
         icons.insert(TILEI_FULLY_CHARGED);
     if (mons.is(MB_STAMPEDE) && mons.type != MONS_BOREAS)
         icons.insert(TILEI_STAMPEDE);
+    if (mons.is(MB_INNER_FLAME))
+    {
+        if (mons.body_size() == SIZE_GIANT)
+            icons.insert(TILEI_INNER_FLAME_LARGE);
+        else
+            icons.insert(TILEI_INNER_FLAME);
+    }
     return icons;
 }
 
