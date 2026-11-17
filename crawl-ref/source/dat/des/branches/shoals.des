@@ -298,8 +298,20 @@ ENDMAP
 
 default-depth: Shoals
 
+# Directly place a decorative vault 25% of the time on the latter half.
+NAME:    shoals_decor
+TAGS:    no_dump extra allow_dup nolayout_encompass luniq
+DEPTH:   Shoals:3-4
+CHANCE:  25%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="shoalsdec", count=c}
+  end)
+}}
+
 NAME:   overgrown_tower
-TAGS:   transparent extra luniq_shoalsdec_doors
+TAGS:   transparent extra shoalsdec luniq_shoalsdec_doors
 WEIGHT: 5
 MONS:   plant, fungus
 SUBST:  x = x:60 `
@@ -322,7 +334,7 @@ MAP
 ENDMAP
 
 NAME:   shoals_oasis
-TAGS:   transparent extra
+TAGS:   transparent extra shoalsdec
 WEIGHT: 1
 MONS:   plant
 SUBST:  . = 1:1 .
@@ -340,9 +352,8 @@ MAP
 ENDMAP
 
 NAME:   nicolae_shoals_former_cling_halls
-TAGS:   no_pool_fixup extra no_descent
+TAGS:   no_pool_fixup extra shoalsdec no_descent
 DEPTH:  Shoals:2-, !Shoals:$
-ORIENT: float
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., H = x_, J = xw
 KMASK:  Ww = no_monster_gen
@@ -366,7 +377,7 @@ HxxxxxxxxxxxxxH
 ENDMAP
 
 NAME:    nicolae_shoals_former_cling_ruins
-TAGS:    no_pool_fixup extra no_descent
+TAGS:    no_pool_fixup extra shoalsdec no_descent
 DEPTH:   Shoals:2-
 NSUBST:  D = 1:wx / *:x, E = wx / x, F = wx / x, H = wx / x
 NSUBST:  J = 2:w / *:x, K = 2=w / x, L = 2=w / x, M = 2=w / x, N = ' / 'x / x
@@ -391,7 +402,7 @@ xxxO'''''''Oxxx
 ENDMAP
 
 NAME: nicolae_shoals_seven_spires
-TAGS: transparent extra water_ok
+TAGS: transparent extra water_ok shoalsdec
 MAP
      .....
    ....c....
@@ -411,7 +422,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_square_sea_wall
-TAGS: transparent extra water_ok
+TAGS: transparent extra water_ok shoalsdec
 MAP
 ..............
 .cc..cccc..cc.
@@ -430,7 +441,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_circle_sea_wall
-TAGS: transparent extra water_ok
+TAGS: transparent extra water_ok shoalsdec
 MAP
       .....
     ..cc.cc..
@@ -452,7 +463,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_shoals_cliffside_cave
-TAGS:  transparent extra water_ok no_pool_fixup
+TAGS:  transparent extra water_ok no_pool_fixup shoalsdec
 KFEAT: ~ = w
 SUBST: X = x., W = w.
 KPROP: ~' = no_tide
@@ -475,8 +486,7 @@ wwW......~ww
 ENDMAP
 
 NAME:    nicolae_shoals_stone_sculpture_thing
-TAGS:    transparent extra water_ok
-TAGS:    water_ok transparent extra
+TAGS:    transparent extra water_ok shoalsdec
 SHUFFLE: abde
 SUBST:   ab = @, de = ., C : .c, y : .wc, z : .wc
 MAP
@@ -495,7 +505,7 @@ Cczc....czcC
 ENDMAP
 
 NAME:    nicolae_shoals_arrival_archipelago
-TAGS:    transparent extra luniq_shoalsdec_stairs
+TAGS:    transparent extra shoalsdec luniq_shoalsdec_stairs
 SHUFFLE: {[(<, abc, def
 SUBST:   a:@, de:., bcf:W
 MAP
@@ -514,7 +524,7 @@ wwwwwee....a
 ENDMAP
 
 NAME:    nicolae_shoals_island_circles
-TAGS:    transparent extra buniq_shoalsdec_huge
+TAGS:    transparent extra shoalsdec buniq_shoalsdec_huge
 ORIENT:  float
 SHUFFLE: abc/xyz
 SUBST:   Z = Ww, ab = ., c = sG, xy = xx., z = x
@@ -558,7 +568,7 @@ wwwZ...WWZZwwwwwwwww
 ENDMAP
 
 NAME:  nicolae_shoals_loop_pool
-TAGS:  transparent extra
+TAGS:  transparent extra shoalsdec
 KPROP: w- = no_tide
 SUBST: Y = yZ, y = x___, Z = w.___, - = .
 CLEAR: _
@@ -579,7 +589,7 @@ yxx-----wwwww-xy
 ENDMAP
 
 NAME:    nicolae_shoals_land_atoll
-TAGS:    extra no_pool_fixup no_tide transparent water_ok
+TAGS:    extra no_pool_fixup no_tide shoalsdec transparent water_ok
 SUBST:   a = DE, p = EF, q = FH, r = HJ, s = KJ, y = KL, z = LM, - = MD
 SUBST:   R = NO, S = OP, Z = PQ, ! = QN, _ = NOPQ
 SHUFFLE: DEFHJKLM
@@ -604,7 +614,7 @@ DD..NN!QZPP..JJ
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_amphitheater
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -631,7 +641,7 @@ cc     cccccc     cc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_baths
-TAGS:  extra no_exits no_pool_fixup luniq_nicolostgiant
+TAGS:  extra no_exits no_pool_fixup shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _, w = w:50 _
 CLEAR: _
 MAP
@@ -654,7 +664,7 @@ cccc  cccc  cccc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_hut
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -675,7 +685,7 @@ ccc        ccc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_pillars
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -696,7 +706,7 @@ cccccccccccccccc  cccccccccccccccc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_temple
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -727,7 +737,7 @@ cccccc  cc    cc  cccccc
 ENDMAP
 
 NAME:  nicolae_shoals_nautilus_by_nature
-TAGS:  transparent extra water_ok luniq_shoalsdec_stairs
+TAGS:  transparent extra water_ok shoalsdec luniq_shoalsdec_stairs
 : if you.depth() == 1 then
 SUBST: S = )}]
 : elseif you.depth() ~= dgn.br_depth(you.branch()) then
@@ -754,7 +764,7 @@ cc..cc.....cc..cc
 ENDMAP
 
 NAME:   nicolae_shoals_aurelia_aurita
-TAGS:   transparent extra no_tide
+TAGS:   transparent extra shoalsdec no_tide
 DEPTH:  Shoals
 ORIENT: float
 KFEAT:  @ = W
@@ -783,7 +793,7 @@ WW   wwwwcccwwww  WW
 ENDMAP
 
 NAME:    nicolae_shoals_gull_way
-TAGS:    transparent water_ok luniq_shoalsdec_doors
+TAGS:    transparent water_ok shoalsdec luniq_shoalsdec_doors
 DEPTH:   Shoals
 SHUFFLE: DEFHJKLMN
 SUBST:   H : H`, J : J`, K : K`
@@ -817,7 +827,7 @@ cccPccccPcccPccc+cc
 ENDMAP
 
 NAME:    regret_index_shoalsdec_tripartite
-TAGS:    transparent extra water_ok
+TAGS:    transparent extra water_ok shoalsdec
 DEPTH:   Shoals
 SHUFFLE: ABC, DEF
 SUBST:   AD = @, B : c``, E : c``, CF = c
@@ -845,7 +855,7 @@ cccDEFccc
 ENDMAP
 
 NAME:  nicolae_shoals_beached_house
-TAGS:  transparent extra water_ok luniq_shoalsdec_doors
+TAGS:  transparent extra water_ok shoalsdec luniq_shoalsdec_doors
 KMONS: . = nothing w:40 / plant
 KFEAT: . = . w:40 / W
 SUBST: x = xxxx., m = mmmm., + = ++++., _ = wwww_
@@ -867,7 +877,7 @@ _wx..x...x..xw_
 ENDMAP
 
 NAME:  nicolae_shoals_eyelet_islets_line
-TAGS:  extra water_ok no_exits luniq_nicoeyelets
+TAGS:  extra water_ok no_exits shoalsdec luniq_nicoeyelets
 MAP
  ccc     ccc     ccc     ccc
 ccwcc   ccwcc   ccwcc   ccwcc
@@ -877,7 +887,7 @@ ccwcc   ccwcc   ccwcc   ccwcc
 ENDMAP
 
 NAME:  nicolae_shoals_eyelet_islets_square
-TAGS:  extra water_ok no_exits luniq_nicoeyelets
+TAGS:  extra water_ok no_exits shoalsdec luniq_nicoeyelets
 CLEAR: _
 MAP
  ccc     ccc
@@ -896,7 +906,7 @@ ccwcc   ccwcc
 ENDMAP
 
 NAME:   nicolae_shoals_fishbones
-TAGS:   transparent extra water_ok
+TAGS:   transparent extra water_ok shoalsdec
 WEIGHT: 5
 MAP
  ........  ....
@@ -909,7 +919,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_shoals_forestry_at_sea
-TAGS:   transparent extra water_ok
+TAGS:   transparent extra water_ok shoalsdec
 KITEM:  d = human skeleton
 SUBST:  ` = W., ~ = Ww, _ = w_, s = t.
 NSUBST: d = d / %*
@@ -938,7 +948,7 @@ ENDMAP
 
 # https://en.wikipedia.org/wiki/Tetrapod_(structure)
 NAME:  nicolae_shoals_hast_thou_considered_the_tetrapod
-TAGS:  transparent extra water_ok luniq_shoalsdec_stairs
+TAGS:  transparent extra water_ok shoalsdec luniq_shoalsdec_stairs
 KPROP: DEFHJKLMNOPQ'ST = no_tide
 : if you.depth() == 1 then
 SUBST: S = ]})
@@ -982,7 +992,7 @@ pcP
 ENDMAP
 
 NAME:   nicolae_shoals_hexagonal_tidal_flats
-TAGS:   transparent extra water_ok no_tide
+TAGS:   transparent extra water_ok shoalsdec no_tide
 NSUBST: p = w / W, q = w / W, r = w / W, s = w / W, u = w / W
 NSUBST: y = w / W, z = w / W
 MAP
@@ -1000,7 +1010,7 @@ WrWxWsWxWuW
 ENDMAP
 
 NAME:  nicolae_shoals_infinity_pool
-TAGS:  transparent extra water_ok no_tide luniq_shoalsdec_wallless
+TAGS:  transparent extra water_ok no_tide shoalsdec luniq_shoalsdec_wallless
 SUBST: ` = W., ~ = Ww, _ = w_
 CLEAR: _
 MAP
@@ -1032,7 +1042,7 @@ __w~...W~~w...w~~~~www__
 ENDMAP
 
 NAME:  nicolae_shoals_live_berth
-TAGS:  transparent water_ok no_tide luniq_shoalsdec_doors
+TAGS:  transparent water_ok no_tide shoalsdec luniq_shoalsdec_doors
 SUBST: _ = _w
 CLEAR: _
 MAP
@@ -1048,7 +1058,7 @@ xxxxxxxxxxxwwwwwww
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_house
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -1065,7 +1075,7 @@ cccccccccccc  cccccccccccc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_waterscales
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _, w = w:50 _
 CLEAR: _
 MAP
@@ -1082,7 +1092,7 @@ cc  cc  cc  cc  ccwwcc
 ENDMAP
 
 NAME:  nicolae_shoals_lost_giant_waterwheel
-TAGS:  extra no_exits water_ok luniq_nicolostgiant
+TAGS:  extra no_exits water_ok shoalsdec luniq_nicolostgiant
 SUBST: c = c:50 _
 CLEAR: _
 MAP
@@ -1109,7 +1119,7 @@ ccccc    cc    ccccc
 ENDMAP
 
 NAME:  nicolae_shoals_kinda_femur_shaped_island
-TAGS:  transparent extra water_ok no_tide
+TAGS:  transparent extra water_ok no_tide shoalsdec
 SUBST: - = xw, ` = x., ' = .w, _ = w_
 CLEAR: _
 MAP
@@ -1131,7 +1141,7 @@ _...`xx`..ww_
 ENDMAP
 
 NAME:  nicolae_shoals_matching_berths
-TAGS:  transparent extra water_ok no_tide luniq_shoalsdec_doors
+TAGS:  transparent extra water_ok no_tide shoalsdec luniq_shoalsdec_doors
 SUBST: _ = _w
 CLEAR: _
 MAP
@@ -1149,7 +1159,7 @@ xxxxxxxxxxxwwwwwwxxxxxxxxxxx
 ENDMAP
 
 NAME:  nicolae_shoals_phragmites
-TAGS:  transparent extra no_tide
+TAGS:  transparent extra no_tide shoalsdec
 KMONS: p = plant
 KMONS: P = plant w:40 / nothing
 KITEM: d = human skeleton
@@ -1174,7 +1184,7 @@ tttttt-pPP`www_
 ENDMAP
 
 NAME:  nicolae_shoals_pier_reviewed
-TAGS:  transparent extra water_ok no_tide luniq_shoalsdec_doors
+TAGS:  transparent extra water_ok no_tide shoalsdec luniq_shoalsdec_doors
 SUBST: _ = w_
 CLEAR: _
 MAP
@@ -1190,7 +1200,7 @@ xxxxwwwwwwwwwww_
 ENDMAP
 
 NAME:  nicolae_shoals_pier_to_pier
-TAGS:  transparent extra water_ok no_tide luniq_shoalsdec_doors
+TAGS:  transparent extra water_ok no_tide shoalsdec luniq_shoalsdec_doors
 SUBST: _ = w_
 CLEAR: _
 MAP
@@ -1206,7 +1216,7 @@ xxxxwwwwwwwwwwwwwxxxx
 ENDMAP
 
 NAME:  nicolae_shoals_pier_27_imports
-TAGS:  transparent extra water_ok no_tide luniq_shoalsdec_doors
+TAGS:  transparent extra water_ok no_tide shoalsdec luniq_shoalsdec_doors
 KFEAT: S = any shop
 SUBST: _ = w_
 CLEAR: _
@@ -1225,7 +1235,7 @@ xxxxwwwwwwwwwxwxwww_
 ENDMAP
 
 NAME:  nicolae_shoals_plorbo_island
-TAGS:  transparent extra water_ok
+TAGS:  transparent extra water_ok shoalsdec
 KMONS: 1 = plant
 SUBST: ' = xw, 1 = 1., _ = w_
 CLEAR: _
@@ -1250,7 +1260,7 @@ _www111...xx'xww
 ENDMAP
 
 NAME:  nicolae_shoals_rippling_ripples
-TAGS:  transparent extra water_ok no_tide
+TAGS:  transparent extra water_ok no_tide shoalsdec
 TAGS:  luniq_shoalsdec_wallless buniq_shoalsdec_huge
 MAP
         WWWWWWW
@@ -1279,7 +1289,7 @@ WwwWwWwWwwWWWwwWwWwWwwW
 ENDMAP
 
 NAME:   nicolae_shoals_seawalls
-TAGS:   transparent extra water_ok no_tide
+TAGS:   transparent extra water_ok no_tide shoalsdec
 NSUBST: D = @ / _, E = @ / _
 SUBST:  ~ = ww_
 CLEAR:  _
@@ -1301,7 +1311,8 @@ ENDMAP
 # and other burrowing creatures. These holes were no doubt made by something
 # much, much larger. They're gone, though. Probably. You'll be fine.
 NAME:   nicolae_shoals_sholes
-TAGS:   transparent extra water_ok luniq_shoalsdec_wallless buniq_shoalsdec_huge
+TAGS:   transparent extra water_ok shoalsdec
+TAGS:   luniq_shoalsdec_wallless buniq_shoalsdec_huge
 DEPTH:  Shoals, !Shoals:$
 KMONS:  1 = plant
 KFEAT:  ^ = shaft
@@ -1339,7 +1350,7 @@ _w--..''..`---ww_
 ENDMAP
 
 NAME:    nicolae_shoals_shuffling_rosette
-TAGS:    transparent extra no_tide luniq_shoalsdec_wallless
+TAGS:    transparent extra no_tide shoalsdec luniq_shoalsdec_wallless
 SHUFFLE: Ww.
 MAP
     ww
@@ -1357,7 +1368,7 @@ wwwwWW.WWW
 ENDMAP
 
 NAME:    nicolae_shoals_shuffling_square
-TAGS:    transparent extra no_tide luniq_shoalsdec_wallless
+TAGS:    transparent extra no_tide shoalsdec luniq_shoalsdec_wallless
 SHUFFLE: Ww.
 MAP
     ..
@@ -1373,7 +1384,7 @@ MAP
 ENDMAP
 
 NAME:  nicolae_shoals_soggy_cave
-TAGS:  transparent water_ok
+TAGS:  transparent water_ok shoalsdec
 SUBST: ` = w., - = x., _ = x_, . = W..
 CLEAR: _
 MAP
@@ -1396,7 +1407,8 @@ _xx-..`ww`..-xx_
 ENDMAP
 
 NAME:    nicolae_shoals_stairanded
-TAGS:    transparent extra water_ok no_tide no_descent luniq_shoalsdec_stairs
+TAGS:    transparent extra water_ok no_tide shoalsdec
+TAGS:    no_descent luniq_shoalsdec_stairs
 DEPTH:   Shoals:2-, !Shoals:$
 KMONS:   1 = plant
 SHUFFLE: [] / () / {}
@@ -1422,7 +1434,7 @@ wwww~...`xxxxxx`...~wwww
 ENDMAP
 
 NAME:  nicolae_shoals_statuary_house_1
-TAGS:  extra no_exits water_ok no_tide luniq_shoalsdec_statues
+TAGS:  extra no_exits water_ok no_tide shoalsdec luniq_shoalsdec_statues
 MAP
 cccc    cccc
 cccc    cccc
@@ -1439,7 +1451,7 @@ cccc    cccc
 ENDMAP
 
 NAME:  nicolae_shoals_statuary_house_2
-TAGS:  extra no_exits water_ok no_tide luniq_shoalsdec_statues
+TAGS:  extra no_exits water_ok no_tide shoalsdec luniq_shoalsdec_statues
 MAP
    cccccc
    cccccc
@@ -1456,7 +1468,7 @@ cc   cc   cc
 ENDMAP
 
 NAME:  nicolae_shoals_statuary_house_3
-TAGS:  extra no_exits water_ok no_tide luniq_shoalsdec_statues
+TAGS:  extra no_exits water_ok no_tide shoalsdec luniq_shoalsdec_statues
 CLEAR: _
 MAP
      ccc
@@ -1475,7 +1487,7 @@ _
 ENDMAP
 
 NAME:    nicolae_shoals_tidal_flooding_hallways
-TAGS:    transparent extra water_ok
+TAGS:    transparent extra water_ok shoalsdec
 SHUFFLE: Pp
 SUBST:   P = c, p = .
 MAP
@@ -1499,7 +1511,7 @@ www...........www
 ENDMAP
 
 NAME:  nicolae_shoals_two_channels
-TAGS:  transparent extra water_ok no_tide buniq_shoalsdec_huge
+TAGS:  transparent extra water_ok no_tide shoalsdec buniq_shoalsdec_huge
 KFEAT: @ = W
 MAP
       .....       wwwww       .....       wwwww

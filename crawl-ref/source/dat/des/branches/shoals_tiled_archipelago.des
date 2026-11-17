@@ -36,7 +36,7 @@ end
 }}
 
 NAME:   nicolae_shoals_tiled_archipelago_1x1
-TAGS:   extra
+TAGS:   extra shoalsdec
 : nico_shoals_archipelago_setup(_G, true)
 WEIGHT: 5
 MAP
@@ -55,7 +55,7 @@ WWDDDDDDDD`
 ENDMAP
 
 NAME: nicolae_shoals_tiled_archipelago_2x2
-TAGS: extra
+TAGS: extra shoalsdec
 : nico_shoals_archipelago_setup(_G)
 MAP
  ``  ``WW``  ``WW``
@@ -232,7 +232,7 @@ WWFFFFFFFFHHHHHHHHJJJJJJJJ`
 ENDMAP
 
 NAME: nicolae_shoals_tiled_archipelago_lozenge
-TAGS: extra
+TAGS: extra shoalsdec
 : nico_shoals_archipelago_setup(_G)
 MAP
      ``  ``WW``
