@@ -17,6 +17,7 @@
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "mon-transit.h" // untag_followers() in duration-data
+#include "player-notices.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "spl-summoning.h" // NEXT_OBLIVION_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
@@ -920,7 +921,7 @@ static const duration_def duration_data[] =
           if (!player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
-    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
+    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{"", mark_unseen_monsters}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
     { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},

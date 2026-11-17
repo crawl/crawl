@@ -717,3 +717,12 @@ void seen_monster(monster* mons, bool do_encounter_message)
     if (you.form == transformation::maw)
         maw_hunger_check(mons);
 }
+
+// Have the player remember the locations of all previously-visible invisible
+// monsters after they lose the ability to see them.
+void mark_unseen_monsters()
+{
+    for (monster_iterator mi; mi; ++mi)
+        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
+            mi->sense_if_invisible();
+}
