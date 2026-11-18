@@ -23,8 +23,7 @@ static bool _banned_combination(job_type job, species_type species)
     if (species::mutation_level(species, MUT_NO_GRASPING)
         && (job == JOB_GLADIATOR
             || job == JOB_BRIGAND
-            || job == JOB_HUNTER
-            || job == JOB_HEXSLINGER))
+            || job == JOB_HUNTER))
     {
         return true;
     }

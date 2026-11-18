@@ -483,8 +483,6 @@ public:
     int prevailing_wind;
     bool gave_wind_change_warning;
 
-    bool gave_invis_clear_prompt;
-
     // ---------------------------
     // Volatile (same-turn) state:
     // ---------------------------

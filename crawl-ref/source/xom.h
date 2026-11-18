@@ -21,6 +21,8 @@ using std::string;
 #define XOM_DISGUISE_OBSERVER_KEY "xom_disguise_observers"
 #define XOM_DISGUISE_RECOVERY_KEY "xom_disguise_recovery"
 
+#define XOM_EARLY_JOIN_KEY "xom_early_join"
+
 struct item_def;
 
 enum xom_message_type

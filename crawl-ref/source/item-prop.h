@@ -179,7 +179,7 @@ bool is_crossbow(const item_def &item) PURE;
 bool is_slowed_by_armour(const item_def *item) PURE;
 const char *missile_name(missile_type ammo) IMMUTABLE;
 string launched_projectile_name(const item_def &item);
-bool is_throwable(const actor *actor, const item_def &wpn) PURE;
+bool is_throwable(const actor *actor, const item_def &wpn, bool base = false) PURE;
 
 bool ammo_always_destroyed(const item_def &missile) PURE;
 bool ammo_never_destroyed(const item_def &missile) PURE;

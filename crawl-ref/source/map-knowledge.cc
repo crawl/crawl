@@ -788,8 +788,6 @@ void invis_monster_knowledge::clear()
         _clear_remembered_invis_mon(data[i].last_known_pos);
 
     data.clear();
-
-    you.gave_invis_clear_prompt = false;
 }
 
 void invis_monster_knowledge::suppress_invis_warning()
@@ -808,10 +806,7 @@ void invis_monster_knowledge::suppress_invis_warning()
     }
 
     if (did_work)
-    {
         mpr("Marking recently encountered invisible creatures as non-dangerous.");
-        you.gave_invis_clear_prompt = false;
-    }
 }
 
 // Are there any known-invisible monsters which the player doesn't currently

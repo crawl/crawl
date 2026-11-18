@@ -3038,7 +3038,7 @@ void do_eel_melee_jolt(coord_def pos)
     targets.push_back(pos);
 
     targets = _get_chain_targets(you, targets, true, true);
-    targets.resize(random_range(3, 6));
+    targets.resize(min(targets.size(), (size_t)random_range(3, 6)));
     _do_chain_jolt(you, targets, get_form()->get_special_damage());
 }
 

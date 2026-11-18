@@ -1627,6 +1627,38 @@ xx.....O.....xx
        x
 ENDMAP
 
+# (An Unfavorable Semicircle reference of a vault.)
+NAME:   tekkud_abyss_golden
+WEIGHT: 2
+KFEAT:  T = dry_fountain
+KFEAT:  s = abandoned_shop
+KFEAT:  m = iron_grate
+NSUBST: . = 3:0 / 6:0. / 1:$ / * = .:670 +:25 x
+MAP
+ xxxxxxxxxxxxxx
+xxxT..........+x
+xx.............x
+xT.xx.......xx.x
+x..xxx.....xxx.xxxxxx
+x...xxx...xxx.......xx
+x....xx...xx.........xx
+x......x.x.......xxxxxx
+x..s....x.......x.....x
+x.....xx........x.....x
+xx0..xxxx.xx.....x....x
+ @....xx...x..GG..xxxxx
+ @................x
+ @.....x...xG.s..Gx
+xxxxxx.xx.xxG....Gx
+xxxxx.............x
+xxx....x...x..GG..++  G
+xxx.G.xx...xmxxxx+'+
+xxx...xx...xm    +++x
+xxxxxxxx...x       xx
+xxxxxxxx@@@x         x
+ xxxxxxx   xG    G
+ENDMAP
+
 ###############################################################################
 # Abyss rune vaults
 #

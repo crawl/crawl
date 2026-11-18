@@ -944,6 +944,11 @@ static void _assign_living_spell_appearance(monster* mon)
             mon->colour = LIGHTBLUE;
             break;
 
+        case SPELL_FORCE_LANCE:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_WARP;
+            mon->colour = MAGENTA;
+            break;
+
         case SPELL_CORROSIVE_BOLT:
             mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ACID;
             mon->colour = YELLOW;

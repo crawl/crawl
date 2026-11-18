@@ -4241,7 +4241,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SHADOW_DRAINING, "Shadow Draining",
     spschool::necromancy,
-    spflag::monster | spflag::needs_tracer | spflag::silent,
+    spflag::monster | spflag::silent,
     5,
     200,
     2, 2,

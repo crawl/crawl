@@ -291,8 +291,7 @@ only be received once.
 # Yredelemnul
 Recall Undead Harvest ability
 
-Recalls your undead followers from anywhere in the dungeon to your immediate
-surroundings.
+Recalls your undead followers from anywhere in the dungeon to your side.
 %%%%
 Light the Black Torch ability
 
@@ -621,8 +620,7 @@ divine trial.
 %%%%
 Recall Apostles ability
 
-Recalls your apostles from anywhere in the dungeon to your immediate
-surroundings.
+Recalls your apostles from anywhere in the dungeon to your side.
 %%%%
 Dismiss Apostle ability
 
@@ -979,8 +977,7 @@ overall increase is determined by the size of your donation.
 %%%%
 Recall Ancestor ability
 
-Recalls your ancestor from anywhere in the dungeon to your immediate
-surroundings.
+Recalls your ancestor from anywhere in the dungeon to your side.
 %%%%
 Idealise ability
 

@@ -1493,6 +1493,8 @@ bool mon_do_stampede(monster& mon)
 
     if (should_end)
         mon.del_ench(ENCH_STAMPEDE);
+    else if (mons_base_type(mon) == MONS_BOREAS)
+        mon.add_ench(mon_enchant(ENCH_REGENERATION, &mon, 20));
 
     return true;
 }

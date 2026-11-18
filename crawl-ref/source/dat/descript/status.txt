@@ -1455,3 +1455,8 @@ ends, and there is nobody else around to see you, its cooldown will be skipped.
 
 You have recently disguised yourself and must explore some more before being
 able to do so again.
+%%%%
+-2ndWind status
+
+Your Boreal Bulwark must spend some time recharging its power before it can
+regenerate your health.

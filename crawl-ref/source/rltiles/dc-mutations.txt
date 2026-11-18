@@ -170,6 +170,7 @@ deterioration_1 POOR_CONSTITUTION
 deterioration_2
 initially_attractive_1 INITIALLY_ATTRACTIVE
 initially_attractive_2
+inhibited_regeneration INHIBITED_REGENERATION
 persistent_drain PERSISTENT_DRAIN
 potion_fungus POTION_FUNGUS
 reckless RECKLESS
@@ -224,22 +225,32 @@ black_mark BLACK_MARK
 silence_aura SILENCE_AURA
 word_of_chaos WORD_OF_CHAOS
 
-# Per-species effects mutations
+# Per-species effects mutations, alphabetized by species.
+# Barachi:
+daystalker DAYSTALKER
 hop_1 HOP
 hop_2
-accursed ACCURSED
+# Coglin:
+no_jewellery NO_JEWELLERY
+slow_wield SLOW_WIELD
+warmup_strikes WARMUP_STRIKES
+wield_offhand WIELD_OFFHAND
+# Demigod:
 divine_attributes DIVINE_ATTRIBUTES
 forlorn FORLORN
+# Djinn:
 flat_hp_1 FLAT_HP
 flat_hp_2
 flat_hp_3
 hp_casting HP_CASTING
+# Draconian:
 cold_blooded COLD_BLOODED
 acid_res ACID_RES
 acidic_bite ACIDIC_BITE
 big_wings BIG_WINGS
 inviolate_magic INVIOLATE_MAGIC
 steam_res STEAM_RES
+# Felid:
 shaggy_fur_1 SHAGGY_FUR
 shaggy_fur_2
 shaggy_fur_3
@@ -247,39 +258,64 @@ multilived MULTILIVED
 no_armour NO_ARMOUR
 no_grasping NO_GRASPING
 paws PAWS
-petrification_res PETRIFICATION_RES
-explore_regen EXPLORE_REGEN
-nightstalker_1 NIGHTSTALKER
-nightstalker_2
-nightstalker_3
-inhibited_regeneration INHIBITED_REGENERATION
-mertail MERTAIL
-reflexive_headbutt REFLEXIVE_HEADBUTT
-in_touch_with_death_1 IN_TOUCH_WITH_DEATH
-in_touch_with_death_2
-no_drink NO_DRINK
-faith FAITH
-naga_tail_1 NAGA_TAIL
-naga_tail_2
-spit_poison_1 SPIT_POISON
-spit_poison_2
-double_potion_heal DOUBLE_POTION_HEAL
-acrobatic ACROBATIC
-antimagic_bite ANTIMAGIC_BITE
-no_potion_heal_1 NO_POTION_HEAL
-no_potion_heal_2
-float FLOAT
-formless_1 FORMLESS
-formless_2
-trickster TRICKSTER
-spellclaws SPELLCLAWS
-mnemophage MNEMOPHAGE
+# Formicid
+four_strong_arms FOUR_STRONG_ARMS
+# Gale Centaur:
 stampede_1 STAMPEDE
 stampede_2
 stampede_north STAMPEDE_NORTH
 stampede_south STAMPEDE_SOUTH
 stampede_east STAMPEDE_EAST
 stampede_west STAMPEDE_WEST
+# Gnoll:
+distributed_training DISTRIBUTED_TRAINING
+treasure_sense TREASURE_SENSE
+# Gargoyle:
+petrification_res PETRIFICATION_RES
+# Human:
+explore_regen EXPLORE_REGEN
+# Kobold:
+nightstalker_1 NIGHTSTALKER
+nightstalker_2
+nightstalker_3
+# Merfolk:
+mertail MERTAIL
+nimble_swimmer_1 NIMBLE_SWIMMER
+nimble_swimmer_2
+# Minotaur
+reflexive_headbutt REFLEXIVE_HEADBUTT
+# Mountain Dwarf:
+artefact_enchanting ARTEFACT_ENCHANTING
+runic_magic RUNIC_MAGIC
+# Mummy:
+accursed ACCURSED
+faith FAITH
+in_touch_with_death_1 IN_TOUCH_WITH_DEATH
+in_touch_with_death_2
+no_drink NO_DRINK
+# Naga:
+naga_tail_1 NAGA_TAIL
+naga_tail_2
+spit_poison_1 SPIT_POISON
+spit_poison_2
+# Octopode
+tentacles TENTACLES
+# Oni:
+double_potion_heal DOUBLE_POTION_HEAL
+# Poltergeist:
+float FLOAT
+formless_1 FORMLESS
+formless_2
+trickster TRICKSTER
+# Revenant:
+spellclaws SPELLCLAWS
+mnemophage MNEMOPHAGE
+# Tengu:
+acrobatic ACROBATIC
+# Vine Stalker
+antimagic_bite ANTIMAGIC_BITE
+no_potion_heal_1 NO_POTION_HEAL
+no_potion_heal_2
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

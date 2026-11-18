@@ -104,7 +104,8 @@ string skill_title_by_rank(
 
 unsigned get_skill_rank(unsigned skill_lev);
 
-string player_title(bool the = true);
+string player_title(bool use_prefix = true);
+string player_title_prefix(const string& title);
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
                       skill_type excl_skill = SK_NONE);

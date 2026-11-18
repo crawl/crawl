@@ -97,6 +97,7 @@ void move_companion_to(const monster* mons, const level_id lid);
 void update_companions();
 
 bool companion_is_elsewhere(mid_t mid, bool must_exist = false);
+bool companions_are_adjacent();
 
 bool recall_offlevel_ally(mid_t mid);
 

@@ -67,7 +67,8 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
 bool move_item_to_inv(item_def& item, bool quiet = false);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
-item_def* auto_assign_item_slot(item_def& item, bool quiet = false);
+item_def* auto_assign_item_slot(item_def& item, bool quiet = false,
+                                bool newgame = false);
 void mark_items_non_pickup_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);

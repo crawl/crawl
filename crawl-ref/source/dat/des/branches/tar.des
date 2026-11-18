@@ -1168,6 +1168,22 @@ xx@@@xx
            xx@@@xx
 ENDMAP
 
+NAME:   tekkud_tar_oblivion_access
+TAGS:   transparent
+DEPTH:  Tar:2-, !Tar:$
+MONS:   oblivion hound / reaper w:2
+NSUBST: + = 2:+ / *:x, ' = 2:1 / 4 = 1. / *:.
+SUBST:  - = x.
+MAP
+xxxxxxxxxxxx
+x'x-{-x.'.xx+x
+x.-.x-..xx-.'x
++......-x.''.x
+x.-.---..-.-.+
+xxx..x.x.x.x.x
+ xxx+xxxxx+xxx
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################

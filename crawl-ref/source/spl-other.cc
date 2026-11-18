@@ -188,16 +188,10 @@ bool try_recall(mid_t mid)
         return recall_offlevel_ally(mid);
     if (!mons->alive())
         return false;
-    // Don't recall monsters that are already close to the player
-    if (mons->pos().distance_from(you.pos()) < 3
-        && mons->see_cell_no_trans(you.pos()))
-    {
-        recall_orders(mons);
-        return false;
-    }
-    coord_def empty;
-    if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
-        || !mons->move_to(empty, MV_TRANSLOCATION, true))
+
+    coord_def spot = find_newmons_square(mons->type, you.pos(), 1, 3);
+    if (spot.origin()
+        || !mons->move_to(spot, MV_TRANSLOCATION, true))
     {
         return false;
     }

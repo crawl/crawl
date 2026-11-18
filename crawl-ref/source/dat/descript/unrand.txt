@@ -954,3 +954,10 @@ imagery, but the focus of the scene is obscured by a great dark stain {{
         return "that smells strongly "
     end
 }}of ashes and salt. It seems somehow blasphemous to wear.
+%%%%
+boreal bulwark
+
+A towering wall of ancient tamarack and patterned steel, said to have been
+quenched in the sweat of the North Wind itself. Despite its weight, those who
+carry it find their steps bolstered by bracing gusts and given the strength to
+endure even the toughest hardships.

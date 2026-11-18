@@ -7863,6 +7863,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     default:
         break;
 
+    case SPELL_CANTRIP:
+        return;
+
     case SPELL_WATERSTRIKE:
     {
         pbolt.flavour    = BEAM_WATER;

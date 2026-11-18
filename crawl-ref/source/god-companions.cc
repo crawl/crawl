@@ -219,6 +219,23 @@ void wizard_list_companions()
     }
 }
 
+// Returns true if all divine companions the player has are currently adjacent to them.
+bool companions_are_adjacent()
+{
+    for (auto &entry : companion_list)
+    {
+        if (const monster* mon = monster_by_mid(entry.first))
+        {
+            if (!adjacent(mon->pos(), you.pos()))
+                return false;
+        }
+        else if (companion_is_elsewhere(entry.first, true))
+            return false;
+    }
+
+    return true;
+}
+
 /**
  * Returns the mid of the current ancestor granted by Hepliaklqana, if any. If none
  * exists, returns MID_NOBODY.
