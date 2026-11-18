@@ -3571,8 +3571,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
 
-    if (!crawl_state.game_is_arena() && count_kill && !in_transit)
+    if (!crawl_state.game_is_arena() && count_kill && !in_transit
+        && mons.base_attitude != ATT_FRIENDLY)
+    {
         you.kills.record_kill(&mons, killer, pet_kill);
+    }
 
     if (mount_death)
     {
