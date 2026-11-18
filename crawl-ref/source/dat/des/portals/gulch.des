@@ -101,10 +101,12 @@ end
 
 function gulch_setup(e, main_vault, trap_count)
   e.kfeat("^ = trap_tyrant w:20 / trap_dispersal w:4 / " ..
-              "trap_harlequin w:2 / trap_zot w:2")
+              "trap_harlequin w:4 / trap_zot w:2")
   e.kfeat("< = exit_gulch")
   e.kfeat("} = purified_mutation_catalyst")
-  e.subst("^ : ^.")
+  if trap_count == "1" then
+    e.subst("^ : ^.")
+  end
   e.nsubst("^ = " .. trap_count .. ":^ / 1:^. / *:.")
   decorative_floor(e, ']', "empty mutation catalyst")
   if main_vault then
@@ -232,11 +234,11 @@ end
 function gulch_onslaught(e, is_subvault)
   e.kmons("1 : alligator / anaconda / large slime creature w:2 / " ..
               "crawling flesh cage w:12")
-  e.kmons("2 = mongrel wurm / rusted inspector / roaming sludgefish w:4")
+  e.kmons("2 = mongrel wurm / rusted inspector / roaming sludgefish w:6")
   e.kmons("3 = roaming sludgefish / fungal shambler")
   e.kmons("4 = great orb of eyes / crawling flesh cage")
-  e.kmons("5 = fungal shambler / formless jellyfish / " ..
-              "telencephalon w:4 / torpor snail w:1")
+  e.kmons("5 = fungal shambler / formless jellyfish w:12 / " ..
+              "telencephalon w:4 / torpor snail w:2")
   if is_subvault and crawl.coinflip() then
     e.kmons("? = fungus")
     e.subst("? : ;WW?")
@@ -261,7 +263,7 @@ function gulch_crossways_sections(e)
               "telencephalon w:4 / torpor snail w:1")
   e.subst("~ = ..Wwx")
   gulch_boss_theme_sets(e, false)
-  gulch_generic_subvaults(e, {"y", "z"}, "x.", true, "1")
+  gulch_generic_subvaults(e, {"y", "z"}, "x.", crawl.coinflip(), "1")
   gulch_loot(e, "|", 4)
 end
 
@@ -298,7 +300,7 @@ function gulch_chamber_river(e, is_subvault)
   if is_subvault then
     gulch_loot(e, "|", 3)
   end
-  gulch_generic_subvaults(e, {"y", "z", "Y", "Z"}, "xxW..", true, "1")
+  gulch_generic_subvaults(e, {"y", "z", "Y", "Z"}, "xxW..", true, "3")
 end
 
 function gulch_winding_coils(e)
@@ -589,6 +591,7 @@ NAME:     regret_index_gulch_onslaught
 WEIGHT:   25
 KFEAT:    - = broken_door
 KFEAT:    P = mould_patch
+KFEAT:    T = trap_alarm / trap_dispersal / trap_zot w:2
 SUBST:    - = ++-., ~ = ...WWwx
 SUBST:    y : x.., z : x.., Y : x.., Z : x..
 SUBVAULT: B : gulch_onslaught_subvault
@@ -596,7 +599,7 @@ SUBVAULT: C : gulch_onslaught_subvault
 SUBVAULT: D : gulch_onslaught_subvault
 : gulch_onslaught(_G, false)
 : gulch_loot(_G, "|", 4)
-: gulch_setup(_G, true, "2")
+: gulch_setup(_G, true, "3")
 MAP
               ccccccccccccccccccccccc
               ccccccccccccccccccccccc
@@ -614,22 +617,22 @@ MAP
   c..W.W.W..$|ccccccccccccccccccccccc|$..W.W.W..c
 cccc-c-c-c-ccccvvvvvvvvvvvvvvvvvvvvvcccc-c-D-c-cccc
 ccBBBBBBBBBBBcvw?'..Z....Y....Z..'?wvcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv?'........Y........'?vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv?'......^.Y.^......'?vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv'.......v.'.v.......'vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv.....y..v.?.v........vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv....yy..v.'.v........vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv.......vv...vv.......vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv..z...vv.....vv...z..vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..z...vv..T..vv...z..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv..vvvvv...v...vvvvv..vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv....v$....v....$v....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv...'v$....v....$v'...vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv...'v'.'.vvv.'.'v'...vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv.^v'v$?..vvv..?$v'v^.vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv...'v'.1.vvv.1.'v'...vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv....v$0.0$v$0.0$v....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcvPPvPv$?.2vvv2.?$vPvPPvcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv...'v'31.vvv.13'v'...vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv...'v$0.0$v$0.0$v'...vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv..vvvvv0.6v6.0vvvvv..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv..z...vv||6||vv...z..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv.......vv|}|vv.......vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv........vvvvv..yy....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..^.....vvvvv..yy.^..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv........v...v..y.....vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv'.......v...v.......'vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv?'........Y........'?vcDDDDDDDDDDDcc
@@ -637,8 +640,8 @@ ccBBBBBBBBBBBcvw?'..Z....Y....Z..'?wvcDDDDDDDDDDDcc
 cccc+c+B+c+ccccvvvv+v+v+vvvvvvvvvvvvcccc+c+c+c+cccc
 cc...W.W.W....xxxxxxPxPxccccxxxxxxxxx....W.W.W...cc
 cc.....^......~~~~~~~.~~ccc~~~~~~~~~~......^.....cc
-cci.v..............3.2<.ccc.A.W...1.3.........v.icc
-cc~'..............2^1...ccc..W.<...2.1.........'~cc
+cci.v.................<.ccc.A.W...1.3.........v.icc
+cc~'...............1....ccc..W.<...2.1.........'~cc
 ccx~|i~i~i~i~i~~~~~~~~~~ccc~~~~~~~~~~i~i~i~i~i|~xcc
 ccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcc
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -649,15 +652,15 @@ NAME:   regret_index_gulch_onslaught_flux
 : gulch_onslaught(_G, true)
 MAP
 x...Yxxz..?..ZxxW...x
-....1x...2'....x.....
+.....x...1'2...x.....
 .''..c...'?'...c.3''.
-xxx......xcx......xxx
+xx.......xcx.......xx
 .......cxxxxxc.......
-....y2?xxxxxxx?4y..5.c
+....y.?xxxxxxx?2y4.5.c
 .......cxxxxxc.......
-xxx......xcx......xxx
+xx.......xcx.......xx
 .''..c...'?'...c.3''.
-....1x...2'....x.....
+.....x...1'2...x.....
 x...WxxZ..?..zxxY...x
 ENDMAP
 
@@ -683,15 +686,15 @@ NAME:   regret_index_gulch_onslaught_nodes
 : gulch_onslaught(_G, true)
 MAP
 xcWcxxxxxc'cxxxxxc'cx
-x..2yx..x...x..xz1..x
+x...yx..x.1.x..xz2..x
 ..?......2?3......?..
-x....xxxx...xxxx....x
+x....x.xx...xxxx....x
 xx.xxxxxxc.cxxxxxx.xx
 x..cxxxxc5?4cxxxxc..xc
 xx.xxxxxxc.cxxxxxx.xx
-x....xxxx...xxxx....x
+x....xxxx...xx.x....x
 ..?......3?2......?..
-x..1zx..x...x..xy2..x
+x...zx..x.1.x..xy2..x
 xc'cxxxxxc'cxxxxxcWcx
 ENDMAP
 
@@ -701,15 +704,15 @@ NSUBST: R = 1:+ / *:., S = 1:+ / *:.
 : gulch_onslaught(_G, true)
 MAP
 xz.xxxxx'.cW'xxxxx.zx
-R...xxxxx.c3xxxZx...S
-xx?..2xyx...xxx...?xx
-R...x'.'xx.xc'.'x...S
-x..xx1x.x'2xc.x4xx..x
+R...xxxxx2c3xxxZx...S
+xx?...xyx...xxx...?xx
+R...x'.'xx.xc'1'x...S
+x..xx.x.x'2xc.x4xx..x
 cccccY?...?...?Ycccccc
-x..xx1x.cx2'x.x5xx..x
-R...x'.'cx.xx'.'x...S
-xx?..2xxx...xyx...?xx
-R...xZxxx3c.xxxxx...S
+x..xx.x.cx2'x.x5xx..x
+R...x'.'cx.xx'1'x...S
+xx?...xxx...xyx...?xx
+R...xZxxx3c2xxxxx...S
 xz.xxxxx'Wc.'xxxxx.zx
 ENDMAP
 
@@ -737,14 +740,14 @@ NAME:   regret_index_gulch_onslaught_sworl
 MAP
 .Wxc..........cc?.y..
 .Zx.z..xxxxx..cc.4.5.
-..x..xxx..ZxY..x.c...
+..x..xxx5.ZxY..x.c...
 ..x..x....3xx..x..x..
-.xx.xx.cc'.?cc.xx.xx.
+.xx.xx.cc'4?cc.xx.xx.
 Yx..x..c'2?2'c..x..xYc
-.xx.xx.cc?.'cc.xx.xx.
+.xx.xx.cc?2'cc.xx.xx.
 ..x..x..xx3....x..x..
-...c.x..YxZ..xxx..x..
-.1.2.cc..xxxxx..z.xZ.
+...c.x..YxZ.1xxx..x..
+.....cc..xxxxx..z.xZ.
 ..y.?cc..........cxW.
 ENDMAP
 
@@ -755,15 +758,15 @@ WEIGHT: 7
 : gulch_onslaught(_G, true)
 MAP
 y..Y...z..c......y..Y
-..1.....z.cZ.........
-..xWWx....x....xWWx4.
+........z.cZ.........
+..xWWx1...x...4xWWx..
 ..x'?c.xxxxxxx2c?'x..
 ..x?'x..W'?'W3.x'?x..
 ..x''x..W???W..x''x..c
 ..x?'x..W'?'W3.x'?x..
 ..x'?c.xxxxxxx2c?'x..
-..xWWx....x....xWWx5.
-..2......Zc.z........
+..xWWx2...x...5xWWx..
+.........Zc.z........
 Y..y......c..z...Y..y
 ENDMAP
 
@@ -808,18 +811,20 @@ BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.^~.BBBBBBBBBBBB.^~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBBi~~iBBBBBBBBBBBBi~~iBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBBDDDDBBBBBBBBBBBBFF2FBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBBCCCCBBBBBBBBBBBBEEEEBBBBBBBBBBBBBBB
-BB.........3iHGy2..1.~.W.xW.1..z...GHi..........BB
-BB.~~~~~~~~~~HG.?.....W~A~......?..GH~^~~~~~~~~.BB
-BB.~~~~~~~~^~HG..?......~(~W.....?.GH~~~~~~~~~~.BB
-BB..........iHG...z..1.Wx.W.~.1..2yGHi3.........BB
+BB.........3iHGy2..+1~.W.xW.1.+z...GHi..........BB
+BB.~~~~~~~~~~HG.?..+..W~A~....+.?..GH~^~~~~~~~~<BB
+BB<~~~~~~~~^~HG..?.+....~(~W..+..?.GH~~~~~~~~~~.BB
+BB..........iHG...z+.1.Wx.W.~1+..2yGHi3.........BB
 BBBBBBBBBBBBBBBEEEEBBBBBBBBBBBBCCCCBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBBF2FFBBBBBBBBBBBBDDDDBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBBi~~iBBBBBBBBBBBBi~~iBBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~^.BBBBBBBBBBBB.~^.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
 BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
@@ -837,38 +842,40 @@ NAME:    regret_index_gulch_crossways_closets
 : gulch_crossways_sections(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvxx    x.2cvvvvc3.x    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    x.2cvvvvc3$x    xxvvvvvvvvvvvvv
 vvvvvvvvvvvvvxx    +.2cvvvvc2.+    xxvvvvvvvvvvvvv
-vvvvvvvvvvvvvxx    +.$cvvvvc$.+    xxvvvvvvvvvvvvv
-vvvvvvvvvvvvvxx    xcccvvvvcccx    xxccccccccvvvvv
-vvvvvvvvcccccxx    x.'cvvvvc'.x    xx~~.~~|03cvvvv
-vvvvvvvvc$$$cxx    +.1cvvvvc$.+    xx.....060cvvvv
-vvvvvvvccc+ccxx    +.$cvvvvc0.+    .x..c$060|cvvvv
-vvvvvccc04...x.    x.'cvvvvc'.x    .+..c$|0.~cvvvv
-vvvvvc$c5'?..+.    xcccvvvvcccx    .+..c}$$.~cvvvv
-vvvvvc|+.?~..+.    +.$cvvvvc$.+    .+..cccc..cvvvv
-vvvvvc$c...3.+.    +.2cvvvvc2.+    .x.?.....~cvvvv
-vvvvvccc.....x.    x.2cvvvvc2.x    xx?......~cvvvv
+vvvvvvvvvvvvvxx    +.$cvvvvc$.+    xxcccccccccvvvv
+vvvvvvvvvvvvvxx    xcccvvvvcccx    xx.~~+~~|03cvvv
+vvvvvvvvcccccxx    x.'cvvvvc'.x    xx...+..060cvvv
+vvvvvvvvc$$$cxx    +.1cvvvvc$.+    xx...c$.60|cvvv
+vvvvvvvccc+ccxx    +.$cvvvvc0.+    .x.x.c$|..~cvvv
+vvvvvccc04...x.    x2'cvvvvc'.x    .+...c}$$.~cvvv
+vvvvvc$c5'?..+.    xcccvvvvcccx    .+...cccc++cvvv
+vvvvvc|+.?~..+.    +.$cvvvvcxxx    .+..?.....~cvvv
+vvvvvc$c...3.+.    +.2cvvvvcxxx    .x.?..x...~cvvv
+vvvvvccc.....x.    x.2cvvvvcxxx    xx.........cvvv
 vxxxxxxxx+++xxx    xxxxxxxxxxxx    xxx+++xxxxxxxxv
 vxxxxxxxx...xxx    xxxxxxxxxxxx    xxx...xxxxxxxxv
+vxxxxxxx.....xx    xxxxxxxxxxxx    xx.....xxxxxxxv
 vv                                              vv
 vv                                              vv
 vv                                              vv
 vv                                              vv
+vxxxxxxx.....xx    xxxxxxxxxxxx    xx.....xxxxxxxv
 vxxxxxxxx...xxx    xxxxxxxxxxxx    xxx...xxxxxxxxv
 vxxxxxxxx+++xxx    xxxxxxxxxxxx    xxx+++xxxxxxxxv
-vvvvc~..'...?xx    x.2cvvvvc2.x    .x.....cccvvvvv
-vvvvc~.....?.xx    +.2cvvvvc2.+    .+.3...c$cvvvvv
-vvvvc..cccc..+.    +.$cvvvvc$.+    .+..~?.+|cvvvvv
-vvvvc~.$$|c..+.    xcccvvvvcccx    .+..?'5c$cvvvvv
-vvvvc~.0|$c..+.    x.'cvvvvc'.x    .x...40cccvvvvv
-vvvvc|040$c.'x.    +.0cvvvvc$.+    xxcc+cccvvvvvvv
-vvvvc130.....xx    +.$cvvvvc1.+    xxc$$$cvvvvvvvv
-vvvvc21|~~.~~xx    x.'cvvvvc'.x    xxcccccvvvvvvvv
-vvvvvccccccccxx    xcccvvvvcccx    xxvvvvvvvvvvvvv
-vvvvvvvvvvvvvxx    +.$cvvvvc$.+    xxvvvvvvvvvvvvv
+vvvc.........xx    xxxcvvvvc..x    .x.....cccvvvvv
+vvvc~..'x..?.xx    xxxcvvvvc..+    .+.3...c$cvvvvv
+vvvc~.....?..+.    xxxcvvvvc$.+    .+..~?.+|cvvvvv
+vvvc++cccc...+.    xcccvvvvcccx    .+..?'5c$cvvvvv
+vvvc~.$$|c...+.    x.'cvvvvc'.x    .x...40cccvvvvv
+vvvc~.0|$c.x.x.    +.0cvvvvc$.+    xxcc+cccvvvvvvv
+vvvc|040$c.'.xx    +.$cvvvvc1.+    xxc$$$cvvvvvvvv
+vvvc130..+...xx    x.'cvvvvc'2x    xxcccccvvvvvvvv
+vvvc21|~~+~~.xx    xcccvvvvcccx    xxvvvvvvvvvvvvv
+vvvvcccccccccxx    +.$cvvvvc$.+    xxvvvvvvvvvvvvv
 vvvvvvvvvvvvvxx    +.2cvvvvc2.+    xxvvvvvvvvvvvvv
-vvvvvvvvvvvvvxx    x.3cvvvvc2.x    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    x$3cvvvvc2.x    xxvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
@@ -890,10 +897,12 @@ vvvvc......?xxx    x....'....cx    xx.c...c.ccvvvv
 vvvvc'....'xxxx    xccccccccccx    xx?....?'$ccvvv
 vxxxxxx++xxxxxx    xxxxxxxxxxxx    xxxx++xxxxxxxxv
 vxxxxx....xxxxx    xxxxxxxxxxxx    xxx....xxxxxxxv
+vxxxxx....xxxxx    xxxxxxxxxxxx    xxx....xxxxxxxv
 vv                                              vv
 vv                                              vv
 vv                                              vv
 vv                                              vv
+vxxxxxxx....xxx    xxxxxxxxxxxx    xxxxx....xxxxxv
 vxxxxxxx....xxx    xxxxxxxxxxxx    xxxxx....xxxxxv
 vxxxxxxxx++xxxx    xxxxxxxxxxxx    xxxxxx++xxxxxxv
 vvvcc$.?....?xx    xccccccccccx    xxxx'....'cvvvv
@@ -901,8 +910,8 @@ vvvvcc.c...c.xx    xc}...'....x    .xx?......cvvvv
 vvvvvcc..2c..x.    xc0c..?..c.+    .x'.....c.cvvvv
 vvvvvvcc1v2..+.    xc6cc$'.cc.+    .x...c.c..cvvvv
 vvvvvvvcc1...+.    xc0$cc?cc..+    .+....v523cvvvv
-vvvvvvvvcc.c?x.    xv|0|ccc.'.x    .+...c4cc$cvvvv
-vvvvvvvvvcc..xx    xv|0|ccc.'.x    xx..c.2c|ccvvvv
+vvvvvvvvcc.c?x.    xv|.|ccc.'.x    .+...c4cc$cvvvv
+vvvvvvvvvcc..xx    xv|.|ccc.'.x    xx..c.2c|ccvvvv
 vvvvvvvvvvcc$xx    xc0$cc?cc..+    xx'...3$cccvvvv
 vvvvvvvvvvvccxx    xc6cc$'.cc.+    xxcccccccccvvvv
 vvvvvvvvvvvvcxx    xc0c..?..c.+    xxvvvvvvvvvvvvv
@@ -916,36 +925,38 @@ NAME:    regret_index_gulch_crossways_carvings
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvcccxx    xccccccccccx    xxvvvvvvvvvvvvv
-vvvvvvvvvvc..x.    +...cccc...+    xxvccccvvvvvvvv
-vvvvvvvvvvc~.+.    +..~.3'.~..+    xxvc$$cvvvvvvvv
-vvvvvvvvvvc..+.    +....'0....+    xccc++ccvvvvvvv
-vvvvvvvvvvc1.x.    xcc..2?..ccx    xc...22ccvvvvvv
-vvvvvvvvvcc++xx    xvc+c?3c+cvx    xc~..|34vcvvvvv
-vvvvvvvccc...xx    xvc$cccc$cvx    xcc++c|.5ccvvvv
-vvvvvvvc$.~..xx    xvcccvvcccvx    xc...cc|32cccvv
-vvvvvvcc.2.4.xx    xvvvvvvvvvvx    xc...'cc|2+$cvv
+vvvvvvvvvvc..x.    xccccccccccx    xxvccccvvvvvvvv
+vvvvvvvvvvc~.+.    +...cccc...+    xxvc$$cvvvvvvvv
+vvvvvvvvvvc..+.    +..~.3'.~..+    xccc++ccvvvvvvv
+vvvvvvvvvvc1.x.    +....'0....+    xc...22ccvvvvvv
+vvvvvvvvvcc++xx    xcc..2?..ccx    xc~..|34vcvvvvv
+vvvvvvvccc...xx    xvc+c?3c+cvx    xcc++c|.5ccvvvv
+vvvvvvvc$.~..xx    xvc$cccc$cvx    xc...cc|32cccvv
+vvvvvvcc.2.4.xx    xvcccvvcccvx    xc...'cc|2+$cvv
 vcccccc.~.2$cxx    xvvvvvvvvvvx    xc.??..+..+$cvv
 vc.~.1+..3$|cxx    xvvvvvvvvvvx    xc'1...+..cccvv
 vc'...+...cccxx    xvvvvvvvvvvx    xc.....c~.cvvvv
-vxx++xxxxxxxxxx    xvvvvvvvvvvx    xcx+++xxxxxxxxv
-vv....xxxxxxxxx    xxxxxxxxxxxx    xx.....xxxxxxxv
+vc....xxxxxxxxx    xvvvvvvvvvvx    xc.....ccccxxxv
+vvx++xxxxxxxxxx    xxxxxxxxxxxx    xxx+++xxxxxxxxv
+vv....xxxxxxxxx    xxxxxxxxxxxx    xx.....xxxxxxvv
 vv                                              vv
 vv                                              vv
 vv                                              vv
 vv                                              vv
-vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxxxxx....xv
-vvxxxxxxx+++xxx    xxxxxxxxxxxx    xxxxxxxxxx++xxv
+vvxxxxxx.....xx    xxxxxxxxxxxx    xxxxxxxxx....vv
+vxxxxxxxx+++xxx    xxxxxxxxxxxx    xxxxxxxxxx++xcv
+vvxxcccc.....xx    xvvvvvvvvvvx    xxxxxxxxx....cv
 vvvvc..c.....cx    xvvvvvvvvvvx    xxccc...+...'cv
 vvccc..+...1'cx    xvvvvvvvvvvx    xxc|.3..+1.~.cv
 vvc$+..+..??.cx    xvvvvvvvvvvx    xxc.2.~.ccccccv
-vvc$+0|cc'...cx    xvvvvvvvvvvx    xx.4.2$ccvvvvvv
-vvccc00|cc...cx    xvcccvvcccvx    xx..~$$cvvvvvvv
-vvvvcc6}|c++ccx    xvc$cccc$cvx    xx...cccvvvvvvv
-vvvvvcv60|...cx    xvc+c2?c+cvx    xx++ccvvvvvvvvv
-vvvvvvcc00...cx    xcc..?3..ccx    .x.1cvvvvvvvvvv
-vvvvvvvcc++cccx    +....0'....+    .+..cvvvvvvvvvv
-vvvvvvvvc$$cvxx    +..~.'3.~..+    .+.~cvvvvvvvvvv
-vvvvvvvvccccvxx    +...cccc...+    .x..cvvvvvvvvvv
+vvc$+.|cc'...cx    xvcccvvcccvx    xx.4.2$ccvvvvvv
+vvccc00|cc...cx    xvc$cccc$cvx    xx..~$$cvvvvvvv
+vvvvcc6}|c++ccx    xvc+c2?c+cvx    xx...cccvvvvvvv
+vvvvvcv60|...cx    xcc..?3..ccx    xx++ccvvvvvvvvv
+vvvvvvcc0....cx    +....0'....+    .x.1cvvvvvvvvvv
+vvvvvvvcc++cccx    +..~.'3.~..+    .+..cvvvvvvvvvv
+vvvvvvvvc$$cvxx    +...cccc...+    .+.~cvvvvvvvvvv
+vvvvvvvvccccvxx    xccccccccccx    .x..cvvvvvvvvvv
 vvvvvvvvvvvvvxx    xccccccccccx    xxcccvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
@@ -971,10 +982,12 @@ vcc..c..cc.?$cx    xvc$..c.~?.+    .+.c......+$cvv
 vc2..c..1cc$|cx    xvccccc.?~.+    .x.....'..c$cvv
 vxx++x++xxccccx    xvvvvvc....+    xxx+++xxccccccv
 vx...x...xxxxxx    xxxxxxxxxxxx    xx.....xxxxxxxv
+vx.......xxxxxx    xxxxxxxxxxxx    xx.....xxxxxxxv
 vv                                              vv
 vv                                              vv
 vv                                              vv
 vv                                              vv
+vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxx.......xv
 vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxx...x...xv
 vccccccxx+++xxx    +....cvvvvvx    xccccxx++x++xxv
 vvc$c..'.....x.    +.~?.cccccvx    xc|$cc1..c..2cv
@@ -983,8 +996,8 @@ vvc|+....c?..+.    x....+.0.cvx    xcc...cc.c.Pccv
 vvc|c..6ccc..+.    xccc++..2cvx    xxcc...cRccP.cv
 vvccc'0ccc...x.    xcc....~.cvx    .x1cc...Rc..'cv
 vvvvc0ccc6..'xx    xvc......cvx    .+..cc.PR..3ccv
-vvvvc0}c0....cx    xvc.~.++cccx    .+...QQQ..0ccvv
-vvvvc|00'...$cx    xvc3..+...'x    xxccccc..5ccvvv
+vvvvc.}c0....cx    xvc.~.++cccx    .+...QQQ..0ccvv
+vvvvc|.0'...$cx    xvc3..+...'x    xxccccc..5ccvvv
 vvvvcccccc++ccx    xvc.2.c.~?.+    .+...c..4ccvvvv
 vvvvvvvvc||$$cx    xvc$..c.?~.+    .+..PP.3ccvvvvv
 vvvvvvvvccccccx    xvccccc'...+    .x2cc.'ccvvvvvv
@@ -1019,7 +1032,7 @@ KFEAT:    sS = W
 SUBST:    y : xxW., z : xxW., - = ++-., ~ = .:35 W:20 s:5 S:5 w:25 x:15
 SUBVAULT: X : gulch_network
 COLOUR:   sS = lightgreen
-: gulch_setup(_G, true, 2)
+: gulch_setup(_G, true, "2")
 MAP
 XXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXX
@@ -1080,13 +1093,13 @@ NAME:    regret_index_gulch_net_lineage
 ORIENT:  encompass
 MAP
 ccccccccccccccccc
-c<..........xxxxc
-c....x.1.......'c
-c....x...x...3..c
+c<...x......xxxxc
+c..............'c
+c....x.1.x...3..c
 c...Ax...x......c
-c.xxxx.2.x'.....c
+cx.xxx.2.x'.....c
 c.....1..x??xxx'c
-c.1..2..Wx'.y...ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
+c..1.2..Wx'.y...ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
 c......W3x..y...'c    x$$xx$$x         vvvvvv
 c..xxxxxxx0......c    x..xx.|x         xvvvvv
 c....'?'.0.......c    +..2'..+         xvvvvv
@@ -1120,14 +1133,14 @@ cccccccc'..+                                v
        v                               +....x..x..|v
        vvxxxx         xxxxxxxx      c++c....x.'xxx.v
        vvvvvx         +..4'..+    ccc.......x..'...v
-       vvvvvx         +..'5..+    c........2x......v
+       vvvvvx         +..'5..+    c.........x......v
        vvvvvx         x..xx..x    c.......1.x..xxx.v
-       vvvvvv         x$$xx|$x    c'.....2..x..z..3v
+       vvvvvv         x$$xx|$x    c'........x..z..3v
        vvvvvvvvvvvvvvvvvvvvvvvvvvvvv??xxxxxxx..z...v
-                                   v'........}.....v
+                                   v'........}..2..v
                                    v...'......xxxx0v
                                    v.xxx'.xzz.x6'0.v
-                                   v...x..x...x'6.$v
+                                   v...x..x..2x'6.$v
                                    v$|.x..x...x0.6|v
                                    v|$|....3..0.$|$v
                                    vvvvvvvvvvvvvvvvv
@@ -1138,20 +1151,20 @@ NAME:    regret_index_gulch_net_slashes
 ORIENT:  encompass
 MAP
 ccccccccccccccccc
-cA....<.1...Wyx'c
-c.x....x.2.....xc
+cA....<.....Wyx'c
+c.x....x......2xc
 c..xx...x......yc
-c..xx....x.xx..Wc
-c....x..1.x..3..c
-c<....xx...x?...c
+c..xx.x..x.xx..Wc
+c....x....x..3..c
+c<..x.xx...x?...c
 c.x...xx...?x?..ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
-c1.x.1..x.'.?x..0c    x|$...xx         x..$xv
-c.2.x....x....x..c    x$.x4x.x         +.2x$v
+c..x....x.'.?x..0c    x|$...xx         x..$xv
+c...x....x.1..x..c    x$.x4x.x         +.2x$v
 c....x..'.xx...x.c    x.x5x..x         +.x3|v
-c...x.x?..xx'..c+c    xx.....x         xx...v
+c...x.x?.1xx'..c+c    xx.....x         xx1..v
 cW..x.?x?..'ccc+      xxx++xxx         xx++xv
 cy...3.?x...c                               v
-cx.......x..c                               v
+cx2......x..c                               v
 c'xyW.....xc+                               v
 cccccccc0..+                                v
        ccccc                                v
@@ -1178,7 +1191,7 @@ cccccccc0..+                                v
        v                               +..xx..+...6c
        vx++xx         xxx++xxx      c++c...xx.x..0.c
        v...xx         x.....xx    ccc...z...xxx.0..c
-       v.2x.+         x..x4x.x    c|xx......2xx.0.~c
+       v.2x1+         x..x4x.x    c|xx......2xx.0.~c
        v$x3.+         x.x5x.$x    c|$xx......3x...~c
        vx$|.x         xx...$|x    c|$$xx......xx...c
        vvvvvvvvvvvvvvvvvvvvvvvvvvvcc|..xx2..?...x..c
@@ -1198,16 +1211,16 @@ MAP
 ccccccccccccccccc
 c<.......2..~''Wc
 c....y...x.....'c
-c..Axxx1.x.....'c
-c..xx~...xx.3..~c
+c..Axxx1.x3....'c
+c..xx~...xx....~c
 c.yx~.....x.....c
 c..x..1...xxx...c
 c..1....'??.xxx?ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
 c......''.......'c    x$xxxx|x         xvvvvv
-c2xxx..?...x0....c    +.4xx5$+         xxxvvv
-c...xxx?..xxx....c    +..''..+         +$vxvv
+c2xxx..?..0x.....c    +.4xx5$+         xxxvvv
+c..3xxx?.0xxx....c    +..''..+         +$vxvv
 c.....x..xx....+cc    x......x         +?$xvv
-c~..3.xx.0x.ccc+      xxx++xxx         x++xxv
+c~....xx..x.ccc+      xxx++xxx         x++xxv
 c'.....x....c                               v
 c'.....x....c                               v
 cW''~..?...++                               v
@@ -1219,10 +1232,10 @@ cccccccc'..c                                v
        v                                    v
        vx++xx                          xx++xv
        v'...x                          x'...v
-       v.1..x                          x.1..v
-       v$xxxx                          x$xxxv
-       vxxx$x                          xxxx|v
-       v|23.x                          x.23.v
+       v....x                          x.32.v
+       v.xxxx                          x|xxxv
+       vxxx$x                          xxxx.v
+       v|23.x                          x....v
        v...'x                          x...'v
        vx++xx                          xx++xv
        v                                    v
@@ -1232,20 +1245,20 @@ cccccccc'..c                                v
        v                                ccccc
        v                                c..?cccccccc
        v                               cc.'?....zzzc
-       v                               +..'x3.....zc
+       v                               +..'?3.....zc
        v                               +..xxxx....zc
        vxx++x         xxx++xxx      c++c..2x|xx~...c
        vvx$?+         x......x    ccc......x|$xx...c
        vvxv$+         +..''..+    c......1.x|~$xx..c
        vvvxxx         +.4xx5.+    c.''x2..xx$..|x..c
-       vvvvvx         x$xxxx|x    c??xxxxxxxx++xx..c
-       vvvvvvvvvvvvvvvvvvvvvvvvvvvcc.3x|||$xx...x..c
-                                   c..xx$~.+.}.0..0c
-                                   c...xx$.+..6.0..c
+       vvvvvx         x$xxxx|x    c???xxxxxxx++xx..c
+       vvvvvvvvvvvvvvvvvvvvvvvvvvvcc.3x|||$xx.0.x..c
+                                   c..xx$~.+.}.0...c
+                                   c...xx$.+0.6.0..c
                                    c...~xx|x.0.6.0.c
                                    cz....xxxx.0.6..c
-                                   cz..........0...c
-                                   czzz......0.....c
+                                   cz..........0..1c
+                                   czzz..........1.c
                                    ccccccccccccccccc
 ENDMAP
 
@@ -1364,7 +1377,7 @@ ENDMAP
 NAME:    regret_index_gulch_river_twins
 TAGS:    gulch_river_chamber
 SHUFFLE: Pp / Qq / Rr
-SUBST:   Pp = ., QR = x, qr = +
+SUBST:   Pp = ., Qq = ', R = x, r = +
 : gulch_chamber_river(_G)
 MAP
   +xx+
@@ -1374,16 +1387,16 @@ MAP
 ...?y'.~.'''..'''Q...'.'..r..'..Z.x
 ~.'y....P..~??~.WQ''?..'..r..'..Z..
 ...'y...p........Q...??...R..'.Z...
-....''?WP......2.q.Y...''WR.?......
-..1..2^?P^......3Q2......?R?.3..4..
-xxx++xxxxx-xx+++xxx+++xx-xxxxx++xxx
-..1..3.?R?......2Q3......^P?^3..5..
-...Z..?.RW''...Y.q.2......PW?''....
+....''?WP......2^q.Y...''WR.?......
+.....1^?P^2.....3Q2.....3?R?.4.....
+xxx++xxxxx-xx+++x?x+++xx-xxxxx++xxx
+.....1.?R?3.....2Q3.....3^P?^5.....
+...Z..?.RW''...Y.q^2......PW?''....
 ..Z..'..R...??...Q........p...y'...
 ..Z..'..r..'..?''QW.~??~..P....y'.~
 x..Z.'..r..'.'...Q'''..'''.~.'y?...
 x$....'.R..~.'...q.......~P''.?....
-. $.....R.Y...'..q...z....p....'...
+. $.....R.Y...'..q...z....p....'.^.
 ~.xxW...R......~$Q$.zzzz..P....W...
 ENDMAP
 
@@ -1393,21 +1406,21 @@ TAGS:    gulch_river_chamber
 MAP
   ++++
 x.....Wz...x...$xxx$...x..yyy..'~~x
-.x....zW...x...........x.......'..~
+.x....zW...x....2......x.......'..~
 ..<.....W.'x'.........'x'.......'.~
 ...xx....?.x.?.......?.x.?....xx.?.
 ..~..~..?..+..?.2.3.?..+..?.......w
 .......'...+...'...'...+...'......'
 .......W.Y^x..~?.'.?~..x^Z.'.......
-.1....2'.W.xZW'.. ..'WYx.W.'3....4.
-x.......?.wxw.?.'''1?.wxw.?.......x
-.1....3'.W.xYW'.. ..'WZx.W.'3....5.
+.1.....'.W.xZW'.. ..'WYx.W.'3....4.
+x.......?.wxw.?.'''4?.wxw.?.......x
+.1.....'.W.xYW'.. ..'WZx.W.'3....5.
 .......'.Z^x..~?.'.?~..x^Y.W.......
 '......'...+...'...'...+...'.......
 w.......?..+..'.3.2.?..+..?..~..~..
 .?.xx....?.x.?.......?.x.?....xx...
-~.'.......'x'.........'x'.W........
-~..'.......x...........x...Wz....x.
+~.'.......'x'.........'x'.W.....^..
+~..'.......x......2....x...Wz....x.
 x~~'..yyy..x...$xxx$...x...zW.....x
 ENDMAP
 
@@ -1430,7 +1443,7 @@ w...1...''.'....'?'...?'.'........x
 ?......'...'.........'....''.....x.
 $'....?Z....'.......'.......'x....x
 $'..''Z...Y.'z....??.........?x....
-'..'.Z....Y..'.z.'..W...y.....?'...
+'..'.Z....Y..'.z.'..W...y.....?'.^.
 .''..........'z?'....W..y.......'..
 ?..~..........'......W.........'...
 ENDMAP
@@ -1447,7 +1460,7 @@ MAP
 '.y..'..x.'...?'....Y'....+..?.'z.w
 .'.y.?..x?...?..?...'.....+^'.4.'..
 ...y.?.'x.?''....''..?'...+.'W5.?..
-..y..'x.x'.......1.'?..'.'x'.?W.'..
+..y..'x.x'.......4.'?..'.'x'.?W.'..
 ..y.W.'.x.~..Z...^'.....'.x...''.3.
 ~.....'zx?..Z.Z2.?.3.....?x..'z.W..
 ~....'.?xxxxxxxx+++xxxxxxxx?.'....~
@@ -1457,7 +1470,7 @@ MAP
 ..?.1W'.+...'?..''....''?.x..?.y...
 ..'.3.'^+.....'...?..?...?x..?.y.'.
 w.z'.?..+....'Y....'?...'.x..'..y.'
-x1.z'z..x....'Y..x...'.'Z.x...'.y'.
+x1.z'z..x....'Y..x...'.'Z.x.^.'.y'.
 x''.....x.YY'..$x x$..'Z..x...'...'
 ENDMAP
 
@@ -1468,7 +1481,7 @@ MAP
   +xx+
 x...'....~~xxxx$.~.Zxxxxx....xx..'.
 x..'.'....~x ~$..3Z....x........'.w
-~..'..'....x~.....Z...?x?........'.
+~..'..'...<.>x~.....Z...?x?........'.
 ..yy..?....x.......Z..?+?.........'
 ..yy.'.'...x.....1...'?+?..'.zz..~.
 .....'..'..x........'.?x?'.'.zz...~
@@ -1480,7 +1493,7 @@ xxx++x+xxxxx...Y'?'Y...xxxxx+x++xxx
 ~...zz.'.'?x?.'........x..'..'.....
 .~..zz.'..?+?'...1.....x...'.'.yy..
 '.........?+?..Z.......x....?..yy..
-.'........?x?...Z.....~x....'..'..~
+.'........?x?...Z.....~x^...'..'..~
 w.'........x....Z3...~ x~....'.'..x
 .'...xx~..xxxxxZ.~$$xxxx~~....'...x
 ENDMAP
@@ -1545,12 +1558,12 @@ vx...x..'xcCCCCCCCCCCCCCCCCCCCCCCCCCCcvvvvv
 vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
 vx...x'..xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
 vx...?...xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
-vx..'x..2xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
+vx..'x..3xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
 vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCccv
-vx'..x3..xcCCCCCCCCCCCCCCCCCCCCCCCCCcvvvvv
+vx'..x4..xcCCCCCCCCCCCCCCCCCCCCCCCCCcvvvvv
 vx...x...xcccccccccccccccccccccccccccxxxxvvvvv
 vx...v..'xxxxxxxxxxxxxxxxxxxxxxxxxxxx.0.vxxxxv
-vvi..^..4?'.''......'??'......''.'6..1.0.$|wvv
+vvi..^..5?'.''......'??'......''.'6..1.0.$|wvv
 vv$....<.?.........W.........W...6W.0.<.0~]wvv
 vvi...5..?..vvv'??'......'??'.....6''1.0.$|wvv
 vxxxxv..'vxxxxxxxxxxxxxxxxxxxxxxxxxxv'0.vxxxxv
@@ -1816,18 +1829,18 @@ MAP
         .zzz.'????'.....
         ..z..'??x?'.....
         .....'??x?'.y...
-        ....2'????'1yy..
-.............'????'.yyy.........
-...z.z....2.4.????.3.1...y......
-x''''''''''''''.?''''''''''''''x
-''???????????'?''?'???????????''
+        .....'????'1yy..
+.............'????'..yy.........
+...z.z........2??..3.1...y......
+x''''''''''''''2?'''''..'''''''x
+''???????????'.'4.'???''??????''
 '???????xx?????3'???????????x??'
 '??x???????????'3?????xx???????'
-''???????????'?''?'???????????''
-x''''''''''''''?.''''''''''''''x
-......y...1.3.????.4.2....z.z...
-.........yyy.'????'.............
-        ..yy1'????'2....
+''??????''???'.4'.'???????????''
+x'''''''..'''''?2''''''''''''''x
+......y...1.3..??2........z.z...
+.........yy..'????'.............
+        ..yy1'????'.....
         ...y.'?x??'.....
         .....'?x??'..z..
         .....'????'.zzz.
