@@ -696,8 +696,11 @@ bool skills_being_trained()
 // If not, go to the skill menu and return true.
 bool check_selected_skills()
 {
-    if (skills_being_trained())
+    if (you.should_retrain)
+        you.should_retrain = false;
+    else if (skills_being_trained())
         return false;
+
     if (!trainable_skills())
     {
         if (!you.received_noskill_warning)
@@ -1670,11 +1673,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
                  skill_name(exsk),
                  exsk == SK_THROWING ? "skilfully " : "");
             if (Options.reskill_after_manuals)
-            {
-                skill_menu();
-                redraw_screen();
-                update_screen();
-            }
+                you.should_retrain = true;
         }
     }
 
