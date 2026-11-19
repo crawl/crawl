@@ -151,6 +151,7 @@ void xom_give_blessing();
 string xom_remove_blessing();
 
 void xom_maybe_reverts_banishment();
+void xom_revert_banishment();
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);

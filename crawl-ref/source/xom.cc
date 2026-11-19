@@ -4331,6 +4331,12 @@ void xom_maybe_reverts_banishment()
         _revert_banishment(false);
 }
 
+void xom_revert_banishment()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+        _revert_banishment();
+}
+
 static void _xom_do_banishment(bool real)
 {
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
@@ -4338,7 +4344,15 @@ static void _xom_do_banishment(bool real)
     // Handles note taking
     banished("Xom");
     if (!real)
-        _revert_banishment();
+    {
+        // Will last for exactly one action (ie: just long enough to see it, but
+        // not for any monsters to do anything.)
+        if (you.experience_level < 9)
+            you.duration[DUR_XOM_FAKE_BANISH] = 1;
+        // Can last a little longer at higher XL, but not very long.
+        else
+            you.duration[DUR_XOM_FAKE_BANISH] = you.experience_level * 10 + random_range(20, 40);
+    }
 }
 
 static void _xom_banishment(int) { _xom_do_banishment(true); }
@@ -5247,14 +5261,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                 || one_chance_in(3);}
     },
     {
-        XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 10, [](int /*tn*/)
+        XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 4, [](int /*tn*/)
         {return !you.penance[GOD_XOM]
                 && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
     {
         XOM_BAD_BANISHMENT, 0, 0, 1, [](int /*tn*/)
         {return _allow_xom_banishment()
-                && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
                 && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
     {
