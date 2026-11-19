@@ -3392,6 +3392,14 @@ static void _tag_read_you(reader &th)
         unmarshallInt(th);
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FIX_BAD_SKILL_XP
+        && you.skill_exp_spent < 0)
+    {
+        you.skill_exp_spent = 0;
+    }
+#endif
+
     // Set up you.skill_cost_level.
     you.skill_cost_level = 0;
     check_skill_cost_change();
