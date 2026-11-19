@@ -4827,6 +4827,7 @@ bool monster::is_patrolling() const
 bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
+            || mons_is_xom_guardian(*this)
             || (flags & MF_BANISHED)
                && get_experience_level() > 8 + random2(25)
                && mons_can_use_stairs(*this))
