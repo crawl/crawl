@@ -1655,6 +1655,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         }
     }
 
+    if (mg.flags & MG_CHAOSLACE)
+        mon->add_ench(mon_enchant(ENCH_CHAOS_LACE, nullptr, INFINITE_DURATION));
+
     // Random Abyss monster spawns.
     if (mg.announce_type == SC_ABYSS)
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);

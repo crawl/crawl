@@ -5787,13 +5787,13 @@ static void _xom_chaos_reinforcements(int)
     const int num = random_range(3, 8);
 
     mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, coord_def(), MHITNOT,
-                 MG_PERMIT_BANDS, GOD_XOM);
+                 MG_PERMIT_BANDS | MG_CHAOSLACE, GOD_XOM);
     mg.proximity = PROX_AWAY_FROM_PLAYER;
 
-    if (env.absdepth0 <= 20)
-        mg.place = level_id(BRANCH_DUNGEON, env.absdepth0 + 1);
+    if (you.experience_level <= 20)
+        mg.place = level_id(BRANCH_DUNGEON, you.experience_level);
     else
-        mg.place = level_id(BRANCH_DEPTHS, env.absdepth0 - 20);
+        mg.place = level_id(BRANCH_DEPTHS, you.experience_level - 20);
 
     vector<monster*> near_targs;
     for (monster_iterator mi; mi; ++mi)
@@ -5820,11 +5820,8 @@ static void _xom_chaos_reinforcements(int)
             mg.flags &= ~MG_FORCE_PLACE;
         }
 
-        if (monster* mon = place_monster(mg))
-        {
-            mon->add_ench(mon_enchant(ENCH_CHAOS_LACE, nullptr, INFINITE_DURATION));
+        if (place_monster(mg))
             created = true;
-        }
     }
 
     if (created)
