@@ -2057,13 +2057,12 @@ ENDMAP
 NAME:    nicolae_shoals_isolated_beach
 TAGS:    water_ok no_pool_fixup no_descent
 DEPTH:   Shoals:2-
-NSUBST:  { = 1:{ / *:.
-SUBST:   b = .wW, r = ..Wxx
-KPROP:   wW.{x1 = no_tide
-SHUFFLE: {([
-KMONS:   1 = merfolk / merfolk impaler w:5 / merfolk siren w:5 / nothing w:20
+MONS:    merfolk / merfolk impaler w:5 / merfolk siren w:5
 KFEAT:   : = . / W
 KFEAT:   y = w
+NSUBST:  { = 1:{([ / *:.
+SUBST:   1 = 1., b = wW., r = xxW..
+KPROP:   wW.{([x1 = no_tide
 MAP
     yyyyyyyy
    yywwwwwwyy

@@ -695,8 +695,8 @@ MAP
 '''''''
 ENDMAP
 
-NAME: nicolae_trove_entry_path_of_doom
-TAGS: transparent no_descent
+NAME:  nicolae_trove_entry_path_of_doom
+TAGS:  transparent no_descent
 KMONS: O1 = patrolling guardian mummy
 SUBST: 1 = 1..
 : trove.portal(_G)

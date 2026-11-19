@@ -2614,10 +2614,10 @@ MONS:   curse skull
 MONS:   revenant soulmonger
 MONS:   lich
 MONS:   eidolon / flayed ghost
-MONS:   phantasmal warrior / shadow wraith w:6
+MONS:   phantasmal warrior / shadow wraith w:4 / spectral storm dragon w:2
 MONS:   weeping skull
-MONS:   wraith w:5 / freezing wraith w:5 / shadow wraith / \
-        spectral thing w:5 / spectral caustic shrike / \
+MONS:   freezing wraith w:5 / shadow wraith w:5 / \
+        spectral thing w:15 / spectral caustic shrike / \
         spectral spriggan defender / shadowghast w:5 / nothing
 : else -- mummy layout
 MONS:   royal mummy
@@ -3190,8 +3190,8 @@ MONS:   patrolling freezing wraith / patrolling spectral thing w:12
 MONS:   revenant soulmonger
 MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior w:8
-MONS:   spectral thing / simulacrum / reaper w:5 / shadow wraith / \
-        spectral storm dragon w:5 / spectral quicksilver dragon w:5
+MONS:   spectral thing / simulacrum / reaper / shadow wraith w:4 / \
+        spectral storm dragon w:6 / spectral quicksilver dragon w:6
 MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
 : else
@@ -3386,7 +3386,7 @@ MONS:    jiangshi / ghoul w:2
 MONS:    profane servitor w:12 / bone dragon w:12 / vampire bloodprince / \
          curse toe w:1 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; partisan | halberd | glaive | bardiche w:5
-MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
+MONS:    freezing wraith / shadow wraith / flayed ghost w:5
 MONS:    zombie w:20 / draugr w:15 / simulacrum w:15
 KMONS:   8 = vampire knight
 KMONS:   9 = vampire w:7 / vampire mage w:3

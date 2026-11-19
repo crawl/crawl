@@ -4519,7 +4519,7 @@ ENDMAP
 
 NAME:    nzn_life_drinkers
 TAGS:    no_monster_gen no_item_gen no_wall_fixup vaults_hard
-DEPTH:   D:8-, Crypt, Vaults, Depths
+DEPTH:   D:10, Crypt, Vaults, Depths
 ITEM:    sanguine talisman
 SHUFFLE: '-
 NSUBST:  ' = 1:D / 1:DE / *:.
@@ -9642,19 +9642,20 @@ DEPTH:   D:9-
 WEIGHT:  3
 MONS:    fire dragon, ice dragon
 ITEM:    shield_of_resistance no_pickup
-KMASK:   lw = opaque
+KMASK:   .d12Tlw = opaque
+KPROP:   .d12Tlw = no_tele_into
 MAP
-...........
-.vnnv=vnnv.
-.n...1nlln.
-.n.T..nlln.
-.v....vnnv.
-.n2..d..1n.
-.vnnv....v.
-.nwwn..V.n.
-.nwwn2...n.
-.vnnv=vnnv.
-...........
+'''''''''''
+'vnnv=vnnv'
+'n...1nlln'
+'n.T..nlln'
+'v....vnnv'
+'n2..d..1n'
+'vnnv....v'
+'nwwn..V.n'
+'nwwn2...n'
+'vnnv=vnnv'
+'''''''''''
 ENDMAP
 
 NAME:    chequers_guarded_unrand_ignorance
@@ -9896,7 +9897,7 @@ SUBST:  1 = 1.
 : else
 MONS:   zombie place:Depths:1 / draugr place:D:$, soul eater
 : end
-KPROP:  D = no_tele_into
+: display_closet_setup(_G, "D")
 : dgn.delayed_decay(_G, 'D', 'human corpse')
 MAP
      @

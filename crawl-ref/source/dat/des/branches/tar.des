@@ -1630,7 +1630,7 @@ MAP
 ENDMAP
 
 NAME:   tar_grunt_small_loot
-TAGS:   tar_grunt_small_loot allow_dup unrand no_exits
+TAGS:   tar_grunt_small_loot allow_dup unrand no_exits no_tele_into
 MONS:   oblivion hound w:20 / profane servitor w:15 / shadow wraith w:10 / \
         putrid mouth w:5
 NSUBST: x = 1:m / *:x

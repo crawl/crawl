@@ -5123,19 +5123,21 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:11-, Depths
 ORIENT: float
 : if you.in_branch("Depths") then
-MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
+KMONS:  1 = tzitzimitl
+KMONS:  2 = hell knight / skeletal warrior / w:2 lich
 : else
-MONS: tormentor
-MONS: skeletal warrior / phantasmal warrior w:5 / \
-      wraith w:5 / freezing wraith w:1
+KMONS:  1 = tormentor
+KMONS:  2 = skeletal warrior / phantasmal warrior w:5 / \
+            wraith w:5 / freezing wraith w:1
 : end
-ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain / \
-      demon blade ego:draining / demon trident ego:pain / \
-      demon trident ego:draining
+ITEM:   demon whip ego:pain / demon whip ego:draining / demon blade ego:pain / \
+        demon blade ego:draining / demon trident ego:pain / \
+        demon trident ego:draining
+KFEAT:  1 = >
 SUBST:  b = bccc
 NSUBST: " = 2 = d| / 5:* / 5 = %$$
 NSUBST: ' = 3:* / 6:% / *:$, ` = 5:2 / 4 = 2.
-KPROP:  "1 = no_tele_into
+KPROP:  d$%*|1 = no_tele_into
 KFEAT:  - = iron_grate
 TILE:   b = bedevilled_crystal_tartarus
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
@@ -6737,20 +6739,18 @@ MAP
 ENDMAP
 
 NAME:    dreamdust_experimentation
-TAGS:    no_monster_gen no_item_gen
+TAGS:    no_monster_gen
 DEPTH:   D:13-, Depths
 ORIENT:  float
-KPROP:   23 = no_tele_into
-KFEAT:   t = demonic_tree
 : item(dgn.loot_potions .. " / potion of mutation w:40")
-KMONS:   p = human perm_ench:berserk generate_awake \
-             / human perm_ench:wretched generate_awake \
-             / human perm_ench:confusion generate_awake \
-             / human perm_ench:blind generate_awake
-KMONS:   q = felid perm_ench:berserk generate_awake \
-             / octopode perm_ench:wretched generate_awake \
-             / spriggan perm_ench:confusion generate_awake ; nothing \
-             / minotaur perm_ench:blind generate_awake ; nothing
+KMONS:   p = human perm_ench:berserk generate_awake / \
+             human perm_ench:wretched generate_awake / \
+             human perm_ench:confusion generate_awake / \
+             human perm_ench:blind generate_awake
+KMONS:   q = felid perm_ench:berserk generate_awake / \
+             octopode perm_ench:wretched generate_awake / \
+             spriggan perm_ench:confusion generate_awake ; nothing / \
+             minotaur perm_ench:blind generate_awake ; nothing
 : if you.in_branch("D") then
 KMONS:   1 = arcanist / occultist
 KMONS:   2 = shapeshifter / large abomination
@@ -6762,9 +6762,11 @@ KMONS:   2 = large abomination / glowing shapeshifter w:20
 KMONS:   3 = very ugly thing
 NSUBST:  - = 2=1 / 3=1- / 3=2 / 5=2- / -
 : end
+KFEAT:   t = demonic_tree
 # Human (shapeshifters and large abominations) or animal (ugly things)
 # experimentation.
 SHUFFLE: 2p / 3q
+: display_closet_setup(_G, "pq")
 COLOUR:  c = white
 TILE:    G = dngn_statue_demonic_bust
 TILE:    x = wall_brick_white
@@ -7622,7 +7624,7 @@ KITEM:   h = parchment disc:forgecraft
 KFEAT:   yYzZ = b
 KFEAT:   m = iron_grate
 KPROP:   Cn" = bloody
-KPROP:   C = no_tele_into
+: display_closet_setup(_G, "C")
 TILE:    G = dngn_gravestone
 TILE:    y = bedevilled_crystal_gehenna
 TILE:    Y = bedevilled_crystal_cocytus
