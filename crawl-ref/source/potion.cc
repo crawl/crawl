@@ -563,8 +563,9 @@ public:
 
         // these are included in default force_more_message
 
+        const int sp_gain = (650 + 140 * you.skill_cost_level) * pow / 40;
         // This shouldn't slow down future normal training
-        you.skill_points_available += 650 + 140 * you.skill_cost_level;
+        you.skill_points_available += sp_gain;
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             train_skills();
         else
