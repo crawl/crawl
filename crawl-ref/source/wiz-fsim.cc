@@ -465,7 +465,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.monster.iterations = fdata.player.iterations = iter_limit;
 
     // now make sure the player is ready
-    unwind_var<int> exp_available(you.exp_available, 0);
+    unwind_var<int> exp_available(you.experience_pool, 0);
 
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
@@ -635,7 +635,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         else
         {
             for (const auto& entry : scale)
-                set_skill_level(entry.first, i / entry.second);
+                preview_skill_level(entry.first, i / entry.second * 10);
         }
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
@@ -705,8 +705,8 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
         for (int x = 1; x <= 27; x += 2)
         {
             clear_messages();
-            set_skill_level(skx, x);
-            set_skill_level(sky, y);
+            preview_skill_level(skx, x * 10);
+            preview_skill_level(sky, y * 10);
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
             fight_damage_stats &fstats = defense ? fdata.monster : fdata.player;
             mprf("%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,

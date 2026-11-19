@@ -373,6 +373,7 @@ enum tag_minor_version
     TAG_MINOR_MONINFO_SPELLS,      // Marshall monster_info::spells
     TAG_MINOR_XOM_EXPLORATION,     // Add exploration tracking and effects to Xom
     TAG_MINOR_XOM_GUARDIANS,       // Add tracking for Xom's guardian blessing
+    TAG_MINOR_SKILL_POINTS,        // Save the number of skill points available
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

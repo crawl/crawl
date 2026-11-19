@@ -1346,11 +1346,11 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
         "you %sreach %d.%d in %s.",
             hypothetical ? "would " : "",
             scaled_target / 10, scaled_target % 10,
-            _xl_cost_desc(diffs.experience).c_str());
+            _xl_cost_desc(diffs.skill_experience).c_str());
     if (you.wizard)
     {
         description += make_stringf("\n    (%d xp, %d skp)",
-                                    diffs.experience, diffs.skill_points);
+                                    diffs.skill_experience, diffs.skill_points);
     }
     return description;
 }
@@ -4685,19 +4685,18 @@ static string _get_skill_training_change(skill_type skill,
 {
     unwind_var<uint8_t> unwind_skill(you.skills[skill]);
     unwind_var<unsigned int> unwind_sp(you.skill_points[skill]);
-    unwind_var<unsigned int> unwind_xp(you.total_experience);
-    unwind_var<int> unwind_costlevel(you.skill_cost_level);
 
     const int cur_ac = you.armour_class_scaled(100);
     const int cur_ev = you.evasion_scaled(100, false);
     const int cur_sh = player_displayed_shield_class(100, false);
     const FixedVector<int, MAX_KNOWN_SPELLS> cur_fail = _spell_fail_rates();
 
-    const double cur_skill = you.skill(skill, 10, true) * 0.1;
-    const bool mastering = cur_skill >= 26;
+    const int scaled_cur_skill = you.skill(skill, 10, true);
+    const bool mastering = scaled_cur_skill >= 26 * 10;
     const char* msg = mastering ? "mastering" : "training 1 level of";
 
-    set_skill_level(skill, cur_skill + 1, true);
+    preview_skill_level(skill, scaled_cur_skill + 10);
+
     const int new_ac = you.armour_class_scaled(100);
     const int new_ev = you.evasion_scaled(100, false);
     const int new_sh = player_displayed_shield_class(100, false);
@@ -4915,25 +4914,21 @@ static string _miscast_damage_string(spell_type spell)
 }
 
 static int _spell_fail_at_level(spell_type spell, const skill_set &skills,
-                                int level, int *xp = nullptr)
+                                int level, int *skill_xp = nullptr)
 {
     unwind_var<FixedVector<uint8_t, NUM_SKILLS>> unwind_skills(you.skills);
     unwind_var<FixedVector<unsigned int, NUM_SKILLS>>
         unwind_sp(you.skill_points);
-    unwind_var<unsigned int> unwind_xp(you.total_experience);
-    unwind_var<int> unwind_costlevel(you.skill_cost_level);
 
     // Model training the skills.
-    // For normal-skilling species, we train these one at a time, adding up the
-    // cost (and raising it by increasing total_experience).
-    // For djinni and gnolls, we instead find the max cost to raise any of them
-    // to the desired level, assuming in the case of djinni that they train
-    // only magic skills. Neither takes into account the effect of raising
+    // For normal-skilling species, we add up the skill point cost of training
+    // all skills. For djinni and gnolls, we instead find the max skill points
+    // to raise any of them to the desired level, assuming in the case of
+    // djinni that they train only magic skills and multiply by the number of
+    // skills trained. Neither takes into account the effect of raising
     // skills not asked for, like spellcasting or armour.
-    const bool restricted = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-                            || you.has_mutation(MUT_INNATE_CASTER);
-    int total_cost = 0;
-    int max_cost = 0;
+    int total_skill_points = 0;
+    int max_skill_points = 0;
     for (skill_type sk : skills)
     {
         // Some skills might not be able to reach the level because of
@@ -4942,28 +4937,28 @@ static int _spell_fail_at_level(spell_type spell, const skill_set &skills,
         if (you.skill(sk, 10, false, false) >= target)
             continue;
 
-        int training_amount = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-            ? you.training[sk] : you.has_mutation(MUT_INNATE_CASTER)
-            ? 100 / num_magic_skills() : 100;
-        const skill_diff diffs = skill_level_to_diffs(sk, target / 10.0,
-                                                      training_amount,
-                                                      false);
-        total_cost += diffs.experience;
-        max_cost = max(max_cost, diffs.experience);
+        int sp_for_skill = skill_points_for_level(sk, target);
+        int sp_needed = sp_for_skill - you.skill_points[sk];
 
-        you.skill_points[sk] = skill_points_for_level(sk, target);
+        total_skill_points += sp_needed;
+        max_skill_points = max(max_skill_points, sp_needed);
+
+        you.skill_points[sk] = sp_for_skill;
         you.skills[sk] = calc_skill_level_change(sk, you.skills[sk],
                                                  you.skill_points[sk]);
-        // Raise cost for the next skill.
-        if (!restricted)
-        {
-            you.total_experience += diffs.experience;
-            check_skill_cost_change(true);
-        }
     }
 
-    if (xp)
-        *xp = restricted ? max_cost : total_cost;
+    if (skill_xp)
+    {
+        // XXX: this will be a bit high if some skills reach max part way
+        // through training all skills by max_skill_points
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            total_skill_points = max_skill_points * gnoll_total_skill_cost();
+        else if (you.has_mutation(MUT_INNATE_CASTER))
+            total_skill_points = max_skill_points * djinni_magic_skill_cost();
+
+        *skill_xp = skill_experience_for_skill_points(total_skill_points);
+    }
 
     return failure_rate_to_int(raw_spell_fail(spell, false, false));
 }

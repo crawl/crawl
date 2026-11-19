@@ -1755,10 +1755,11 @@ static void _tag_construct_you(writer &th)
     marshallInt(th, you.magic_points_regeneration);
 
     marshallInt(th, you.experience);
-    marshallInt(th, you.total_experience);
+    marshallInt(th, you.skill_exp_spent);
     marshallInt(th, you.gold);
 
-    marshallInt(th, you.exp_available);
+    marshallInt(th, you.skill_exp_available);
+    marshallInt(th, you.skill_points_available);
 
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
@@ -3378,18 +3379,35 @@ static void _tag_read_you(reader &th)
 #endif
 
     you.experience                = unmarshallInt(th);
-    you.total_experience = unmarshallInt(th);
+    you.skill_exp_spent           = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);
-    you.exp_available             = unmarshallInt(th);
+    you.skill_exp_available       = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_XP_SCALING)
     {
-        you.total_experience *= 10;
-        you.exp_available *= 10;
+        you.skill_exp_spent *= 10;
+        you.skill_exp_available *= 10;
     }
     if (th.getMinorVersion() < TAG_MINOR_NO_ZOTDEF)
         unmarshallInt(th);
 #endif
+
+    // Set up you.skill_cost_level.
+    you.skill_cost_level = 0;
+    check_skill_cost_change();
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SKILL_POINTS)
+    {
+        int skill_xp = you.skill_exp_available;
+        you.skill_points_available = 0;
+        you.skill_exp_available = 0;
+        gain_skill_experience(skill_xp);
+    }
+    else
+#endif
+        you.skill_points_available = unmarshallInt(th);
+
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
@@ -3615,10 +3633,6 @@ static void _tag_read_you(reader &th)
         for (int j = 0; j < 4; ++j)
             unmarshallInt(th);
 #endif
-
-    // Set up you.skill_cost_level.
-    you.skill_cost_level = 0;
-    check_skill_cost_change();
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_MERGE_RANGED)

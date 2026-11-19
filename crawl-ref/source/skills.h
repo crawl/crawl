@@ -26,10 +26,8 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> base_training_targets;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
-    int skill_cost_level;
-    unsigned int total_experience;
     bool auto_training;
-    int exp_available;
+    int skill_points_available;
 
     void save();
     bool state_saved() const;
@@ -42,11 +40,11 @@ private:
 
 struct skill_diff
 {
-    skill_diff() : skill_points(0), experience(0) { }
-    skill_diff(int skp, int xp) : skill_points(skp), experience(xp) { }
+    skill_diff() : skill_points(0), skill_experience(0) { }
+    skill_diff(int skp, int xp) : skill_points(skp), skill_experience(xp) { }
 
     int skill_points;
-    int experience;
+    int skill_experience;
 };
 
 typedef set<skill_type> skill_set;
@@ -62,6 +60,8 @@ int calc_skill_cost_level(int xp, int start);
 int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change(bool quiet = false);
 
+void gain_skill_experience(int amount);
+
 skill_set default_shown_skills();
 void reassess_starting_skills(bool balance_djinn = true);
 bool check_selected_skills();
@@ -70,19 +70,18 @@ void init_training();
 void reset_training();
 int calc_skill_level_change(skill_type sk, int starting_level, int sk_points);
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
-void change_skill_level(skill_type exsk, int num_level);
 void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 bool is_mundane_skill(skill_type sk);
 bool is_magic_skill(skill_type sk);
-int num_magic_skills();
 
 void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
 bool skill_trained(int i);
 static inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
 void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE, bool recalculate_order = true);
-void set_skill_level(skill_type skill, double amount, bool quiet = false);
+void set_skill_level(skill_type skill, double amount);
+void preview_skill_level(skill_type skill, int scaled_level);
 
 int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
@@ -126,14 +125,16 @@ float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
 int max_modified_skill_level(skill_type sk);
+int skill_points_for_base_level(skill_type skill, int scaled_level);
 int skill_points_for_level(skill_type sk, int scaled_level);
+int skill_experience_for_skill_points(int skill_points);
 skill_diff skill_level_to_diffs(skill_type skill, double amount,
     int scaled_training=100, bool base_only=true);
 
 vector<skill_type> get_crosstrain_skills(skill_type sk);
 int get_crosstrain_points(skill_type sk);
 
-void skill_menu(int flag = 0, int exp = 0);
+void skill_menu(int flag = 0);
 void dump_skills(string &text);
 int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
 void fixup_skills();
@@ -194,3 +195,6 @@ static inline bool is_invalid_skill(skill_type skill)
 {
     return skill < SK_FIRST_SKILL || skill >= NUM_SKILLS;
 }
+
+int gnoll_total_skill_cost();
+int djinni_magic_skill_cost();

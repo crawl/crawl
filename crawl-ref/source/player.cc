@@ -2979,22 +2979,22 @@ void apply_exp()
         you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
-    unsigned int skill_xp = exp_gained;
+    unsigned int scaled_xp = exp_gained;
     if (crawl_state.game_is_sprint())
-        skill_xp = sprint_modify_exp(skill_xp);
+        scaled_xp = sprint_modify_exp(scaled_xp);
 
     // xp-gated effects that use sprint inflation
-    _recharge_xp_evokers(skill_xp);
-    _reduce_abyss_xp_timer(skill_xp);
-    _handle_hp_drain(skill_xp);
-    _handle_banes(skill_xp);
-    _handle_ostracism(skill_xp);
-    _handle_breath_recharge(skill_xp);
-    _handle_cacophony_recharge(skill_xp);
-    _handle_batform_recharge(skill_xp);
-    _handle_watery_grave_recharge(skill_xp);
+    _recharge_xp_evokers(scaled_xp);
+    _reduce_abyss_xp_timer(scaled_xp);
+    _handle_hp_drain(scaled_xp);
+    _handle_banes(scaled_xp);
+    _handle_ostracism(scaled_xp);
+    _handle_breath_recharge(scaled_xp);
+    _handle_cacophony_recharge(scaled_xp);
+    _handle_batform_recharge(scaled_xp);
+    _handle_watery_grave_recharge(scaled_xp);
 
-    _handle_xom_blessing(skill_xp);
+    _handle_xom_blessing(scaled_xp);
 
     _log_form_xp(exp_gained);
 
@@ -3011,11 +3011,11 @@ void apply_exp()
     else
         you.experience += exp_gained;
 
-    you.exp_available += 10 * skill_xp;
+    gain_skill_experience(10 * scaled_xp);
 
     train_skills();
     while (check_selected_skills()
-           && you.exp_available >= calc_skill_cost(you.skill_cost_level))
+           && you.skill_points_available > 0)
     {
         train_skills();
     }
@@ -5726,7 +5726,6 @@ player::player()
     hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
     experience       = 0;
-    total_experience = 0;
     experience_level = 1;
     experience_pool  = 0;
     gold             = 0;
@@ -5783,7 +5782,9 @@ player::player()
     skill_menu_view = SKM_NONE;
 
     skill_cost_level = 1;
-    exp_available = 0;
+    skill_exp_available = 0;
+    skill_exp_spent = 0;
+    skill_points_available = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
