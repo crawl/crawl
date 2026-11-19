@@ -3593,7 +3593,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
 
-    xom_reduce_floor_lock();
+    xom_maybe_reduce_floor_lock(mon);
 
     // End constriction.
     mon.stop_constricting_all();

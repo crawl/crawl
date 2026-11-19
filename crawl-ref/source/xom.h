@@ -161,7 +161,8 @@ void debug_xom_effects();
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
-void xom_reduce_floor_lock();
+void xom_check_floor_lock();
+void xom_maybe_reduce_floor_lock(const monster& mon_killed);
 
 void xom_maybe_disguise_self(monster* observer);
 void xom_disguise_self();

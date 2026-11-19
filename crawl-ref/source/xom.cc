@@ -45,6 +45,7 @@
 #include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
@@ -104,11 +105,15 @@
 static void _do_xom_event(xom_event_type event_type, int tension);
 static bool _explore_event_is_valid(xom_event_type event, int tension);
 
-static int _count_reachable_monsters();
+static int _count_reachable_monsters(bool include_temp_flight = false);
 
 static constexpr int XOM_EXPLORE_THRESHOLD = 910;
 
 #define XOM_QUEUED_EXPLORE_KEY "xom_queued_explore"
+
+// Timestamp of when we should next check if the player has somehow stranded
+// themselves.
+#define XOM_FLOOR_LOCK_TIME_KEY "xom_floor_lock_time"
 
 enum xom_explore_type
 {
@@ -5267,7 +5272,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {
             return is_connected_branch(you.where_are_you)
                    && !you.attribute[ATTR_XOM_FLOOR_LOCK]
-                   && _count_reachable_monsters() > 5;
+                   && _count_reachable_monsters() >= 9;
         }
     },
     {
@@ -5926,9 +5931,36 @@ static void _xom_chaos_cloud(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
+// Returns how many kills a given monster counts as, progressing the Xom floor
+// lock. (Since merged slime creatures count as multiple, while summons and
+// neutral monsters do not count at all.)
+//
+// If preferred_only is true, discount several types of monsters that we'd
+// rather not *expect* the player to find and kill (and thus factor into
+// whether the floor is lockable in the first place), but will still reward if
+// they actually kill them.
+static int _xom_floor_lock_value(const monster& mon, bool preferred_only = false)
+{
+    if (mon.is_summoned() || mon.is_peripheral() || mon.base_attitude != ATT_HOSTILE)
+        return 0;
+
+    // Wall monsters can sometimes wander very far out of the player's sight,
+    // making them hard to track down (and possibly making it look like the
+    // player is soft-locked, even when they aren't).
+    if (preferred_only && (mons_habitat(mon) & HT_WALLS_ONLY))
+        return 0;
+
+    if (mon.type == MONS_SLIME_CREATURE)
+        return mon.blob_size;
+    else if (mon.type == MONS_SLYMDRA)
+        return mon.props[SLYMDRA_SLIMES_EATEN_KEY].get_int() + 1;
+    else
+        return 1;
+}
+
 // A rough count of how many full hostile monsters are available within the
 // player's area (which could count for the floor lock effect).
-static int _count_reachable_monsters()
+static int _count_reachable_monsters(bool include_temp_flight)
 {
     // Pathfinding is a bit intensive, so first do a quick pass to make sure
     // that there's at least *something* on the floor (excluding monsters in
@@ -5937,8 +5969,7 @@ static int _count_reachable_monsters()
     bool found = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->is_summoned() && !mi->is_peripheral()
-            && mi->base_attitude == ATT_HOSTILE
+        if (_xom_floor_lock_value(**mi, true) > 0
             && !(env.pgrid(mi->pos()) & FPROP_NO_TELE_INTO))
         {
             found = true;
@@ -5956,7 +5987,8 @@ static int _count_reachable_monsters()
 
     monster_pathfind pf;
     monster fake_mons;
-    fake_mons.type = you.permanent_flight() ? MONS_PLAYER_ILLUSION
+    fake_mons.type = include_temp_flight && you.airborne() ? MONS_EFREET
+                     : you.permanent_flight() ? MONS_PLAYER_ILLUSION
                      : you.can_swim(true) ? MONS_MERFOLK
                      : MONS_ORC;
     fake_mons.position = you.pos();
@@ -5967,12 +5999,9 @@ static int _count_reachable_monsters()
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->is_summoned() && !mi->is_peripheral()
-            && mi->base_attitude == ATT_HOSTILE
-            && pf.is_reachable(mi->pos()))
-        {
-            ++count;
-        }
+        const int value = _xom_floor_lock_value(**mi);
+        if (value > 0 && pf.is_reachable(mi->pos()))
+            count += value;
     }
 
     return count;
@@ -5984,11 +6013,14 @@ static void _xom_floor_lock(int)
 {
     int count = _count_reachable_monsters();
 
-    // Just in case.
-    if (count == 0)
+    // We leave a 'buffer' of monsters on the floor so that the player is never
+    // asked to track down every last one of them (since, if unlucky with
+    // monster wandering, the final ones can take so long to find that they
+    // may appear to not exist)
+    if (count <= 4)
         return;
 
-    const int to_kill = min(count, random_range(5, 12));
+    const int to_kill = min(count - 4, random_range(5, 12));
     you.attribute[ATTR_XOM_FLOOR_LOCK] = to_kill;
 
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -6009,6 +6041,7 @@ static void _xom_floor_lock(int)
     god_speaks(GOD_XOM, _get_xom_speech("floor lock").c_str());
     mpr("Xom locks all of the stairs on the floor! (Kill monsters to unlock them again.)");
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "floor lock"), true);
+    you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
 }
 
 static void _xom_minibane(int)
@@ -6020,16 +6053,121 @@ static void _xom_minibane(int)
 }
 
 // On an appropriate kill, maybe progress the floor lock.
-void xom_reduce_floor_lock()
+void xom_maybe_reduce_floor_lock(const monster& mon_killed)
 {
     if (!you.attribute[ATTR_XOM_FLOOR_LOCK])
         return;
 
-    if (--you.attribute[ATTR_XOM_FLOOR_LOCK] == 0)
+    const int value = _xom_floor_lock_value(mon_killed);
+    you.attribute[ATTR_XOM_FLOOR_LOCK] = max(0, you.attribute[ATTR_XOM_FLOOR_LOCK] - value);
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK] == 0)
     {
         god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
         end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
     }
+    // Check in on the player after 100 turns without a kill to see if they're stranded.
+    else if (value > 0)
+        you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
+}
+
+// Checks if the player is stuck, and if so attempts to free them.
+// Returns true if the player is in an okay situation (and the game shouldn't
+// keep checking). False if they remain stuck.
+static bool _ensure_player_is_not_stuck()
+{
+    // Formicids can dig themselves out of any problem if not at the bottom of a branch.
+    if (you.can_burrow() && is_valid_shaft_level(false)
+        && feat_is_shaftable(env.grid(you.pos())))
+    {
+        return true;
+    }
+
+    // Check if there are enough enemies in the player's reach to end the floor
+    // lock. (We include temporary flight in the reachability check so that Xom
+    // doesn't yank the player back to monsters the instant they fly acoss a
+    // river they are fully capable of flying out of again.
+    int count = _count_reachable_monsters(true);
+    if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+        return true;
+
+    // First use Xom's normal teleport action (which should be an 'invisible'
+    // interevention, as far as the player is concerned).
+    if (!you.no_tele(false, false))
+    {
+        xom_take_action(XOM_BAD_TELEPORT, 0);
+
+        count = _count_reachable_monsters();
+        if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            return true;
+
+        // Teleport failed to connect the player again. But Xom's teleport is
+        // unreliable, so instead try a reliable one (the only reason we don't
+        // do this first is that it's more conspicuous, and the former is
+        // usually sufficient).
+        hostile_teleport_player();
+
+        count = _count_reachable_monsters();
+        if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            return true;
+    }
+
+    // Either the player is unable to teleport or teleport somehow failed to put
+    // them near monsters. Instead, bring the monsters to them.
+    vector<monster*> mon_list;
+    for (monster_iterator mi; mi; ++mi)
+        if (_xom_floor_lock_value(**mi, true) > 0)
+            mon_list.push_back(*mi);
+
+    shuffle_array(mon_list);
+    int sum = count;
+
+    for (monster* mon : mon_list)
+    {
+        coord_def spot;
+        if (find_habitable_spot_near(you.pos(), mon->type, LOS_RADIUS, spot))
+        {
+            mon->move_to(spot, MV_TRANSLOCATION);
+            sum += _xom_floor_lock_value(*mon);
+            if (sum >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            {
+                god_speaks(GOD_XOM, _get_xom_speech("floor lock rescue").c_str());
+                return true;
+            }
+        }
+    }
+
+    // Somehow, nothing we did was enough.
+    return false;
+}
+
+// Periodically sanity-check the floor lock to make sure that the required number
+// of monsters remains reachable from the player's location.
+//
+// If the player has somehow gotten themselves stranded, first try to teleport
+// them towards monsters. If this fails (possibly because they're a formicid),
+// try to teleport some monsters to them instead. If this also fails, just end
+// the lock.
+void xom_check_floor_lock()
+{
+    // No need to check.
+    if (!you.attribute[ATTR_XOM_FLOOR_LOCK]
+        || you.elapsed_time < you.props[XOM_FLOOR_LOCK_TIME_KEY].get_int())
+    {
+        return;
+    }
+
+    // Check if the player is stuck and possibly rescue them if needbe
+    if (_ensure_player_is_not_stuck())
+    {
+        // Schedule next check for another 100 turns (unless they kill something first).
+        you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
+        return;
+    }
+
+    // Player is stuck and we failed to rescue them. End the floor lock immediately.
+    you.attribute[ATTR_XOM_FLOOR_LOCK] = 0;
+    god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
+    end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
 }
 
 static void _xom_cleaving()
@@ -6673,7 +6811,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_pseudo_banishment }},
     { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
-    { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
+    { XOM_BAD_FLOOR_LOCK, {"floor lock", _xom_floor_lock }},
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
     { XOM_BAD_HALL_OF_MIRRORS, {"hall of mirrors", _xom_hall_of_mirrors }},
     { XOM_BAD_MAKE_TRAPS, {"traps", _xom_make_traps }},
