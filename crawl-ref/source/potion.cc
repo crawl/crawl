@@ -541,12 +541,15 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
+        const int sp_gain = (650 + 140 * you.skill_cost_level) * pow / 40;
+
         if (player_under_penance(GOD_HEPLIAKLQANA))
         {
             simple_god_message(" appreciates the memories.", false,
                                GOD_HEPLIAKLQANA);
-            reduce_xp_penance(GOD_HEPLIAKLQANA,
-                              750 * you.experience_level * pow / 40);
+            int skill_xp_gain = skill_experience_for_skill_points(sp_gain);
+            int xp_gain = skill_xp_gain / 10;
+            reduce_xp_penance(GOD_HEPLIAKLQANA, xp_gain);
             return true;
         }
 
@@ -563,7 +566,6 @@ public:
 
         // these are included in default force_more_message
 
-        const int sp_gain = (650 + 140 * you.skill_cost_level) * pow / 40;
         // This shouldn't slow down future normal training
         you.skill_points_available += sp_gain;
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
