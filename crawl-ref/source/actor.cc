@@ -45,6 +45,9 @@ bool actor::will_trigger_shaft() const
            && !(is_monster()
                 && (mons_is_elven_twin(static_cast<const monster* >(this))
                     || as_monster()->type == MONS_ORC_APOSTLE
+                    // These will soon be leaving the dungeon altogether,
+                    // rather than waiting for the player on another floor.
+                    || as_monster()->type == MONS_TREASURE_GOBLIN
                     || testbits(as_monster()->flags, MF_PENDING_REVIVAL)));
 }
 

@@ -1719,6 +1719,24 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_OPENING_PORTAL:
+        // The player's return to this level will settle whether it got away.
+        if (you.doing_monster_catchup)
+            break;
+
+        // Opening a portal takes all of a treasure goblin's attention.
+        if (!treasure_goblin_can_open_portal(*this))
+        {
+            del_ench(en, true, false);
+            if (you.can_see(*this))
+                mprf("%s half-open portal collapses!", name(DESC_ITS).c_str());
+        }
+        else if (decay_enchantment(en))
+            treasure_goblin_escape(*this);
+        else if (you.can_see(*this))
+            mprf("%s portal yawns wider.", name(DESC_ITS).c_str());
+        break;
+
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
@@ -2195,6 +2213,7 @@ static const char *enchant_names[] =
     "exposed", "briar_cooldown", "stampeding",
     "preparing_to_lurk", "phase_shift", "divine_shield",
     "insubstantial", "mostly_harmless", "maybe_fake",
+    "opening_portal",
     "buggy", // NUM_ENCHANTMENTS
 };
 

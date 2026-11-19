@@ -704,3 +704,17 @@ end
 function trove_marker(pars)
   return TroveMarker:new(pars)
 end
+
+-- A marker for a trove portal that charges no toll at all. Such portals are
+-- not placed by entry vaults; one is left behind by a slain treasure goblin.
+-- It needs none of the toll logic above, only to collapse after use.
+function free_trove_marker()
+    return one_way_stair {
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_trove_gone",
+        overview_note = "no toll",
+        feature_description_long =
+            "\nThis portal was left ajar by a thief who never paid its toll. "
+            .. "It may be entered freely.\n_________________\n",
+    }
+end

@@ -614,8 +614,11 @@ void melee_attack::do_vampire_lifesteal()
 
         const bool can_heal = actor_can_drain_life_from(you, *mon)
                               && mon->res_negative_energy() < 3;
+        // A treasure goblin raised as a thrall would never leave its portal
+        // behind, and it's always running away, so always being stabbed.
         const bool can_enthrall = stab_attempt && !mon->is_summoned()
                                   && !mon->alive()
+                                  && mon->type != MONS_TREASURE_GOBLIN
                                   && mon->holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC);
 
         if (can_heal && !can_enthrall)

@@ -282,6 +282,9 @@ enum monster_info_flags
     MB_DIVINE_SHIELD,
     MB_GUARDIAN,
     MB_MAYBE_FAKE,
+    MB_OPENING_PORTAL,
+    MB_WANTS_OUT,
+    MB_ABOUT_TO_ESCAPE,
     NUM_MB_FLAGS
 };
 

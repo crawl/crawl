@@ -1780,6 +1780,8 @@ void yred_fathomless_shackles_effect(int delay)
 bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true, true)
+           // A bound treasure goblin would never leave its portal behind.
+           && mon->type != MONS_TREASURE_GOBLIN
            && !mon->has_ench(ENCH_SOUL_RIPE)
            && mon->base_attitude != ATT_FRIENDLY;
 }
@@ -3147,6 +3149,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_BLINK_AWAY:
         case SPELL_BLINK_CLOSE:
         case SPELL_BLINK_RANGE:
+        case SPELL_HASTY_PASSAGE:
         case SPELL_WIND_BLAST:
         case SPELL_DIMENSION_ANCHOR:
         case SPELL_INK_CLOUD:
@@ -6597,7 +6600,9 @@ spret okawaru_duel(const coord_def& target, bool fail)
     if (mons->is_peripheral()
         || !(mons_habitat(*mons) & HT_DRY_LAND)
         || mons->wont_attack()
-        || mons->type == MONS_BOUNDLESS_TESSERACT)
+        || mons->type == MONS_BOUNDLESS_TESSERACT
+        // A treasure goblin's portal couldn't be left behind in the arena.
+        || mons->type == MONS_TREASURE_GOBLIN)
     {
         mpr("You cannot duel that!");
         return spret::abort;

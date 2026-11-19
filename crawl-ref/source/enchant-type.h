@@ -261,6 +261,7 @@ enum enchant_type
     ENCH_INSUBSTANTIAL,
     ENCH_MOSTLY_HARMLESS,
     ENCH_HALL_OF_MIRRORS,
+    ENCH_OPENING_PORTAL,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

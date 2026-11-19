@@ -561,7 +561,7 @@ void monster::timeout_enchantments(int time, bool no_drowning)
         case ENCH_ROLLING: case ENCH_MERFOLK_AVATAR_SONG: case ENCH_INFESTATION:
         case ENCH_HELD: case ENCH_BULLSEYE_TARGET: case ENCH_FATIGUE:
         case ENCH_TIDE: case ENCH_SLOWLY_DYING: case ENCH_BRAMBLE_COOLDOWN:
-        case ENCH_EXPOSED:
+        case ENCH_EXPOSED: case ENCH_OPENING_PORTAL:
             _timeout_enchantment(*this, entry.second, time);
             break;
 
@@ -650,8 +650,16 @@ void update_level(int elapsedTime)
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), (sim_turns + quick_turns) * 10));
 
     for (monster_iterator mi; mi; ++mi)
-        if (!update_monster(**mi, elapsedTime))
+    {
+        // A treasure goblin won't have waited around once spooked.
+        if (mi->type == MONS_TREASURE_GOBLIN
+            && treasure_goblin_left_unwatched(**mi))
+        {
             continue;
+        }
+
+        update_monster(**mi, elapsedTime);
+    }
 }
 
 /**

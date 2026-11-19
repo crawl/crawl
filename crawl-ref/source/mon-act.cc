@@ -2267,10 +2267,14 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->type == MONS_TREASURE_GOBLIN)
+        treasure_goblin_consider_escape(*mons);
+
     // Continue reciting (or staring off into space...)
     if (mons->has_ench(ENCH_DAZED)
         || mons->has_ench(ENCH_WORD_OF_RECALL)
-        || mons->has_ench(ENCH_CLOCKWORK_BEE_CAST))
+        || mons->has_ench(ENCH_CLOCKWORK_BEE_CAST)
+        || mons->has_ench(ENCH_OPENING_PORTAL))
     {
         mons->speed_increment -= non_move_energy;
         return;

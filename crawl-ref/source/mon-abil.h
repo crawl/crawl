@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "beam-type.h"
+#include "kill-method-type.h"
 #include "killer-type.h"
 #include "mon-poly.h"
 
@@ -21,6 +23,18 @@
 #define SLYMDRA_SLIMES_EATEN_KEY "slymdra_slimes_eaten"
 
 #define SEISMOSAURUS_EGG_RADIUS 4
+
+// When (in elapsed time) a treasure goblin will next try to leave, and the
+// time beyond which wounding it no longer puts that off.
+#define TREASURE_GOBLIN_ESCAPE_KEY "treasure_goblin_escape"
+#define TREASURE_GOBLIN_LIMIT_KEY "treasure_goblin_limit"
+// Set once the player has been warned that it is about to try.
+#define TREASURE_GOBLIN_WARNED_KEY "treasure_goblin_warned"
+// Set while the goblin has been wounded since it last used its passage.
+#define TREASURE_GOBLIN_STARTLED_KEY "treasure_goblin_startled"
+// When its two tricks will next be ready.
+#define TREASURE_GOBLIN_PASSAGE_KEY "treasure_goblin_passage"
+#define TREASURE_GOBLIN_ROOTS_KEY "treasure_goblin_roots"
 
 class actor;
 class monster;
@@ -55,6 +69,16 @@ void activate_tesseracts();
 void tesseract_action(monster& mon);
 
 int slymdra_split(monster& slymdra, int count = -1, bool quiet = false);
+
+void treasure_goblin_alarm(monster& goblin);
+void treasure_goblin_wounded(monster& goblin, const actor* oppressor,
+                             kill_method_type ktype, beam_type flavour);
+bool treasure_goblin_can_open_portal(const monster& goblin);
+bool treasure_goblin_wants_out(const monster& goblin);
+bool treasure_goblin_about_to_leave(const monster& goblin);
+void treasure_goblin_consider_escape(monster& goblin);
+void treasure_goblin_escape(monster& goblin);
+bool treasure_goblin_left_unwatched(monster& goblin);
 
 bool thorn_hunter_range_check(monster& mon);
 void thorn_hunter_raise_barrier(monster& mon, bool skip_proximity_check = false);

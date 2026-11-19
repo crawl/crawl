@@ -3395,6 +3395,16 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (mons_is_mons_class(&mons, MONS_CASSANDRA) && real_death)
             _cassandra_death_ambush();
+        // A treasure goblin's portal is left behind for whoever killed it,
+        // so long as the player had some hand in that, and it was the real
+        // thing rather than a copy.
+        else if (mons.type == MONS_TREASURE_GOBLIN && real_death && !timeout
+                 && !summoned && !mons.is_unrewarding() && !mons.pacified()
+                 && (YOU_KILL(killer) || pet_kill
+                     || mons.damage_friendly > 0))
+        {
+            schedule_trove_portal_fineff(mons.pos());
+        }
     }
 
     // Must be done after health is set to zero and monster is properly marked dead.

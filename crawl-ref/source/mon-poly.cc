@@ -700,6 +700,8 @@ bool mon_can_be_slimified(const monster* mons)
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
+           // As for polymorph: see monster::can_polymorph().
+           && mons->type != MONS_TREASURE_GOBLIN
            && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 

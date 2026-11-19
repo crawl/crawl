@@ -754,6 +754,26 @@ ENDMAP
 
 ##############################################################################
 #
+# Not every way into a trove is a portal waiting to be paid. A treasure goblin
+# leaves a toll-free portal behind if it is killed before it can get away, so
+# it counts as the game's one trove, just as any of the entries above would.
+#
+# It turns up half as often as a scroll of acquirement does. Counting vaults
+# and shops as well as loose items, objstat finds one of those per 23 levels
+# or so at these depths.
+#
+##############################################################################
+
+NAME:   treasure_goblin
+TAGS:   transparent overwrite_floor_cell no_exits no_descent uniq_trove
+CHANCE: 215
+MONS:   generate_awake treasure goblin
+MAP
+1
+ENDMAP
+
+##############################################################################
+#
 # The portal vaults. As of 0.34:
 #  * Troves should have a unique name linked to a spell or unrand.
 #  * Troves should use a variety of wall tile, floor tile, and decorative
