@@ -644,6 +644,8 @@ glove_short_blue
 %syn GLOVE_SHORT_BLUE
 glove_short_gray
 %syn GLOVE_SHORT_GRAY
+crab_claws
+%syn GLOVE_CRAB_CLAWS
 ## mutations
 claws CLAWS
 player/mutations/octopode1 OCTOPODE_SPIKE

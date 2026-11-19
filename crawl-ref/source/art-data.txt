@@ -2126,7 +2126,7 @@ STR:     +4
 SLAY:    +4
 COLOUR:  ETC_MAGIC
 TILE:    urand_crab_claws
-TILE_EQ: GLOVE_GREEN
+TILE_EQ: GLOVE_CRAB_CLAWS
 BOOL:    evil, enh_necro, special
 DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
  or casts spells, and grants immunity from such clouds. Necromancy spells have
