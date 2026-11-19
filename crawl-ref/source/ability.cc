@@ -757,7 +757,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Xom
         { ABIL_XOM_CHAOS_EISEGESIS, "Chaos Eisegesis",
-            0, 0, 0, -1, {fail_basis::xl}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
