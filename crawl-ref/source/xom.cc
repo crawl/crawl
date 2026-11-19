@@ -4585,6 +4585,7 @@ static void _xom_hall_of_mirrors(int)
 
     monster* orig = candidates[random2(candidates.size())];
     orig->add_ench(ENCH_HALL_OF_MIRRORS);
+    behaviour_event(orig, ME_ALERT, &you, you.pos(), false);
 
     coord_def spot = find_newmons_square(orig->type, you.pos(), 3, 5, 2);
     if (!spot.origin())
