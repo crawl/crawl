@@ -3008,6 +3008,18 @@ void skill_state::restore_training()
     check_training_targets();
 }
 
+static bool _needs_experience_potion_menu()
+{
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+        return false;
+    // Normal training for djinn can leave skill points unspent, but it
+    // shouldn't be more than 100
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return you.skill_points_available > 100;
+    // Pretty arbitrary
+    return you.skill_points_available >= 10;
+}
+
 // Sanitize skills after an upgrade, racechange, etc.
 void fixup_skills()
 {
@@ -3038,12 +3050,8 @@ void fixup_skills()
     }
     reset_training();
 
-    if (you.skill_points_available >= 10
-        && !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        && !you.has_mutation(MUT_INNATE_CASTER))
-    {
+    if (_needs_experience_potion_menu())
         skill_menu(SKMF_EXPERIENCE);
-    }
 
     check_training_targets();
 }
