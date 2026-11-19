@@ -1390,7 +1390,7 @@ void melee_attack::handle_phase_killed()
         makhleb_execution_activate();
 
     if (attacker->is_player() && you.form == transformation::werewolf
-        && defender->is_monster())
+        && !defender->is_firewood() && !defender->friendly())
     {
         _handle_werewolf_kill_bonus(*defender->as_monster(), is_bestial_takedown);
     }
