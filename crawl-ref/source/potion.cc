@@ -562,16 +562,13 @@ public:
             mpr("A flood of memories washes over you.");
 
         // these are included in default force_more_message
-        const int exp = (80 + you.skill_cost_level * pow / 3)
-                        * calc_skill_cost(you.skill_cost_level) * 10;
-        gain_skill_experience(exp);
+
+        // This shouldn't slow down future normal training
+        you.skill_points_available += 650 + 140 * you.skill_cost_level;
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             train_skills();
         else
             skill_menu(SKMF_EXPERIENCE);
-
-        // Don't make !xp slow down future normal training
-        you.skill_exp_spent -= exp;
 
         // the player might meet training targets and need to choose
         // skills
