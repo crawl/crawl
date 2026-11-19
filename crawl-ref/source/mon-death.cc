@@ -3542,7 +3542,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         // Xom's mannquin 'reaping'
         if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_MANNEQUINS
             && (mons.base_attitude == ATT_HOSTILE || mons.base_attitude == ATT_NEUTRAL)
-            && YOU_KILL(killer) && mons_can_be_mannequin(mons))
+            && (YOU_KILL(killer) || pet_kill)
+            && mons_can_be_mannequin(mons))
         {
             CrawlVector& vec = you.props[XOM_MANNEQUIN_TROUPE].get_vector();
             vec.push_back(mons.type);

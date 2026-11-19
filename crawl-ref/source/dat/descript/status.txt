@@ -1415,8 +1415,8 @@ step to create a living beam spell in your trail.
 %%%%
 Troupe status
 
-Slaying corporeal foes yourself will cause Xom to gift you mannequins in their
-image once the battle is ended.
+Slaying corporeal foes will cause Xom to gift you mannequins in their image once
+the battle is ended.
 %%%%
 Battleshape status
 

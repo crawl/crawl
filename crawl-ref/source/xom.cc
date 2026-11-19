@@ -6424,7 +6424,7 @@ static void _xom_mannequins()
     you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_MANNEQUINS;
 
     god_speaks(GOD_XOM, _get_xom_speech("mannequin").c_str());
-    mprf("Xom raises dopplegangers of enemies you slay yourself.");
+    mprf("Xom raises dopplegangers of enemies you slay.");
 
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "blessing of mannequins"), true);
 }
