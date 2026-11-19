@@ -3329,6 +3329,7 @@ static bool _god_rejects_loveless(god_type god)
     case GOD_HEPLIAKLQANA:
     case GOD_FEDHAS:
     case GOD_YREDELEMNUL:
+    case GOD_XOM:
         return true;
     default:
         return false;

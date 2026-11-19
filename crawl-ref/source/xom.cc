@@ -4091,7 +4091,7 @@ static void _xom_summon_hostiles(int)
 // the player can make something of it anyway.
 static void _xom_send_in_clones(int)
 {
-    const int friendly_count = you.allies_forbidden() ? 0 : 1;
+    const int friendly_count = 1;
     const int hostile_count = 2;
     int hostiles_summon_count = 0;
     int friendly_summon_count = 0;
@@ -4773,8 +4773,8 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_SINGLE_ALLY, 300, 0, 50, [](int)
-        {return !you.allies_forbidden();},
+        XOM_GOOD_SINGLE_ALLY, 300, 0, 50,
+        nullptr,
         XOM_EXPLORE_NEXT_BATTLE
     },
     {
@@ -4783,7 +4783,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_ALLIES, 280, 0, 0, [](int tn)
-        {return tn > 4 && !you.allies_forbidden();}
+        {return tn > 4;}
     },
     {
         XOM_GOOD_FORCE_LANCE_FLEET, 230, 0, 0, [](int tn)
@@ -5010,8 +5010,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_ANIMATE_MON_WPN, 325, 0, 0, [](int tn)
-        {return tn > 4 && _find_monster_with_animateable_weapon()
-                       && !you.allies_forbidden();}
+        {return tn > 4 && _find_monster_with_animateable_weapon();}
     },
     {
         XOM_GOOD_SCENERY, 120, 135, 0, [](int tn)
