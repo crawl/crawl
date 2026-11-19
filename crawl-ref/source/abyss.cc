@@ -475,7 +475,7 @@ void push_features_to_abyss()
 
             p += you.pos();
 
-            dungeon_feature_type feature = map_bounds(p) ? env.grid(p)
+            dungeon_feature_type feature = map_bounds(p) ? orig_terrain(p)
                                                          : DNGN_UNSEEN;
             feature = sanitize_feature(feature);
 
