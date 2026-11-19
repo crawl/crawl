@@ -7212,7 +7212,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
             dam = zap_damage(ZAP_CHAOS_BATTLESHAPE_FINALE, you.experience_level, false, false);
             result << "Chaos blast: " << dam.num << "d" << dam.size << "\n";
 
-            dam = zap_damage(ZAP_SHOOTING_STAR, 20 + you.experience_level * 2, false, false);
+            dam = zap_damage(ZAP_SHOOTING_STAR, 30 + you.experience_level * 3, false, false);
             result << "Shooting stars: " << dam.num << "d" << dam.size << "\n";
         }
     }

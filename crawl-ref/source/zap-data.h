@@ -2943,7 +2943,7 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
 {
     ZAP_CHAOS_BATTLESHAPE_FINALE,
     "blast of chaos",
-    new dicedef_calculator<3, 4, 3, 5>,
+    new dicedef_calculator<4, 6, 1, 2>,
     new tohit_calculator<AUTOMATIC_HIT>,
     nullptr,
     nullptr,
