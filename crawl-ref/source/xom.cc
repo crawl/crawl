@@ -5844,14 +5844,48 @@ static void _xom_duel(int)
 
     mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, you.pos(), MHITNOT,
                  MG_NONE, GOD_XOM);
+    mg.set_range(4, 8, 3);
 
     // Three major styles, chosen at random:
 
-    // 1) Some random floor-appropriate monsters
-    if (!one_chance_in(5))
+    // 1) Something completely harmless.
+    if (one_chance_in(20))
+    {
+        const int to_make = random_range(8, 12);
+        mg.cls = one_chance_in(3) ? MONS_TRAINING_DUMMY : MONS_BUTTERFLY;
+        if (mg.cls == MONS_BUTTERFLY)
+            mg.set_range(1, 5, 0);
+        for (int i = 0; i < to_make; ++i)
+        {
+            if (monster* mons = create_monster(mg))
+                mons->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, random_range(30, 60)));
+        }
+    }
+    // 2) A very sad Pan lord
+    else if (you.experience_level >= 14 && one_chance_in(6))
+    {
+        mg.cls = MONS_PANDEMONIUM_LORD;
+        mg.set_range(3, 5, 2);
+
+        if (monster* mons = create_monster(mg))
+        {
+            // Starting at XL 25, you can get real Pan lords!
+            if (!x_chance_in_y(you.experience_level - 24, 3))
+            {
+                ghost_demon ghd;
+                ghd.init_xom_pandemonium_lord(you.experience_level);
+                mons->spells.clear();
+                mons->set_ghost(ghd);
+                mons->ghost_demon_init();
+                mons->props[XOM_PAN_LORD_DESC] = "most pitiful";
+                behaviour_event(mons, ME_ANNOY, &you, you.pos());
+            }
+        }
+    }
+    // 3) Some random floor-appropriate monsters
+    else
     {
         mg.place = orig_place;
-        mg.set_range(4, 8, 3);
 
         // For places with no natural population table, use the dungeon's.
         if (orig_place.branch == BRANCH_TEMPLE
@@ -5883,39 +5917,9 @@ static void _xom_duel(int)
                 behaviour_event(mon, ME_ANNOY, &you, you.pos());
         }
     }
-    // 2) A very sad Pan lord
-    else if (!one_chance_in(4) && you.experience_level >= 14)
-    {
-        mg.cls = MONS_PANDEMONIUM_LORD;
-
-        if (monster* mons = create_monster(mg))
-        {
-            // Starting at XL 25, you can get real Pan lords!
-            if (!x_chance_in_y(you.experience_level - 24, 3))
-            {
-                ghost_demon ghd;
-                ghd.init_xom_pandemonium_lord(you.experience_level);
-                mons->spells.clear();
-                mons->set_ghost(ghd);
-                mons->ghost_demon_init();
-                mons->props[XOM_PAN_LORD_DESC] = "most pitiful";
-                behaviour_event(mons, ME_ANNOY, &you, you.pos());
-            }
-        }
-    }
-    // 3) Something completely harmless.
-    else
-    {
-        const int to_make = random_range(8, 12);
-        mg.cls = MONS_BUTTERFLY;
-        for (int i = 0; i < to_make; ++i)
-        {
-            if (monster* mons = create_monster(mg))
-                mons->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, random_range(30, 60)));
-        }
-    }
 
     god_speaks(GOD_XOM, _get_xom_speech("duel").c_str());
+    more();
 
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "duel"), true);
 }
