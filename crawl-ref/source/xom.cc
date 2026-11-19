@@ -6849,6 +6849,9 @@ void validate_xom_events()
 
     for (int i = 0; i < XOM_LAST_REAL_ACT; ++i)
     {
+        if (i > XOM_LAST_BAD_ACT && i < XOM_FIRST_BLESSING)
+            continue;
+
         const xom_event_type event_type = static_cast<xom_event_type>(i);
         const xom_event *event = map_find(xom_events, event_type);
         if (!event)

@@ -107,8 +107,11 @@ enum xom_event_type
     XOM_BAD_MAKE_TRAPS,
     XOM_LAST_BAD_ACT = XOM_BAD_MAKE_TRAPS,
 
-    // Not 'real' events, but in this enum so they can be triggered easily in wizmode
-    XOM_BLESSING_CLEAVE,
+    // Not 'normal' events, but in this enum so they can be triggered easily in wizmode.
+    // Note that these are marshalled, and thus their enum order matters for
+    // save compat (unlike any of the ones above).
+    XOM_FIRST_BLESSING = 1000,
+    XOM_BLESSING_CLEAVE = XOM_FIRST_BLESSING,
     XOM_BLESSING_CHAOS_EISEGESIS,
     XOM_BLESSING_GUARDIAN,
     XOM_BLESSING_SPELLSTRIDE,
@@ -122,7 +125,7 @@ enum xom_event_type
 
     XOM_LAST_REAL_ACT = XOM_BLESSING_RANDOM,
 
-    XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
+    XOM_PLAYER_DEAD = 10000, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
 };
 

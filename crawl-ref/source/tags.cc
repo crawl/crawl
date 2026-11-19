@@ -99,6 +99,7 @@
 #include "transform.h"
 #include "unwind.h"
 #include "version.h"
+#include "xom.h"
 
 vector<ghost_demon> global_ghosts; // only for reading/writing
 
@@ -3826,6 +3827,13 @@ static void _tag_read_you(reader &th)
         && you.attribute[ATTR_TEMP_MUT_KILLS] > 0)
     {
         you.attribute[ATTR_TEMP_MUT_KILLS] = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_XOM_BLESSING_BUMP
+        && you.attribute[ATTR_XOM_BLESSING])
+    {
+        // 66 was the index of the first blessing at the time of this minor version
+        you.attribute[ATTR_XOM_BLESSING] += XOM_FIRST_BLESSING - 66;
     }
 
 #endif

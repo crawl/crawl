@@ -74,6 +74,9 @@ static xom_event_type _find_xom_event_from_string(const string &event_name)
 
     for (int i = 0; i <= XOM_LAST_REAL_ACT; ++i)
     {
+        if (i > XOM_LAST_BAD_ACT && i < XOM_FIRST_BLESSING)
+            continue;
+
         const xom_event_type xi = static_cast<xom_event_type>(i);
         const string x_name = lowercase_string(xom_effect_to_name(xi));
 
