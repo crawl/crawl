@@ -2068,6 +2068,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_BEAR,                    TILEP_MONS_MANNEQUIN_BEAR },
         { MONS_KILLER_BEE,              TILEP_MONS_MANNEQUIN_BEE },
         { MONS_SCORPION,                TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_ENTROPY_WEAVER,          TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_PHARAOH_ANT,             TILEP_MONS_MANNEQUIN_BEETLE },
         { MONS_CENTAUR,                 TILEP_MONS_MANNEQUIN_CENTAUR },
         { MONS_CRAB,                    TILEP_MONS_MANNEQUIN_CRAB },
         { MONS_DRACONIAN,               TILEP_MONS_MANNEQUIN_DRACONIAN },
