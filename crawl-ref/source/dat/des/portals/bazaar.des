@@ -2223,7 +2223,7 @@ if crawl.x_chance_in_y(4, 5) then
                   "kryia's_mail_coat", "lear's_hauberk",
                   "maxwell's_patent_armour", "moon_troll_leather_armour",
                   "salamander_hide_armour", "orange_crystal_plate_armour"},
-    ["bd_any"] = {"bone_scales", "scales_of_the_dragon_king",
+    ["bd_any"] = {"bone_dragon_armour", "scales_of_the_dragon_king",
                   "fire_dragon_occultist's_scales",
                   "ice_dragon_arcanist's_scales", "robe_of_augmentation",
                   "robe_of_clouds", "robe_of_folly", "robe_of_misfortune",
