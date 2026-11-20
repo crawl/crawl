@@ -276,6 +276,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_PROTECTION:
             case SPWPN_VENOM:
+            case SPWPN_LIGHTWEIGHT:
                 valued *= 12;
                 break;
             }
