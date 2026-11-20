@@ -2348,13 +2348,16 @@ bool targeter_gavotte::set_aim(coord_def a)
     if (!valid_aim(a))
         return false;
 
-    bolt tempbeam = beam;
-    tempbeam.target = a;
-    tempbeam.aimed_at_spot = false;
-    tempbeam.range = you.is_stationary() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
-    tempbeam.path_taken.clear();
-    tempbeam.fire();
-    path_taken = tempbeam.path_taken;
+    if (!you.is_stationary() && !you.stasis())
+    {
+        bolt tempbeam = beam;
+        tempbeam.target = a;
+        tempbeam.aimed_at_spot = false;
+        tempbeam.range = GAVOTTE_DISTANCE;
+        tempbeam.path_taken.clear();
+        tempbeam.fire();
+        path_taken = tempbeam.path_taken;
+    }
 
     vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
     for (monster* mon : affected)
