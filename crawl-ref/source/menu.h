@@ -107,6 +107,7 @@ public:
     string preface_format;
     void *data;
     function<bool(const MenuEntry&)> on_select;
+    function<void(MenuEntry&)> on_click;
 
 #ifdef USE_TILE
     vector<tile_def> tiles;
@@ -191,6 +192,7 @@ public:
 
     virtual void add_tile(tile_def tile);
 
+    virtual bool is_entry_hoverable() const;
 protected:
     virtual string _get_text_preface() const;
     bool m_enabled;
@@ -359,6 +361,7 @@ public:
 
     void reset();
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    virtual void close();
     vector<MenuEntry *> selected_entries() const;
 
     size_t item_count(bool include_headers=true) const;
@@ -428,6 +431,7 @@ protected:
     bool alive;
     bool more_needs_init;
     bool remap_numpad;
+    bool show_menu;
 
     int last_hovered;
     KeymapContext m_kmc;
