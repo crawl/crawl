@@ -110,7 +110,8 @@ public:
     virtual int wearing_ego(object_class_type obj_type, int ego) const = 0;
     int wearing_jewellery(int sub_type) const;
     virtual int scan_artefacts(artefact_prop_type which_property,
-                               vector<const item_def *> *matches = nullptr) const = 0;
+                               vector<const item_def *> *matches = nullptr,
+                               bool check_staff_attunement = false) const = 0;
     virtual bool unrand_equipped(int unrand_index, bool include_melded = false) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item,
