@@ -72,6 +72,8 @@ static const char *features[] =
     "POSIX regexps",
 #elif defined(REGEX_PCRE)
     "PCRE regexps",
+#elif defined(REGEX_PCRE2)
+    "PCRE2 regexps",
 #else
     "Glob patterns",
 #endif
