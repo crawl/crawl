@@ -29,6 +29,8 @@ android {
         debug {
         }
         buildTest {
+            applicationIdSuffix ".morguestatsdev"
+            signingConfig signingConfigs.debug
             ndk {
                 //noinspection ChromeOsAbiSupport
                 abiFilters "arm64-v8a"

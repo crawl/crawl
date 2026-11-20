@@ -4,6 +4,7 @@
     <string name="start_game">Start Game</string>
     <string name="edit_rc">Edit Init File</string>
     <string name="morgue">Morgue Files</string>
+    <string name="morgue_stats">Morgue stats</string>
     <string name="mods">Mods</string>
     <string name="rc_hint">Enter your custom configuration here.</string>
     <string name="help">Options Guide</string>
