@@ -373,17 +373,11 @@ of @_number_or_qualifier_@ @_verbing_@ @_thing_names_@
 Trog weapon
 
 # names containing battle and death are more likely
-w:20
+w:25
 of @_power_or_anger_@
 
-w:5
-of @_adjective_@ @_power_or_anger_@
-
-w:20
+w:25
 of @_battle_or_war_@
-
-w:5
-of the @_verbing_@ @_battle_or_war_@
 
 w:20
 of @death_or_doom@
