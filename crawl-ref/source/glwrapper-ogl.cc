@@ -12,6 +12,7 @@
 # ifdef USE_GLES
 #  ifdef __ANDROID__
 #   include <SDL.h>
+#   include <GLES2/gl2.h>
 #  else
 #   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
@@ -19,8 +20,8 @@
 #  include <GLES/gl.h>
 # else
 #  include <SDL_opengl.h>
-#  include <SDL_video.h>
 # endif
+#  include <SDL_video.h>
 #endif
 
 #include "options.h"
@@ -133,9 +134,9 @@ GLShapeBuffer *GLShapeBuffer::create(bool texture, bool colour,
     return new OGLShapeBuffer(texture, colour, prim);
 }
 
+const char* GLESVersionStringPrefix = "OpenGL ES ";
 /////////////////////////////////////////////////////////////////////////////
 // OGLStateManager
-
 OGLStateManager::OGLStateManager()
 {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -143,37 +144,95 @@ OGLStateManager::OGLStateManager()
     glDepthFunc(GL_LEQUAL);
 
     m_window_height = 0;
-#ifndef USE_GLES
-    // TODO: we probably can do this for GLES TOO, but maybe requires tweaks?
-
     // OpenGL doesn't specify what the GetProcAddress function returns
     // if the implementation does not support a function
     // (e.g. because it doesn't support the OpenGL version in question)
     // So we need to check the version before we try to get the
     // glGenerateMipmap function.
-    const GLubyte* versionString = glGetString(GL_VERSION);
-    if (versionString == nullptr)
+    //
+    // Testing notes: if you have a Linux or Nnix system with Mesa,
+    // Mesa has environment variables that let you enable or disable extensions
+    // or protocol versions (if your computer can support them).
+    // See https://docs.mesa3d.org/envvars.html
+    // Recommended combinations include:
+    // No support for mipmapping:
+    // * MESA_GL_VERSION_OVERRIDE=2.1;MESA_EXTENSION_OVERRIDE=GL_ARB_framebuffer_object
+    // Simulating pre-OpenGL 3 HW, but with extension:
+    // * MESA_GL_VERSION_OVERRIDE=2.1;MESA_EXTENSION_OVERRIDE=-GL_ARB_framebuffer_object
+    // Testing on a OpenGL 3 or higher system
+    // * check OpenGL core profile version string via glxinfo | grep "version string"
+    // GLES _might_ be possible to test too, but I havne't gotten it to work.
+    // * MESA_GLES_VERSION_OVERRIDE=2.0
+    const char* glVersion = reinterpret_cast<const char*>(
+            glGetString(GL_VERSION));
+    if (glVersion == nullptr)
     {
         mprf("Mipmap Setup: Failed to load OpenGL version.");
         return;
     }
-    // We will never see 2 digit OpenGL major versions - 4.6 came out in 2016,
-    // and Vulkan is carrying the torch now
-    //
-    // It's doubtful we'll even see an OpenGL 5.
-    // But we'll be paranoid. We'll consider OpenGL 3.X - 9.X as all fine
-    bool supported_first_digit = ('3' <= versionString[0]) &&
-                                 (versionString[0] <= '9');
-    // Anything other than X.Y would be very weird.
-    // It's incredibly unlikely OpenGL 10 will ever exist.
-    bool second_character_is_dot = versionString[1] == '.';
-    if (!supported_first_digit || !second_character_is_dot)
+
+    // We will never see 2 digit OpenGL or OpenGL ES major versions.
+    // * OpenGL 4.6 came out in 2016
+    // * OpenGL ES 3.2 came out in 2015
+    // Vulkan is carrying the torch now for new development.
+    // It'd be a major surprise if we even see OpenGL 5 or OpenGL ES 4.
+    // So we won't worry about double digit version numbers
+    bool glGenerateMipmapAvailable = false;
+    const char* standard;
+    if (strncmp(glVersion,
+                GLESVersionStringPrefix,
+                strlen(GLESVersionStringPrefix)) == 0)
     {
-        mprf("Mipmap Setup: Disabled because OpenGL version: %s does not "
-             "provide glGenerateMipmap.", versionString);
-        return;
+        standard = "OpenGL ES";
+        // Unlike OpenGL, which leads with the version number, OpenGL ES leads
+        // with OpenGL ES, then the version number.
+        // per https://registry.khronos.org/OpenGL-Refpages/es2.0/
+
+        // offset by the prefix
+        const char* esVersion = glVersion + strlen(GLESVersionStringPrefix);
+        // glGenerateMipmap is supported on OpenGL ES 2+:
+        // * https://registry.khronos.org/OpenGL-Refpages/es3.0/html/glGenerateMipmap.xhtml
+        bool ok_first_digit = ('2' <= esVersion[0]) && (esVersion[0] <= '9');
+        bool ok_second_digit = esVersion[1] == '.' || esVersion[1] == ' ';
+        glGenerateMipmapAvailable |= ok_first_digit && ok_second_digit;
+    }
+    else
+    {
+        standard = "OpenGL";
+        // glGenerateMipmap is supported on OpenGL 3+:
+        // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGenerateMipmap.xhtml
+        bool ok_first_digit = ('3' <= glVersion[0]) && (glVersion[0] <= '9');
+        // Anything other than X.Y or X would be very weird.
+        bool ok_second_digit = glVersion[1] == '.' || glVersion[1] == ' ';
+        glGenerateMipmapAvailable |= ok_first_digit && ok_second_digit;
     }
 
+#ifdef USE_SDL
+    // ARB_framebuffer_object came first, and many old OpenGL implementions
+    // support it as an extension even though it's not in OpenGL core.
+    // Extension details:
+    // https://registry.khronos.org/OpenGL/extensions/ARB/ARB_framebuffer_object.txt
+    // Supported Hardware:
+    // https://feedback.wildfiregames.com/report/opengl/feature/GL_ARB_framebuffer_object
+    // Note that even e.g. Westmere & Sandy Bridge support the extension.
+    // Fortunately, we don't have to do more string parsing.
+    // We can check via https://wiki.libsdl.org/SDL2/SDL_GL_ExtensionSupported
+    bool glGenerateMipmapAvailableViaExtension =
+            SDL_GL_ExtensionSupported("GL_ARB_framebuffer_object");
+#else
+    bool glGenerateMipmapAvailableViaExtension = false;
+#endif
+    glGenerateMipmapAvailable |= glGenerateMipmapAvailableViaExtension;
+
+    if (!glGenerateMipmapAvailable)
+    {
+        mprf("Mipmap Setup: Disabled because %s version: %s does not provide "
+             "glGenerateMipmap and "
+             "extension ARB_framebuffer_object is not present",
+             standard, glVersion);
+        return;
+    }
+#ifdef USE_SDL
     // We have to load the library dynamically before we can load the function
     // from the library via GetProcAddress.
     // That's how dynamic loading works.
@@ -187,11 +246,11 @@ OGLStateManager::OGLStateManager()
         mprf("Mipmap Setup: Disabled because SDL_GL_LoadLibrary failed.");
         return;
     }
-
     // Because we already checked the version is higher enough,
     // SDL_GL_GetProcAddress should always get a non-null pointer back.
-    // But we'll log in case this does somehow happen.
+    // But we'll log in case there's a buggy driver.
     m_mipmapFn = SDL_GL_GetProcAddress("glGenerateMipmap");
+    //m_mipmapFn = nullptr;
     if (m_mipmapFn == nullptr)
     {
         mprf("Mipmap Setup: Failed to load glGenerateMipmap function.");
@@ -199,8 +258,10 @@ OGLStateManager::OGLStateManager()
     }
     else
     {
-        mprf("Mipmap Setup: success, loaded with OpenGL version: %s",
-             versionString);
+        mprf("Mipmap Setup: success, loaded with OpenGL version: %s "
+             "(ARB_framebuffer_object: %s)",
+             glVersion,
+             glGenerateMipmapAvailableViaExtension ? "TRUE" : "FALSE");
     }
 #else
     mprf("Mipmap Setup: skipped, not supported in this build configuration.");
@@ -418,9 +479,7 @@ void OGLStateManager::bind_texture(unsigned int texture)
     glDebug("glBindTexture");
 }
 
-void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
-                                   unsigned int height, MipMapOptions mip_opt,
-                                   int xoffset, int yoffset)
+void OGLStateManager::load_texture(LoadTextureArgs texture)
 {
     // Assumptions...
 #ifdef __ANDROID__
@@ -444,46 +503,44 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glDebug("glTexParameterf GL_TEXTURE_WRAP_T");
 #endif
-#ifndef USE_GLES
-    if (mip_opt == MIPMAP_CREATE)
+
+    const bool should_mipmap = texture.mip_opt == MipMapOptions::CREATE &&
+                             m_mipmapFn != nullptr;
+    // TODO: should min react to Options.tile_filter_scaling in the
+    //  mipmap case? GL_TEXTURE_MIN_FILTER has 4 options that use mipmaps.
+    // Note that GL_TEXTURE_MAG_FILTER only has two valid options. Mipmapping
+    // is not relevant to that.
+    const GLfloat simple_filter_option = Options.tile_filter_scaling ?
+            GL_LINEAR : GL_NEAREST;
+    const GLfloat min_filter_option = should_mipmap ? GL_LINEAR_MIPMAP_NEAREST:
+                                                      simple_filter_option;
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_option);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, simple_filter_option);
+
+    if (texture.has_offset())
     {
-        // TODO: should min react to Options.tile_filter_scaling?
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        m_mipmapFn != nullptr ? GL_LINEAR_MIPMAP_NEAREST :
-                        Options.tile_filter_scaling ? GL_LINEAR :
-                        GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
-                     texture_format, format, pixels);
-        // TODO: possibly restructure this into the main block below
-        // so that we support mipmapping when glTexSubImage2D should be called.
-        if (m_mipmapFn != nullptr)
-        {
-            PFNGLGENERATEMIPMAPPROC mipmapFn =
-                    reinterpret_cast<PFNGLGENERATEMIPMAPPROC>(m_mipmapFn);
-            mipmapFn(GL_TEXTURE_2D);
-        }
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+                        texture.xoffset, texture.yoffset,
+                        texture.width, texture.height,
+                        texture_format, format, texture.pixels);
+        glDebug("glTexSubImage2D");
     }
     else
-#endif
     {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
-        if (xoffset >= 0 && yoffset >= 0)
-        {
-            glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, width, height,
-                         texture_format, format, pixels);
-            glDebug("glTexSubImage2D");
-        }
-        else
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
-                         texture_format, format, pixels);
-            glDebug("glTexImage2D");
-        }
+        glTexImage2D(GL_TEXTURE_2D, 0, bpp,
+                     texture.width, texture.height,
+                     0,
+                     texture_format, format, texture.pixels);
+        glDebug("glTexImage2D");
+    }
+
+    if (should_mipmap)
+    {
+        // Note: can't be nullptr because should_mipmap checks that
+        PFNGLGENERATEMIPMAPPROC mipmapFn =
+                reinterpret_cast<PFNGLGENERATEMIPMAPPROC>(m_mipmapFn);
+        mipmapFn(GL_TEXTURE_2D);
     }
 }
 

@@ -15,7 +15,7 @@ class UIShrinkableImage : public Widget
 {
 public:
     UIShrinkableImage(string img_path) : m_buf(true, false) {
-        m_img.load_texture(img_path.c_str(), MIPMAP_CREATE);
+        m_img.load_texture(img_path.c_str(), MipMapOptions::CREATE);
         m_buf.set_tex(&m_img);
     };
     virtual void _render() override;
