@@ -74,7 +74,7 @@ Branches, Environment
   of themselves and slowly regrow it whenever it dies.
 * Mutagenic fog clouds now apply magic contamination to monsters, which will
   explode violently after standing in them for several turns.
-* Zot traps can no longer paralyze the player.
+* Zot traps can no longer paralyse the player.
 * The Abyss has received multiple changes:
   * The guaranteed entrance has been moved from Depths to D:13-15, where it
     appears as part of a serial vault, with many new entry vaults added.
@@ -425,7 +425,7 @@ Spells
     different properties depending on the vein's element.
 * Apportation now moves every item in a single space closer, rather than
   just whatever's on top.
-* Fortress Blast now prevents its caster being displaced while it is channeled.
+* Fortress Blast now prevents its caster being displaced while it is channelled.
 * The Imbue Servitor and Attune Weapon abilities for Spellspark Servitor and
   Platinum Paragon are now usable by any Sif Muna worshipper with access
   to Divine Exegesis, as long as those spells are in your library.
@@ -3003,7 +3003,7 @@ Spells
 * New spell: Scorch (L2 Fire). Hits a random enemy within 3 tiles, dealing fire
   damage and (if damage is dealt) applying short term rF- to the foe.
 * New spell: Flame Wave (L4 Conjuration/Fire). Burns adjacent creatures, then
-  when channeled by hitting '.' (like Searing Ray), repeatedly hits enemies in
+  when channelled by hitting '.' (like Searing Ray), repeatedly hits enemies in
   an increasing radius.
 * New spell: Enfeeble (L7 Hexes). Enfeeble irresistibly applies weakness and
   antimagic to a single foe. Targets that fail a Willpower check are also dazed
