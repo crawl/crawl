@@ -460,6 +460,17 @@ static void _knight_pinning_attack(monster* mon)
     }
 }
 
+// Rampage attacks happen at movement speed, so proportionally lower the
+// damage of an attack which would otherwise have been slower than this.
+int move_speed_dmg_mult_offset()
+{
+    const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
+    const int move_delay = player_overall_move_delay(BASELINE_DELAY);
+    if (attack_delay > move_delay)
+        return (move_delay * 100 / attack_delay) - 100;
+    return 0;
+}
+
 /**
  * Handle combat between the player and some monster. This is usually a standard
  * melee attack, but can also be a ranged attack performed at melee range.
@@ -502,14 +513,19 @@ bool player_fight(monster* defender, bool is_rampage,
         defender->sense_if_invisible();
         if (do_west_wind_shot())
             return true;
-        else if (do_player_ranged_attack(defender->pos()))
+
+        unique_ptr<ranged_attack> prototype;
+        if (is_rampage)
         {
-            you.time_taken = you.attack_delay().roll();
-            you.turn_is_over = true;
-            return true;
+            prototype.reset(new ranged_attack(&you, nullptr, you.weapon()));
+            prototype->dmg_mult += move_speed_dmg_mult_offset();
         }
-        else
+        if (!do_player_ranged_attack(defender->pos(), nullptr, prototype.get()))
             return false;
+
+        you.time_taken = you.attack_delay().roll();
+        you.turn_is_over = true;
+        return true;
     }
 
     melee_attack attk(&you, defender);
@@ -528,15 +544,8 @@ bool player_fight(monster* defender, bool is_rampage,
         return false;
     }
 
-    // Rampage attacks happen at movement speed, so proportionally lower the
-    // damage of an attack which would otherwise have been slower than this.
     if (is_rampage)
-    {
-        const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
-        const int move_delay = player_overall_move_delay(BASELINE_DELAY);
-        if (attack_delay > move_delay)
-            attk.dmg_mult = (move_delay * 100 / attack_delay) - 100;
-    }
+        attk.dmg_mult += move_speed_dmg_mult_offset();
 
     const bool success = attk.launch_attack_set();
     if (attk.cancel_attack)

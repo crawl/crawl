@@ -35,6 +35,7 @@ bool player_fight(monster* defender, bool is_rampage = false,
                   bool* did_hit = nullptr, bool simu = false,
                   bool confirmed = false);
 bool confirm_player_fight(const monster &defender);
+int move_speed_dmg_mult_offset();
 
 void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
                              actor* primary_target = nullptr);
