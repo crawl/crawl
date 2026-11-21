@@ -3381,6 +3381,16 @@ training dummy
 
 A mannequin used for battle practice.
 %%%%
+treasure goblin
+
+A goblin that has learned to slip through the trove portals of a long-dead
+wizard without paying their toll, and has been hauling away the contents ever
+since. It will not stand and fight for its sack. The moment it sees trouble it
+runs, snaring pursuers in roots grown from stolen seeds and diving through a
+hasty passage when it is hurt, and as soon as it is given a few moments' peace
+it tears open a portal back to the troves and is gone for good. Should it be
+slain first, that portal would be left open behind it, with no toll to pay.
+%%%%
 troll
 
 A huge and physically powerful humanoid creature. Short on intelligence but

@@ -182,6 +182,8 @@ static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell);
 static bool _torment_vulnerable(const actor* victim);
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
+static coord_def _hasty_passage_exit(const monster &caster);
+static void _cast_hasty_passage(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
@@ -785,6 +787,15 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             blink_close(caster);
         }
+    } },
+    { SPELL_HASTY_PASSAGE, {
+        [](const monster &caster) {
+            if (caster.no_tele())
+                return ai_action::impossible();
+            return ai_action::good_or_impossible(
+                        !_hasty_passage_exit(caster).origin());
+        },
+        _cast_hasty_passage,
     } },
     { SPELL_ELECTROLUNGE, {
         [](const monster &caster) {
@@ -1664,6 +1675,115 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
                                        div_rand_round(pow, 12) + 1);
     dprf("Grasping roots turns: %d", turns);
     start_ranged_constriction(caster, *foe, turns, CONSTRICT_ROOTS);
+}
+
+/// Could a passage of Golubria made by the given monster open at this spot?
+static bool _hasty_passage_cell(const monster &caster, coord_def p)
+{
+    return in_bounds(p)
+           && (feat_is_floor(env.grid(p))
+               || env.grid(p) == DNGN_SHALLOW_WATER)
+           && cell_see_cell(caster.pos(), p, LOS_NO_TRANS);
+}
+
+/**
+ * Where should a monster fleeing through a Hasty Passage come out?
+ *
+ * It wants somewhere in its own line of sight that is hidden from its foe,
+ * failing which it settles for getting as far from that foe as it can. It
+ * would rather not land in a dead end, having just got out of one.
+ *
+ * @param caster    The monster casting the spell.
+ * @return          The best exit, or the origin if there is nowhere to go.
+ */
+static coord_def _hasty_passage_exit(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe || !_hasty_passage_cell(caster, caster.pos()))
+        return coord_def();
+
+    const int foe_dist = grid_distance(caster.pos(), foe->pos());
+
+    coord_def best;
+    int best_score = 0;
+    for (radius_iterator ri(caster.pos(), LOS_NO_TRANS, true); ri; ++ri)
+    {
+        // As for the player's spell, the two ends cannot be too close.
+        if (grid_distance(caster.pos(), *ri) <= GOLUBRIA_FUZZ_RANGE
+            || !_hasty_passage_cell(caster, *ri)
+            || !monster_space_valid(&caster, *ri, false))
+        {
+            continue;
+        }
+
+        const int dist = grid_distance(*ri, foe->pos());
+        if (dist <= foe_dist)
+            continue;
+
+        int open = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (!cell_is_solid(*ai))
+                ++open;
+
+        const int score = 3 * dist + open
+                          + (foe->see_cell_no_trans(*ri) ? 0 : 100);
+        if (score > best_score)
+        {
+            best = *ri;
+            best_score = score;
+        }
+    }
+
+    return best;
+}
+
+/**
+ * Open a passage of Golubria under the caster and send it straight through.
+ *
+ * Unlike the player's Passage of Golubria, the near end is left standing open
+ * rather than being used up, so anything right on the caster's heels can
+ * follow it. Being hastily made, the passage does not last long.
+ */
+static void _cast_hasty_passage(monster &caster, mon_spell_slot, bolt&)
+{
+    const coord_def entrance = caster.pos();
+    const coord_def exit = _hasty_passage_exit(caster);
+    if (exit.origin())
+        return;
+
+    // The caster tumbles out to one side of the far end if it can, so as
+    // not to block its own passage; preferably the side away from its foe.
+    const actor* foe = caster.get_foe();
+    coord_def landing = exit;
+    int landing_dist = 0;
+    for (adjacent_iterator ai(exit); ai; ++ai)
+    {
+        if (!monster_space_valid(&caster, *ai, false)
+            || feat_is_trap(env.grid(*ai)))
+        {
+            continue;
+        }
+
+        const int dist = foe ? grid_distance(*ai, foe->pos()) : 1;
+        if (dist > landing_dist)
+        {
+            landing = *ai;
+            landing_dist = dist;
+        }
+    }
+
+    // A second passage would let pursuers come out ahead of the caster.
+    end_terrain_changes(caster, TERRAIN_CHANGE_GOLUBRIA);
+
+    for (const coord_def &end : { entrance, exit })
+    {
+        temp_change_terrain(end, DNGN_PASSAGE_OF_GOLUBRIA,
+                            random_range(8, 12) * BASELINE_DELAY,
+                            TERRAIN_CHANGE_GOLUBRIA, caster.mid);
+    }
+
+    if (caster.move_to(landing, MV_TRANSLOCATION | MV_GOLUBRIA))
+        place_cloud(CLOUD_TLOC_ENERGY, entrance, 1 + random2(3), &caster);
 }
 
 static void _regen_monster(monster* mon, monster* source, int dur)

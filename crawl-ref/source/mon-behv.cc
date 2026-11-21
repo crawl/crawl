@@ -288,6 +288,53 @@ static bool _adjust_jade_crystal_positioning(monster* mon)
 }
 
 /**
+ * Treasure goblins never fight: for as long as they know of a foe, they run
+ * from it instead, without needing to be frightened or giving up when
+ * cornered.
+ *
+ * @param mon           The treasure goblin.
+ * @param prox_player   Whether it can currently perceive the player.
+ * @return              Whether its behaviour has been fully dealt with.
+ */
+static bool _treasure_goblin_flees(monster* mon, bool prox_player)
+{
+    if (mon->asleep() || mon->wont_attack() || mon->has_ench(ENCH_FRENZIED))
+        return false;
+
+    const actor* foe = mon->get_foe();
+    if (!foe)
+    {
+        // With nobody left to run from, go back to wandering rather than
+        // letting the usual rules send it after the player.
+        if (mons_is_fleeing(*mon))
+            mon->behaviour = BEH_WANDER;
+        return false;
+    }
+
+    const bool foe_is_you = mon->foe == MHITYOU;
+    if (foe_is_you ? prox_player : mon->can_see(*foe))
+    {
+        mon->target = foe_is_you && you.doing_monster_catchup
+                      ? env.old_player_pos : foe->pos();
+        mon->foe_memory = 10 * BASELINE_DELAY;
+
+        if (!you.doing_monster_catchup && you.can_see(*mon))
+            treasure_goblin_alarm(*mon);
+    }
+    else if (mon->foe_memory <= 0)
+    {
+        // Out of sight, out of mind.
+        mon->foe = MHITNOT;
+        mon->behaviour = BEH_WANDER;
+        return false;
+    }
+
+    mon->behaviour = BEH_FLEE;
+    mon->props.erase(LAST_POS_KEY);
+    return true;
+}
+
+/**
  * Evaluates the monster's AI state, and sets its target based on its foe.
  */
 void handle_behaviour(monster* mon)
@@ -516,6 +563,12 @@ void handle_behaviour(monster* mon)
     // behaviour adjustments.
     if (_adjust_jade_crystal_positioning(mon))
         return;
+
+    if (mon->type == MONS_TREASURE_GOBLIN
+        && _treasure_goblin_flees(mon, proxPlayer))
+    {
+        return;
+    }
 
     while (changed)
     {
@@ -982,6 +1035,10 @@ void handle_behaviour(monster* mon)
             mon->add_ench(ENCH_PREPARING_TO_LURK);
         }
     }
+
+    // The above may have found a treasure goblin something new to run from.
+    if (mon->type == MONS_TREASURE_GOBLIN)
+        _treasure_goblin_flees(mon, proxPlayer);
 }
 
 static bool _mons_check_foe(monster* mon, const coord_def& p,

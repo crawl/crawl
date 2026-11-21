@@ -1123,6 +1123,235 @@ static bool _slymdra_split_or_merge(monster* mons)
     return false;
 }
 
+// How long (in aut) a treasure goblin puts up with being chased before it
+// first tries to leave, how much longer it stays for each wound it takes, the
+// point past which wounds no longer delay it, the time its portal takes to
+// open, and how long before starting on that portal it shows its intent.
+static const int TREASURE_GOBLIN_PATIENCE    = 15 * BASELINE_DELAY;
+static const int TREASURE_GOBLIN_RESPITE     = 8 * BASELINE_DELAY;
+static const int TREASURE_GOBLIN_LIMIT       = 40 * BASELINE_DELAY;
+static const int TREASURE_GOBLIN_PORTAL_TIME = 5 * BASELINE_DELAY;
+static const int TREASURE_GOBLIN_WARNING     = 5 * BASELINE_DELAY;
+
+/**
+ * Start the clock on a treasure goblin's escape, if it isn't running yet.
+ *
+ * This happens when the goblin first has something to run from in full view
+ * of the player (or is first wounded), so that the player always sees the
+ * chase begin, and can't put it off until a more convenient time.
+ */
+void treasure_goblin_alarm(monster& goblin)
+{
+    if (goblin.props.exists(TREASURE_GOBLIN_ESCAPE_KEY))
+        return;
+
+    goblin.props[TREASURE_GOBLIN_ESCAPE_KEY] =
+        you.elapsed_time + TREASURE_GOBLIN_PATIENCE;
+    goblin.props[TREASURE_GOBLIN_LIMIT_KEY] =
+        you.elapsed_time + TREASURE_GOBLIN_LIMIT;
+
+    if (you.can_see(goblin))
+        simple_monster_message(goblin, " clutches its sack and bolts!");
+    else if (!crawl_state.game_is_arena())
+        mprf(MSGCH_SOUND, "You hear a squeal of alarm.");
+}
+
+/**
+ * React to a treasure goblin being wounded by another creature.
+ *
+ * This startles it into diving through a passage as soon as it can, spoils
+ * any portal it is opening, and keeps it from leaving for a little longer -
+ * but only up to a point, so that the chase can't be dragged out forever.
+ * Poison and the like don't count; only fresh wounds do.
+ */
+void treasure_goblin_wounded(monster& goblin, const actor* oppressor,
+                             kill_method_type ktype, beam_type flavour)
+{
+    if (!oppressor || oppressor == &goblin
+        || ktype == KILLED_BY_POISON
+        || ktype == KILLED_BY_CLOUD
+        || ktype == KILLED_BY_CONSTRICTION
+        || flavour == BEAM_STICKY_FLAME)
+    {
+        return;
+    }
+
+    treasure_goblin_alarm(goblin);
+    goblin.props[TREASURE_GOBLIN_STARTLED_KEY] = true;
+
+    // It knows to run from a blow even if it can't see who struck it.
+    goblin.foe_memory = max(goblin.foe_memory, 10 * BASELINE_DELAY);
+
+    const int limit = goblin.props[TREASURE_GOBLIN_LIMIT_KEY].get_int();
+    if (you.elapsed_time >= limit)
+        return;
+
+    int &escape = goblin.props[TREASURE_GOBLIN_ESCAPE_KEY].get_int();
+    escape = min(limit, max(escape,
+                            you.elapsed_time + TREASURE_GOBLIN_RESPITE));
+    if (!treasure_goblin_about_to_leave(goblin))
+        goblin.props.erase(TREASURE_GOBLIN_WARNED_KEY);
+
+    if (goblin.has_ench(ENCH_OPENING_PORTAL))
+    {
+        goblin.del_ench(ENCH_OPENING_PORTAL, true, false);
+        if (you.can_see(goblin))
+        {
+            mprf("%s half-open portal collapses!",
+                 goblin.name(DESC_ITS).c_str());
+        }
+    }
+}
+
+/// Is a treasure goblin in any state to open (or go on opening) a portal?
+bool treasure_goblin_can_open_portal(const monster& goblin)
+{
+    return !goblin.cannot_act() && !goblin.asleep() && !goblin.confused()
+           && !goblin.caught() && !goblin.is_constricted()
+           && !goblin.berserk_or_frenzied()
+           && !goblin.wont_attack() && !goblin.no_tele();
+}
+
+/**
+ * Is a treasure goblin's escape clock running, without its having got as far
+ * as opening a portal? (This, and the function below, are what the player is
+ * shown of the clock.)
+ */
+bool treasure_goblin_wants_out(const monster& goblin)
+{
+    return goblin.props.exists(TREASURE_GOBLIN_ESCAPE_KEY)
+           && !goblin.has_ench(ENCH_OPENING_PORTAL)
+           && !goblin.wont_attack();
+}
+
+/// Is a treasure goblin within a few turns of stopping to open its portal?
+bool treasure_goblin_about_to_leave(const monster& goblin)
+{
+    return treasure_goblin_wants_out(goblin)
+           && you.elapsed_time + TREASURE_GOBLIN_WARNING
+              >= goblin.props[TREASURE_GOBLIN_ESCAPE_KEY].get_int();
+}
+
+/**
+ * If a treasure goblin has been left alone for long enough, it stops running
+ * and starts opening a portal out of the dungeon; shortly before that, it
+ * gives itself away. Called before each of its moves.
+ */
+void treasure_goblin_consider_escape(monster& goblin)
+{
+    if (you.doing_monster_catchup || !treasure_goblin_wants_out(goblin))
+        return;
+
+    if (you.elapsed_time < goblin.props[TREASURE_GOBLIN_ESCAPE_KEY].get_int())
+    {
+        if (treasure_goblin_about_to_leave(goblin)
+            && !goblin.props.exists(TREASURE_GOBLIN_WARNED_KEY))
+        {
+            goblin.props[TREASURE_GOBLIN_WARNED_KEY] = true;
+            simple_monster_message(goblin, " looks about for a quiet moment"
+                                           " to make its escape.");
+        }
+        return;
+    }
+
+    if (!treasure_goblin_can_open_portal(goblin))
+        return;
+
+    goblin.add_ench(mon_enchant(ENCH_OPENING_PORTAL, &goblin,
+                                TREASURE_GOBLIN_PORTAL_TIME));
+
+    // Past a certain point it can no longer be talked out of leaving.
+    const bool desperate =
+        you.elapsed_time >= goblin.props[TREASURE_GOBLIN_LIMIT_KEY].get_int();
+    simple_monster_message(goblin,
+        desperate ? " stops and frantically tears open a portal!"
+                  : " stops and begins tearing open a portal!");
+}
+
+/// A treasure goblin gets away through its portal, never to be seen again.
+void treasure_goblin_escape(monster& goblin)
+{
+    if (you.can_see(goblin))
+    {
+        simple_monster_message(goblin, " leaps through its portal, which"
+                                       " snaps shut behind it!");
+        place_cloud(CLOUD_TLOC_ENERGY, goblin.pos(), 1 + random2(3), nullptr);
+    }
+    else if (!crawl_state.game_is_arena())
+    {
+        // Let the player know that there's no longer anything to chase.
+        mprf(MSGCH_SOUND, "You hear a distant cackle of glee, cut short.%s",
+             testbits(goblin.flags, MF_SEEN)
+                 ? " The treasure goblin has made its escape!" : "");
+    }
+
+    monster_die(goblin, KILL_RESET, NON_MONSTER, true);
+}
+
+/**
+ * Remove a treasure goblin that had time enough to get away while the player
+ * was off its level. Called on the player's return to that level.
+ *
+ * @return Whether the goblin is gone.
+ */
+bool treasure_goblin_left_unwatched(monster& goblin)
+{
+    if (!goblin.props.exists(TREASURE_GOBLIN_ESCAPE_KEY)
+        || goblin.wont_attack()
+        || you.elapsed_time
+           < goblin.props[TREASURE_GOBLIN_ESCAPE_KEY].get_int()
+             + TREASURE_GOBLIN_PORTAL_TIME)
+    {
+        return false;
+    }
+
+    if (testbits(goblin.flags, MF_SEEN))
+        mpr("The treasure goblin has made its escape in your absence.");
+    else
+        mpr("Something has made its escape from here in your absence.");
+
+    monster_die(goblin, KILL_RESET, NON_MONSTER, true);
+    return true;
+}
+
+/**
+ * A fleeing treasure goblin's tricks: a passage to dive through once it has
+ * actually been hurt, and roots to trip up anything that gets close.
+ *
+ * @return Whether the goblin used up its turn.
+ */
+static bool _treasure_goblin_evade(monster& goblin)
+{
+    const actor* foe = goblin.get_foe();
+    if (!foe || goblin.wont_attack() || goblin.confused()
+        || !goblin.can_see(*foe))
+    {
+        return false;
+    }
+
+    const int now = you.elapsed_time;
+    if (goblin.props.exists(TREASURE_GOBLIN_STARTLED_KEY)
+        && now >= goblin.props[TREASURE_GOBLIN_PASSAGE_KEY].get_int()
+        && try_mons_cast(goblin, SPELL_HASTY_PASSAGE))
+    {
+        goblin.props.erase(TREASURE_GOBLIN_STARTLED_KEY);
+        goblin.props[TREASURE_GOBLIN_PASSAGE_KEY] =
+            now + random_range(3, 5) * BASELINE_DELAY;
+        return true;
+    }
+
+    // Tripping up a pursuer is the work of a moment, and costs it no time.
+    if (grid_distance(goblin.pos(), foe->pos()) <= 3
+        && now >= goblin.props[TREASURE_GOBLIN_ROOTS_KEY].get_int()
+        && try_mons_cast(goblin, SPELL_GRASPING_ROOTS))
+    {
+        goblin.props[TREASURE_GOBLIN_ROOTS_KEY] =
+            now + random_range(10, 14) * BASELINE_DELAY;
+    }
+
+    return false;
+}
+
 bool mon_special_ability(monster* mons)
 {
     bool used = false;
@@ -1300,6 +1529,10 @@ bool mon_special_ability(monster* mons)
             used = true;
         }
 
+        break;
+
+    case MONS_TREASURE_GOBLIN:
+        used = _treasure_goblin_evade(*mons);
         break;
 
     case MONS_HYPNOTAIL:

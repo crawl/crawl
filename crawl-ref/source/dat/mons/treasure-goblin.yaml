@@ -1,0 +1,18 @@
+name: "treasure goblin"
+glyph: {char: "g", colour: etc_gold}
+flags: [see_invis, warm_blood, no_poly_to, no_regen]
+exp: 100
+genus: goblin
+will: 100
+attacks:
+hd: 12
+hp_10x: 1150
+ac: 2
+ev: 14
+spells: treasure_goblin
+shout: shout
+intelligence: human
+energy: {move: 12}
+uses: open_doors
+size: small
+shape: humanoid
