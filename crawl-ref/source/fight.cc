@@ -514,13 +514,16 @@ bool player_fight(monster* defender, bool is_rampage,
         if (do_west_wind_shot())
             return true;
 
-        unique_ptr<ranged_attack> prototype;
+        function<void(ranged_attack_beam&)> setup;
         if (is_rampage)
         {
-            prototype.reset(new ranged_attack(&you, nullptr, you.weapon()));
-            prototype->dmg_mult += move_speed_dmg_mult_offset();
+            const int dmg_mult = move_speed_dmg_mult_offset();
+            setup = [dmg_mult](ranged_attack_beam& atk)
+            {
+                atk.atk.dmg_mult += dmg_mult;
+            };
         }
-        if (!do_player_ranged_attack(defender->pos(), nullptr, prototype.get()))
+        if (!do_player_ranged_attack(defender->pos(), nullptr, setup))
             return false;
 
         you.time_taken = you.attack_delay().roll();

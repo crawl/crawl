@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 
 #include "enum.h"
@@ -59,7 +60,7 @@ coord_def best_ranged_aim(const coord_def& target, bool pierce, bool primary_mus
 
 void aim_player_ranged_attack(quiver::action &a);
 bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile = nullptr,
-                             const ranged_attack* prototype = nullptr,
+                             const function<void(ranged_attack_beam&)>& setup = nullptr,
                              bool no_harm_allies = false, bool allow_salvo = true);
 
 bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false,
