@@ -1168,6 +1168,7 @@ void enter_glimmer_cloud(const actor& triggerer, const coord_def& pos)
     }
 
     bolt beam(you, ZAP_GLIMMER_BOLT, 10);
+    beam.damage = get_form()->get_special_damage();
     for (distance_iterator di(pos, true, true, you.current_vision); di; ++di)
     {
         if (!cell_see_cell(pos, *di, LOS_SOLID_SEE))
