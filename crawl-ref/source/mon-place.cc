@@ -274,7 +274,7 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena())
         return;
 
-    if (!player_on_orb_run()
+    if (!(player_on_orb_run() && !player_in_branch(BRANCH_ARENA))
         && !player_in_branch(BRANCH_ABYSS)
         && !player_in_branch(BRANCH_PANDEMONIUM))
     {
@@ -300,8 +300,7 @@ void spawn_random_monsters()
 
     // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
     // players that get banished there on the orb run.
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
-        && !player_in_branch(BRANCH_ARENA))
+    if (player_on_orb_run())
     {
         mg.proximity = PROX_CLOSE_TO_PLAYER;
         mg.foe = MHITYOU;

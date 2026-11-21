@@ -1763,8 +1763,8 @@ Tengu (Te)
 Oni (On)
   Oni are large, rowdy creatures who love a good fight. They are exceptionally
   strong and robust, and their fondness for drink allows them to heal twice as
-  much from healing potions and even perform free melee swings around themselves
-  while they chug them.
+  much from healing potions and gain twice as much magic from magic potions.
+  They also perform free melee swings around themselves while they chug potions.
 
   They are proficient with most melee weapons and forms of magic, but lack the
   dexterity or inclination to use ranged weapons or magical devices well. They

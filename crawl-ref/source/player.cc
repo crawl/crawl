@@ -851,6 +851,16 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
         if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
             player_did_deliberate_movement();
+
+        if (you.has_bane(BANE_STUMBLING))
+        {
+            // This duration is in player turns, not aut. This means it will
+            // last for the rest of the current turn, still be displayed on the
+            // UI at the start of the player's next turn, and then be removed at
+            // the end of it.
+            you.duration[DUR_STUMBLING] = you.turn_is_over ? 1 : 2;
+            you.redraw_evasion = true;
+        }
     }
 
     // Assuming that entering the same square means coming from above (flight)
@@ -2188,7 +2198,7 @@ bool player_acrobatic()
 
 void update_acrobat_status()
 {
-    if (!player_acrobatic() && !you.has_bane(BANE_STUMBLING))
+    if (!player_acrobatic())
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -2323,9 +2333,8 @@ static int _player_temporary_evasion_modifiers()
     if (acrobat_boost_active())
         evbonus += 15;
 
-    // Bane of stumbling triggers on the same conditions as acrobat (thus
-    // sharing its timer).
-    if (you.has_bane(BANE_STUMBLING) && you.duration[DUR_ACROBAT])
+    // Bane of stumbling is active on any turn you move or are moved.
+    if (you.duration[DUR_STUMBLING])
         evbonus -= 25;
 
     if (you.duration[DUR_VERTIGO])
@@ -4799,7 +4808,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     const bool was_fatal = poison_is_lethal();
 
     if (player_res_poison() < 0)
-        amount *= 2;
+        amount = amount * 3 / 2;
 
     // TODO: support being poisoned by monsters wearing "harm (ha)
     if (you.extra_harm())
@@ -6885,7 +6894,7 @@ int player::armour_class_scaled(int scale) const
         AC += 100 * player_icemail_armour_class();
 
     if (has_mutation(MUT_TRICKSTER))
-        AC += 100 * trickster_bonus();
+        AC += trickster_bonus();
 
     if (duration[DUR_FIERY_ARMOUR])
         AC += 700;
@@ -6907,7 +6916,7 @@ int player::armour_class_scaled(int scale) const
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
-        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int();
 
     if (you.duration[DUR_PHALANX_BARRIER])
         AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
@@ -7412,31 +7421,34 @@ int player::res_blind() const
         return 0;
 }
 
-int player::willpower() const
+int player::willpower(bool items) const
 {
-    return player_willpower();
+    return player_willpower(true, items);
 }
 
-int player_willpower(bool include_temp)
+int player_willpower(bool include_temp, bool items)
 {
     if (include_temp && you.form == transformation::slaughter)
         return WILL_INVULN;
 
-    if (you.unrand_equipped(UNRAND_FOLLY))
+    if (items && you.unrand_equipped(UNRAND_FOLLY))
         return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 
-    // randarts and dragon armour
-    rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
+    if (items)
+    {
+        // randarts and dragon armour
+        rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
 
-    // ego armours
-    rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
+        // ego armours
+        rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
 
-    rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
+        rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
 
-    // rings of willpower
-    rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+        // rings of willpower
+        rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+    }
 
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
@@ -7710,10 +7722,18 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
  */
 bool player::resists_dislodge(string event) const
 {
-    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS)
+        && !you.duration[DUR_FORTRESS_BLAST_TIMER])
+    {
         return false;
+    }
     if (!event.empty())
-        mprf("Your boots keep you from %s.", event.c_str());
+    {
+        if (you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+            mprf("Your boots keep you from %s.", event.c_str());
+        else
+            mprf("Your magic anchors you in place.");
+    }
     return true;
 }
 
@@ -9694,9 +9714,10 @@ bool ench_triggers_trickster(enchant_type ench)
     }
 }
 
+// The max AC Trickster can give (multiplied by 100)
 static int _trickster_max_boost()
 {
-    return 6 + you.experience_level * 4 / 5;
+    return (6 + you.experience_level * 4 / 5) * 100;
 }
 
 // Increment AC boost when applying a negative status effect to a monster.
@@ -9711,7 +9732,7 @@ void trickster_trigger(const monster& victim, enchant_type ench)
         return;
     }
 
-    const int min_bonus = 3 + you.experience_level / 6;
+    const int min_bonus = (3 + you.experience_level / 6) * 100;
 
     if (!you.props.exists(TRICKSTER_POW_KEY))
     {
@@ -9724,23 +9745,28 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     int& bonus = you.props[TRICKSTER_POW_KEY].get_int();
     if (bonus < min_bonus)
         bonus = min_bonus;
-    else if (bonus >= 15)
-        bonus += random2(2);
+    // Make it harder to increase the AC bonus, the more bonus you already have
+    // (down to 0.33 AC per debuff when approaching the max bonus)
     else
-        bonus += 1;
+    {
+        const int delta = _trickster_max_boost() - min_bonus;
+        bonus += 100 - min(67, max(0, (bonus - min_bonus) * 100 / delta));
+    }
 
-    const int max = _trickster_max_boost() + 10;
+    // The bonus AC can exceed the max bonus internally to make it decay slower
+    // when highly stacked (but the AC is still capped at _trickster_max_boost())
+    const int max = _trickster_max_boost() + 1000;
     if (bonus > max)
         bonus = max;
 
     // Give a few turns before the effect starts to decay.
-    if (you.duration[DUR_TRICKSTER_GRACE] < 60)
-        you.duration[DUR_TRICKSTER_GRACE] = random_range(60, 90);
+    if (you.duration[DUR_TRICKSTER_GRACE] < 50)
+        you.duration[DUR_TRICKSTER_GRACE] = random_range(50, 80);
 
     you.redraw_armour_class = true;
 }
 
-// Returns the current AC bonus from Trickster
+// Returns the current AC bonus from Trickster (multiplied by 100)
 int trickster_bonus()
 {
     if (!you.props.exists(TRICKSTER_POW_KEY))

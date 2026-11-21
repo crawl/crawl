@@ -483,12 +483,13 @@ void do_vexed_attack(actor& attacker, bool always_hit_ally)
         empty_space.push_back(attacker.pos());
 
     // Decide whether to attack empty space or an actor
-    const int total_weight = empty_space.size() + targs.size() * 7;
+    const int total_weight = empty_space.size() + targs.size() * 13;
     if (x_chance_in_y(empty_space.size(), total_weight))
     {
         coord_def pos = empty_space[random2(empty_space.size())];
         string targ_desc = (attacker.airborne() && feat_has_solid_floor(env.grid(pos))
                             && coinflip()) ? "the ceiling"
+                            : !env.map_knowledge(pos).feat_known() ? "something"
                             : feature_description_at(pos, false, DESC_THE);
         if (you.can_see(attacker))
         {

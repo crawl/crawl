@@ -252,8 +252,8 @@ static const mutation_def mut_data[] =
 { MUT_SPARK_SWARM, 3, 2, mutflag::good,
   "spark swarm",
 
-  {"Foes burned or shocked in your presence may be outlined in light.",
-   "Foes burned or shocked in your presence are regularly outlined in light.", ""},
+  {"Foes you shock or burn may be outlined in light.",
+   "Foes you shock or burn are regularly outlined in light.", ""},
   {"A subtle swarm of sparks and cinders bursts forth and dances around you.",
    "Your quiet swarm of sparks and cinders mildly raises in intensity.", ""},
   {"Your faint swarm of sparks and cinders peters out.",

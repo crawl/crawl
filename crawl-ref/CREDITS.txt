@@ -469,6 +469,7 @@
     Brian 'buehler' Faires
     Dossy Shiobara
     Jewel
+    eforgacs
 
 The Dungeon Crawl Stone Soup development team is:
     advil

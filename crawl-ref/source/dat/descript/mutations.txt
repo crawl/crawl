@@ -920,7 +920,8 @@ within melee range.
 %%%%
 artefact enchanting mutation
 
-You can use scrolls of enchant weapon and armour upon random artefacts.
+You can use scrolls of brand weapon, enchant weapon, and enchant armour upon
+random artefacts.
 
 This cannot raise their enchantment above what would normally be possible on a
 mundane item of the same type, and cannot affect especially unusual artefacts
@@ -1401,7 +1402,7 @@ Enemies who die to this explosion will always explode themselves.
 %%%%
 Mark of the Celebrant mutation
 
-Whenever you fall below 50% of your maximum HP, you perform an infernal rite,
+Whenever you fall below 1/3rd of your maximum HP, you perform an infernal rite,
 unleashing a flurry of blood arrows aimed at nearby enemies. You will fire at
 least one arrow for every valid target, but may fire additional ones if few are
 present. Invocations increases the damage of these arrows, and Makhleb will
@@ -1612,8 +1613,7 @@ your spells based on the number of solid feature you are currently adjacent to.
 %%%%
 stumbling bane
 
-Your evasion is decreased by 25 on any turn where you either moved or waited in
-place without doing anything else.
+Your evasion is decreased by 25 on any turn where you move or are moved.
 %%%%
 succour bane
 

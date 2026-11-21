@@ -4653,8 +4653,12 @@ static string _player_spell_stats(const spell_type spell)
                                                     acc_str.str().c_str());
     }
 
-    description += make_stringf("\n%*s: ", padding, "Range");
-    description += spell_range_string(spell);
+    const string range_str = spell_range_string(spell);
+    if (!range_str.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Range",
+                                    range_str.c_str());
+    }
     description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
     if (!defence_string.empty())
@@ -7481,7 +7485,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << "you have merely inferred " << mi.pronoun(PRONOUN_POSSESSIVE)
                  << " position. " << uppercase_first(mi.pronoun(PRONOUN_POSSESSIVE))
                  << " current health and status is unknown to you and your"
-                    " accuracy and defense against " << mi.pronoun(PRONOUN_POSSESSIVE)
+                    " accuracy and defence against " << mi.pronoun(PRONOUN_POSSESSIVE)
                  << " attacks is reduced. </magenta>";
     }
     else if (mi.is(MB_REMEMBERED_INVIS))

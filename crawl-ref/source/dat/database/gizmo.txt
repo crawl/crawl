@@ -314,6 +314,9 @@ voltaic
 # Calvin and Hobbes
 zarnium
 
+# EarthBound
+zexonyte
+
 @gizmo_modifier@axial
 
 @gizmo_modifier@bolic

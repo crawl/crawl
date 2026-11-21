@@ -817,10 +817,9 @@ own durability.
 Fortress Blast spell
 
 Draws upon the caster's own physical integrity to create a kinetic shockwave
-that damages foes in a large area. The caster is locked in place for several
-turns as the shockwave starts to form, and the spell will be cancelled if they
-are displaced during that time, but they may otherwise perform other actions
-freely.
+that damages foes in a large area. The caster is anchored in place for several
+turns as the shockwave starts to form, and can neither move nor be dislodged by
+external forces, though they may perform other actions freely.
 
 Spellpower causes the spell to complete more quickly, but the damage depends
 entirely upon the caster's AC.
@@ -1599,7 +1598,7 @@ otherwise almost indistinguishable from the original.
 %%%%
 Phase Shift spell
 
-Shifts the caster's body slighty out of phase with normal space, causing their
+Shifts the caster's body slightly out of phase with normal space, causing their
 exact position to become blurry and indistinct. Any attackers without
 supernaturally acute vision will have a much harder time hitting them and also
 be unable to assess the degree of their injuries.
@@ -2525,3 +2524,5 @@ destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
 Summoned creatures are particularly vulnerable, as the enchantments binding
 them to this plane will unravel and cause them to be dismissed immediately.
+Casting this spell causes some magical contamination for the caster, enough to
+be dangerous after a few castings.

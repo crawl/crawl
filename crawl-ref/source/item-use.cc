@@ -2042,14 +2042,6 @@ bool drink(item_def* potion)
     const bool dangerous = (player_in_a_dangerous_place()
                             && you.experience_level > 1);
 
-    if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
-    {
-        simple_god_message(" petitions for your drink to fail.", false,
-                           GOD_GOZAG);
-        you.turn_is_over = true;
-        return false;
-    }
-
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
     bool did_swing = false;
@@ -2180,7 +2172,10 @@ static void _rebrand_weapon(item_def& wpn)
         }
     }
 
-    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+    if (is_artefact(wpn))
+        set_artefact_brand(wpn, new_brand);
+    else
+        set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
 }
 
 static string _item_name(item_def &item)

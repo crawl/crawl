@@ -2028,6 +2028,20 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
     return true;
 }
 
+targeter_mephitic::targeter_mephitic(const actor* caster, int r, int pow)
+    : targeter_beam(caster, r, ZAP_MEPHITIC, SPELL_MEPHITIC_CLOUD, pow,
+                    pow >= 100 ? 1 : 0, 1)
+{
+}
+
+bool targeter_mephitic::affects_monster(const monster_info& mon)
+{
+    if (!targeter_beam::affects_monster(mon))
+        return false;
+
+    return env.map_knowledge(mon.pos).cloud() != CLOUD_MEPHITIC;
+}
+
 targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
     : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, SPELL_BOULDER, 0, 0, 0),
       hp(boulder_hp)

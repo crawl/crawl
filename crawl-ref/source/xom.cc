@@ -840,7 +840,7 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   {  6, 12,  90, SEMI, MONS_SWAMP_DRAKE },
   {  7, 15,  60, SEMI, MONS_BOGGART },
   {  8, 14,  50, SEMI, MONS_ORANGE_DEMON },
-  {  8, 18, 155, SEMI, MONS_CHAOS_SPAWN },
+  {  8, 15,  90, SEMI, MONS_CHAOS_SPAWN },
   {  9, 13,  40, SEMI, MONS_ICE_DEVIL },
   {  9, 13,  40, SEMI, MONS_RED_DEVIL },
   {  9, 14,   5, FLAT, MONS_TOENAIL_GOLEM },
@@ -882,12 +882,12 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 18, 33,  35, SEMI, MONS_REAPER },
   { 18, 23,  30, SEMI, MONS_DANCING_WEAPON },
   { 19, 26,   1, FLAT, MONS_ORANGE_STATUE },
-  { 20, 33,  30, SEMI, MONS_APOCALYPSE_CRAB },
+  { 20, 30,  30, SEMI, MONS_APOCALYPSE_CRAB },
   { 21, 33,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
   { 22, 33,   1, FLAT, MONS_STARFLOWER },
   { 23, 33,  30, SEMI, MONS_HELLEPHANT },
-  { 24, 33,   5, SEMI, MONS_MOTH_OF_WRATH },
-  { 25, 33,   5, SEMI, MONS_NEKOMATA },
+  { 24, 30,   5, SEMI, MONS_MOTH_OF_WRATH },
+  { 25, 36,   5, SEMI, MONS_NEKOMATA },
 };
 
 // Whenever choosing a monster that obviously comes in bands, spawn a few more,
@@ -967,6 +967,42 @@ static int _xom_pal_counting(int roll, bool isFriendly)
     return count;
 }
 
+// Endgame and extended monsters Xom has some fondness for (in being jokes
+// or highly chaotic), but which are mostly meant to stay in their branches,
+// get a small extra chance to be picked in the appropriate branch or Zigs.
+// Makes it a little more dramatic. Guardian picks can access this pool in
+// general at XL 27, but with fairly low odds without 4+ runes.
+static monster_type _xom_chaos_branch_pal(monster_type mon_type, bool guard)
+{
+    int rune_roll = 1;
+    if (you.runes.count() > ZOT_ENTRY_RUNES)
+        rune_roll = div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES);
+
+    if ((player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_ZIGGURAT)
+         && one_chance_in(13)) || guard && x_chance_in_y(rune_roll, 27))
+    {
+        mon_type = random_choose_weighted(5, MONS_DEATH_COB,
+                                          4, MONS_KILLER_KLOWN,
+                                          3, MONS_PROTEAN_PROGENITOR,
+                                          2, MONS_CURSE_TOE);
+    }
+    else if (((player_in_branch(BRANCH_PANDEMONIUM)
+              || player_in_branch(BRANCH_ZIGGURAT)) && one_chance_in(13))
+              || guard && x_chance_in_y(rune_roll, 54))
+    {
+        mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
+                                         MONS_DEMONSPAWN_CORRUPTER;
+    }
+    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(4) ||
+            guard && x_chance_in_y(rune_roll, 81))
+    {
+        mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
+                                         MONS_PLAYER_GHOST;
+    }
+
+    return mon_type;
+}
+
 static monster_type _xom_random_pal(int roll, bool isFriendly)
 {
     monster_picker xom_picker;
@@ -1006,28 +1042,11 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
 
     monster_type mon_type = xom_picker.pick(_xom_summons, variance, MONS_CRIMSON_IMP);
 
-    // Endgame and extended monsters Xom has some fondness for (in being jokes
-    // or highly chaotic), but which are mostly meant to stay in their branches,
-    // get a small extra chance to be picked in the appropriate branch or Zigs.
-    // Makes it a little more dramatic.
-    if ((player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_ZIGGURAT))
-         && one_chance_in(13))
+    if (player_in_branch(BRANCH_ZOT)
+        || player_in_branch(BRANCH_PANDEMONIUM)
+        || player_in_branch(BRANCH_ZIGGURAT))
     {
-        mon_type = random_choose_weighted(5, MONS_DEATH_COB,
-                                          4, MONS_KILLER_KLOWN,
-                                          3, MONS_PROTEAN_PROGENITOR,
-                                          2, MONS_CURSE_TOE);
-    }
-    else if ((player_in_branch(BRANCH_PANDEMONIUM) ||
-              player_in_branch(BRANCH_ZIGGURAT)) && one_chance_in(13))
-    {
-        mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
-                                         MONS_DEMONSPAWN_CORRUPTER;
-    }
-    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(4))
-    {
-        mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
-                                         MONS_PLAYER_GHOST;
+        mon_type = _xom_chaos_branch_pal(mon_type, false);
     }
 
     return mon_type;
@@ -4211,37 +4230,6 @@ static void _xom_brain_drain(int)
     }
 }
 
-// XXX: Possibly this could be used elsewhere, like defaults for wizard spells
-// for those without speech, but we generally try to just give those custom
-// messages per-monster anyway currently.
-static const map<shout_type, string> speaking_keys = {
-    { S_SILENT,         "dramatically intoning" },
-    { S_SHOUT,          "shouting" },
-    { S_BARK,           "barking" },
-    { S_HOWL,           "howling" },
-    { S_SHOUT2,         "shouting twice-over" },
-    { S_ROAR,           "roaring" },
-    { S_SCREAM,         "screaming" },
-    { S_BELLOW,         "bellowing" },
-    { S_BLEAT,          "bleating" },
-    { S_TRUMPET,        "trumpeting" },
-    { S_SCREECH,        "screeching" },
-    { S_BUZZ,           "buzzing" },
-    { S_MOAN,           "chillingly moaning" },
-    { S_GURGLE,         "gurgling" },
-    { S_CROAK,          "croaking" },
-    { S_GROWL,          "growling" },
-    { S_HISS,           "hissing" },
-    { S_SKITTER,        "weaving" },
-    { S_FAINT_SKITTER,  "faintly weaving" },
-    { S_DEMON_TAUNT,    "sneering" },
-    { S_CHERUB,         "speaking" },
-    { S_SQUEAL,         "squealing" },
-    { S_LOUD_ROAR,      "roaring" },
-    { S_RUSTLE,         "scribing" },
-    { S_SQUEAK,         "squeaking" },
-};
-
 static bool _has_min_recall_level()
 {
     int min = you.penance[GOD_XOM] ? 3 : 5;
@@ -4286,9 +4274,9 @@ static void _xom_grants_word_of_recall(int)
     string xom_speech = "grant word of recall";
 
     shout_type shouting = get_monster_data(targetable[0]->type)->shouts;
-    phrasing = speaking_keys.find(shouting)->second;
-    if (phrasing == "dramatically intoning")
+    if (shouting == S_SILENT)
         xom_speech = "grant voiceless word of recall";
+    phrasing = get_speaking_type(shouting);
 
     god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
     mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
@@ -6157,8 +6145,8 @@ static const vector<spell_type> _eisegesis_spells =
 
 static void _xom_eisegesis()
 {
-    const int spell_level = min(9, random_range(you.experience_level / 5 + 2,
-                                                you.experience_level / 3 + 3));
+    const int spell_level = max(3, min(9, random_range(
+        you.experience_level / 5 + 2, you.experience_level / 3 + 3)));
 
     vector<spell_type> choices;
     for (int i = 0; i < (int)_eisegesis_spells.size(); ++i)
@@ -6182,11 +6170,24 @@ static void _xom_guardian()
 {
     xom_remove_guardians();
 
-    monster_type mon_type = _xom_random_pal(0, true);
+    // Since _xom_random_pal has such high variablity, here we directly skip
+    // such to choose a specific short range boosted by extra runes.
+    monster_picker xom_picker;
+    int range = you.experience_level + random_range(-1, 1);
+    if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
+        range = min(33, range + div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES));
 
-    // No statues or butterflies.
-    while (mons_class_is_stationary(mon_type) || !mons_class_is_threatening(mon_type))
+    monster_type mon_type = xom_picker.pick(_xom_summons, range, MONS_CRIMSON_IMP);
+    if (you.experience_level == 27)
+        mon_type = _xom_chaos_branch_pal(mon_type, true);
+
+    // No butterflies (useless), statues (blocks off exploration in dead ends),
+    // or shapeshifters (incentivizes waiting for good rolls across stairs).
+    while (mons_class_is_stationary(mon_type) || !mons_class_is_threatening(mon_type)
+           || mon_type == MONS_SHAPESHIFTER || mon_type == MONS_GLOWING_SHAPESHIFTER)
+    {
         mon_type = _xom_random_pal(0, true);
+    }
 
     mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
     mg.non_actor_summoner = "Xom";
@@ -6200,6 +6201,8 @@ static void _xom_guardian()
                   && mons_class_intel(mon_type) == I_HUMAN
                     ? make_name()
                     : do_mon_name_replacements(getRandMonNameString("bland name"));
+    string other_name = coinflip() ? "Other " : "Not-";
+    string other_other_name = other_name + other_name;
     for (int i = 0; i < count; ++i)
     {
         if (monster *summons = create_monster(mg))
@@ -6212,7 +6215,7 @@ static void _xom_guardian()
 
             summons->mname = make_stringf("%s%s",
                                           i == 0 ? "" :
-                                          i == 1 ? "Other " : "Other Other ",
+                                          i == 1 ? other_name.c_str() : other_other_name.c_str(),
                                           name.c_str());
             summons->props[DBNAME_KEY] = mons_class_name(mon_type);
 

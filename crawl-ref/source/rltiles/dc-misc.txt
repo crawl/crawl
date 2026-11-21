@@ -369,12 +369,12 @@ shadow_shot5
 shadow_shot6
 shadow_shot7
 
-potion_petition0 BOLT_POTION_PETITION
-potion_petition1
-potion_petition2
-potion_petition3
-potion_petition4
-potion_petition5
+purchase_blessing0 BOLT_PURCHASE_BLESSING
+purchase_blessing1
+purchase_blessing2
+purchase_blessing3
+purchase_blessing4
+purchase_blessing5
 
 haemoclasm0 BOLT_HAEMOCLASM
 haemoclasm1

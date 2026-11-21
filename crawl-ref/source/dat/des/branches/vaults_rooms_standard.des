@@ -2576,7 +2576,7 @@ ENDMAP
 
 NAME:    nicolae_vaults_wine_cellar
 TAGS:    vaults_room vaults_orient_e
-KITEM:   ' = any potion w:15 / potion of moonshine / nothing
+KITEM:   ' = any potion w:15 / potion of moonshine
 SHUFFLE: Pp/Qq/Rr
 : if crawl.coinflip() then
 NSUBST:  J = 2=x.. / ., DEFH = x.. / .
@@ -2584,7 +2584,8 @@ NSUBST:  J = 2=x.. / ., DEFH = x.. / .
 NSUBST:  D = x.. / ., E = x.. / ., F = x.. / ., H = x.. / ., J = .
 : end
 NSUBST:  . = 2=0 / 2=0. / .
-SUBST:   Pp = ., QR = x, qr = '
+SUBST:   Pp = ., QR = x, qr = ', ' = ':25 !, ! : !.
+: decorative_floor(_G, '!', "set of bottled spirits")
 MAP
 x'x'x'xx
 '.D.E.pP

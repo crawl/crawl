@@ -1,6 +1,6 @@
 name: "assassin centipede"
 glyph: {char: "B", colour: green}
-flags: [no_skeleton]
+flags: [no_skeleton, no_poly_to]
 resists: {poison: -1}
 exp: 550
 will: 40

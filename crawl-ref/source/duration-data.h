@@ -709,7 +709,7 @@ static const duration_def duration_data[] =
     { DUR_HIVE_COOLDOWN,
         YELLOW, "-Swarm",
         "on swarm cooldown", "swarm cooldown",
-        "Your swarm has recently come to your defense.", D_NO_FLAGS},
+        "Your swarm has recently come to your defence.", D_NO_FLAGS},
     { DUR_STARDUST_COOLDOWN,
         YELLOW, "-Star",
         "on stardust cooldown", "stardust cooldown",
@@ -830,8 +830,8 @@ static const duration_def duration_data[] =
       "Your limbs are incredibly long.", D_NO_FLAGS,
       {{ "Your limbs return to their normal size." }}},
     { DUR_IRRITATED,
-      LIGHTRED, "Irrate",
-      "irrate", "irrate",
+      LIGHTRED, "Irate",
+      "irate", "irate",
       "You are quickly growing irritated.", D_NO_FLAGS,
       {{ "", _sage_go_berserk }}},
     { DUR_RAMPAGE_MAX,
@@ -850,6 +850,9 @@ static const duration_def duration_data[] =
       "", D_NO_FLAGS,
       {{"", [](){ xom_end_disguise(true);}}}
     },
+    { DUR_STUMBLING, 0, "",
+      "stumbling", "stumbling",
+      "You are stumbling and have reduced evasion.", D_NEGATIVE },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

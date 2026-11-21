@@ -773,12 +773,12 @@ first night of creation must eventually give way to day.
 Invocations skill increases the duration of the effect.
 %%%%
 # Gozag
-Potion Petition ability
+Purchase Blessing ability
 
-Petitions Gozag to sell you the effects of a set of potions. (These effects will
-be applied instantly and directly to the petitioner, rather than being provided
-or being drunk as a normal potion.) Gozag will offer three lists at a time, with
-varying prices.
+Petitions Gozag to grant you healing or empowerment at a fair market rate. Three
+sets of random blessings (with effects similar to potions) will be offered each
+time you invoke this ability, each at a different price. Buyer beware: once
+shown the merchandise, you cannot opt out of purchasing one.
 %%%%
 Call Merchant ability
 

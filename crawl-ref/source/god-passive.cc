@@ -2300,7 +2300,7 @@ void makhleb_tyrant_buff()
 
 void makhleb_celebrant_bloodrite()
 {
-    if (you.hp * 2 > you.hp_max
+    if (you.hp * 3 > you.hp_max
         || !you.has_mutation(MUT_MAKHLEB_MARK_CELEBRANT)
         || you.duration[DUR_CELEBRANT_COOLDOWN])
     {

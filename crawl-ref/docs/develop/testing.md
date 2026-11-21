@@ -10,7 +10,7 @@
 
 ## Unit Tests
 
-Crawl integrates the Catch2 unit testing framework. Tests are in the [crawl-ref/source/catch2-tests](crawl-ref/source/catch2-tests) directory. To compile and run all units tests, use:
+Crawl integrates the Catch2 unit testing framework. Tests are in the [crawl-ref/source/catch2-tests](../../source/catch2-tests/) directory. To compile and run all units tests, use:
 
 ```sh
 make catch2-tests

@@ -3484,7 +3484,7 @@ ENDMAP
 NAME:    darby_backdoor_grove
 TAGS:    extra no_descent no_monster_gen uniq_backdoor
 DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
-WEIGHT:  7
+WEIGHT:  5
 : local gn = "att:good_neutral  ; nothing"
 KMONS:   1 = felid att:good_neutral
 KMONS:   2 = generate_awake butterfly
@@ -3565,6 +3565,7 @@ ENDMAP
 NAME:    darby_backdoor_misty_motte
 TAGS:    extra no_descent no_monster_gen no_item_gen no_pool_fixup uniq_backdoor
 DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
+WEIGHT:  7
 : if you.in_branch("D") then
 KMONS:   1 = bat
 :   if you.depth() == 1 then
@@ -3823,6 +3824,156 @@ xxxv.....D.....vxxx
   .zeeezdddvdddv.
   .ze1ez.s.v.s.v.
   ..eee..........
+ENDMAP
+
+# A slime-befouled pool, or a primeval birthplace?
+NAME:    darby_primordial_soup
+TAGS:    no_monster_gen no_pool_fixup
+DEPTH:   D:1-8, D:12-, Zot
+: if you.in_branch("D") then
+:   if you.depth() < 4 then
+KMONS:   1 = endoplasm
+# Dubious, but close enough. Better than only endoplasms.
+KMONS:   2 = dart slug
+:   elseif you.depth() < 12 then
+KMONS:   1 = jelly
+KMONS:   2 = sleepcap
+SUBST:   d = dde
+:   else
+KMONS:   1 = slime creature band
+NSUBST:  ! = 1:1 / *:S
+SUBST:   ? = S, d = dde
+:   end
+KMONS:   F = fungus / toadstool
+KFEAT:   t = mangrove
+SUBST:   p = W
+: else
+KMONS:   1 = protean progenitor
+KMONS:   2 = glowing shapeshifter
+KMONS:   p = demonic plant
+KMONS:   F = fungus
+KFEAT:   t = demonic_tree
+SUBST:   W = .
+TILE:    t = dngn_demonic_tree_2 w:5 / dngn_demonic_tree_3 w:5 / \
+             dngn_demonic_tree_6 / dngn_demonic_tree_7 / \
+             dngn_demonic_tree_12 w:20 / dngn_demonic_tree_13 w:20
+: end
+KITEM:   d = potion of mutation pre_id / flux bauble
+KITEM:   e = protean talisman
+KFEAT:   s = deep_water
+KFEAT:   deFS12 = shallow_water
+NSUBST:  . = 1:@ / *:., ? = 2:2 / *:S
+SUBST:   ! = 1, ? = 122SS, F = FFS
+COLOUR:  s = green
+COLOUR:  deFS12 = lightgreen
+MAP
+            t tt
+            ttttt
+           WWWtt
+          WWtWWtt
+   W       WWWW
+  WpW      . p
+ttWW  FSSSSF
+ ttW.S?ss!s?S
+ tt  SssssssS
+  t  Ssssss!SF
+     F?s!dssSS
+      SSSssssS  W
+        F?ss?S.WWtt
+         SSSF  WWWtt
+              WWtWtt
+              pWWWtt
+               WWttt
+                ttt
+                t
+ENDMAP
+
+# To contrast the other backdoor vaults being open with relatively fixed themes
+# and gimmicks tenuously related to the surrounding branch: A minature dungeon
+# of fixed room layout but otherwise heavily randomized and trapped (though the
+# earliest traps are mostly player-favoring terrain), with mostly normal branch
+# tiles, low chance of faded altar and decent chance of shop.
+NAME:    darby_backdoor_atticsprint
+TAGS:    extra no_descent no_monster_gen uniq_backdoor
+DEPTH:   D:1-3, Lair, !Lair:$, Depths, !Depths:$, Zot, !Zot:$
+WEIGHT:  5 (D:1), 10
+# Due to noise in the compressed layout, mostly avoid monsters that open doors,
+# except for slot 4, which only spawns in the first room.
+: if you.in_branch("D") then
+TAGS:    uniq_ecumenical_altar
+MONS:    bat / rat / frilled lizard
+MONS:    ball python / endoplasm / dart slug / quokka, jackal band
+MONS:    goblin / kobold / hobgoblin / gnoll w:5, plant / fungus
+ITEM:    goblin skeleton / kobold skeleton / gnoll skeleton
+: elseif you.in_branch("Lair") then
+MONS:    black bear / bullfrog / water moccasin / wyvern
+MONS:    basilisk / rime drake / raven / torpor snail
+MONS:    catoblepas / skyshark / hydra / mountainshell
+MONS:    wolf band / yak band / blink frog band / elephant band, plant / fungus
+ITEM:    naga skeleton / merfolk skeleton
+SUBST:   X = Xx
+: elseif you.in_branch("Depths") then
+MONS:    hell knight zombie / kobold fleshcrafter zombie / \
+         tengu warrior zombie / spriggan berserker zombie / \
+         occultist simulacrum
+MONS:    glass eye w:45 / fire dragon / ice dragon / storm dragon / \
+         shadow dragon / walking frostbound tome / \
+         walking earthen tome / walking crystal tome / walking divine tome
+MONS:    golden dragon / chonchon band / spark wasp band / caustic shrike band
+MONS:    necromancer band, plant / fungus / demonic plant
+KFEAT:   t = tree / demonic_tree w:5
+ITEM:    human skeleton / kobold skeleton / tengu skeleton / spriggan skeleton
+SUBST:   * = ***|, % = %%%*
+: elseif you.in_branch("Zot") then
+MONS:    quicksilver dragon / shadow dragon / storm dragon / golden dragon
+MONS:    moth of wrath / ghost moth, curse toe / orb of appropriateness
+MONS:    nonbase draconian band, demonic plant / petrified flower
+KFEAT:   t = demonic_tree / petrified_tree w:5
+ITEM:    draconian skeleton
+SUBST:   * = *|, % = %*
+: end
+KFEAT:   ~ = broken_door
+KFEAT:   ` = closed_clear_door
+KFEAT:   B = altar_ecumenical
+KFEAT:   C = any shop
+KFEAT:   D = jewellery shop / scroll shop
+KFEAT:   ; = web
+# Replace up to two random doors from two sets with windows or walls, chosen to
+# prevent any chance of disconnect, and never generate more traps than doors.
+NSUBST:  - = 1:m / *:~, _ = 1:m / *:~, t = 1:B / 1:C / *:t, ^ = 2:. / *:^
+SUBST:   2 = 2., m = mmccc~, ~ = ~`++, ' : ~`++, " : ~`++, ^ = ^.
+: if you.in_branch("Lair") then
+SUBST:   C = t
+: elseif you.in_branch("D") then
+SUBST:   c : ccccxxxxxv
+: else
+SUBST:   c : cccxxxxvvb
+:   if you.in_branch("Zot") then
+SUBST:   C = D
+:   end
+: end
+SUBST:   B = Btt, C = CCt, t = tGT, T = TTTUUV, ; = ;;55d.....
+CLEAR:   X
+MAP
+   XXXXXXXXXXXXXXX
+  XxxxxxxxxxxxxxxxX
+ XxxxxxxxxxxxxxxxxxX
+XxxxxccccxxxccccxxxxX
+Xxxxcc1;ccccc;1ccxxxX
+Xxxcc%..c;1.-^t.ccxxX
+Xxxc*3>.'^t.c;^2%cxxX
+Xxxcc%..'.2.cc-cccxxX
+Xxxxcc1;c;.._^1;cxxxX
+Xxxxxccccc_cc.t%cxxxX
+Xxxxcc.;c;^._^2;cxxxX
+Xxxcc...".2.cc-cccxxX
+Xxxc;.}^".t4c;^2%cxxX
+Xxxcc...c;1^-.t.ccxxX
+Xxxxcc.;ccccc;1ccxxxX
+XxxxxccccxxxccccxxxxX
+ XxxxxxxxxxxxxxxxxxX
+  XxxxxxxxxxxxxxxxX
+   XXXXXXXXXXXXXXX
 ENDMAP
 
 ################################################################################
@@ -10108,12 +10259,12 @@ NAME:   hellmonk_guarded_unrand_vitality_bloodlust
 TAGS:   no_monster_gen
 DEPTH:  D:7-
 WEIGHT: 3
-MONS:   deep troll, deep troll shaman
+MONS:   troll, deep troll, deep troll shaman
 ITEM:   amulet_of_vitality no_pickup / necklace_of_bloodlust no_pickup
 : if you.depth() < 13 then
-NSUBST: 1 = 1:1 / 2:. / * =  1..
+NSUBST: 1 = 1:2 / 1:1 / 2:. / * = 12.
 : else
-NSUBST: 1 = 1:2 / * = 1.
+NSUBST: 1 = 1:3 / * = 2.
 : end
 COLOUR: x. = lightred
 TILE:   x = wall_pebble_red

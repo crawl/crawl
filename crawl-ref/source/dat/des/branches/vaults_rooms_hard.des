@@ -1978,13 +1978,13 @@ MONS:    great orb of eyes, entropy weaver, glowing orange brain
 MONS:    formless jellyfish
 KITEM:   R = gold no_pickup q:1
 ITEM:    scroll of teleportation pre_id q:2 / wand of digging charges:2
-ITEM:    scroll of teleportation pre_id q:2 w:20 / \
-         wand of digging charges:2 w:20 / dagger ego:distortion pre_id
+ITEM:    dagger ego:distortion pre_id
 : local d = you.depth()
 : nsubst('J = ' .. d .. ':4 / 3 = 5 6:' .. d * 4 .. ' 7:' .. d * 3 .. ' / *:1')
 : subst('1 = 1 2:' .. 4 + d * 3 .. ' 3:' .. 3 + d * 2)
 SHUFFLE: %!'"
-NSUBST:  % = 1:d / * = %$, ! = 1:d / * = %$, ' = 1:d / * = %$, " = 1:e / * = %$
+NSUBST:  % = 1:d / 1:e / * = %%$, ! = 1:d / 1:e / * = %%$
+NSUBST:  ' = 1:d / 1:e / * = %$$, " = 1:e / * = %$
 KMASK:   %$de = opaque
 KMASK:   %$de = allow_tele_closets
 TILE:    m = dngn_transparent_wall_green

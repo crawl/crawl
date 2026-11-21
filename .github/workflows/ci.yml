@@ -603,7 +603,7 @@ jobs:
         # oldest non-eol security release + current bugfix version
         #   https://devguide.python.org/versions/
         # TODO: 3.12 is currently broken because of requirements.txt brittleness
-        python-version: [3.8, 3.11, 3.13]
+        python-version: [3.11, 3.13]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
