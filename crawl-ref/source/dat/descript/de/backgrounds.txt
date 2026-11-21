@@ -1,125 +1,152 @@
 %%%%
-Abyssal Knight
-
-verehren Lugonu und wurden aus der Abyssos ausgesandt, um Verderbtheit und
-Chaos zu verbreiten.
-%%%%
 Air Elementalist
 
-kennen den Spruch Stromschlag. Später erlaubt ihnen das breitgefächerte Buch
-der Winde, im Überlebenskampf zu bestehen.
-%%%%
-Arcane Marksman
-
-sind für den Fernkampf bewaffnet und verwenden Magie, um ihre Feinde anfälliger
-für derartige Angriffe zu machen.
+Luftmagier haben den Zauber Schock erlernt. Ihre elektrische Magie kann Gruppen
+von Feinden verletzen, während ihre Luftzauber dabei unterstützen, Gegner zu
+bekämpfen oder vor ihnen zu fliehen.
 %%%%
 Artificer
 
-beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
-kompetent umgehen.
-%%%%
-Assassin
-
-Assassinen sind die Heimlichkeit in Person, bereit um ahnungslose Gegner zu
-erstechen. Nicht nur Mantel und Degen, sie tragen fiese Curare Nadeln für ihr
-Blasrohr.
+Artifizienten beginnen mit ein paar Zauberstäben und einem Knüppel. Sie müssen
+bessere Waffen und Rüstungen finden, bevor ihre Zauberstäbe aufgebraucht sind.
 %%%%
 Berserker
 
-Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
-einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris
+Berserker glauben an Trog, den magiehassenden Gott der Raserei. Anfangs kann
+nicht viel einen tobenden Berserker aufhalten, außer die eigene Hybris.
+%%%%
+Brigand
+
+Briganten tragen vergiftete Wurfpfeile und eine kleine Anzahl fieser
+Curare-Wurfpfeile.
 %%%%
 Chaos Knight
 
-Chaosritter sind Spielzeuge des unberechenbaren Xom, und sind den ständig
-wechselnden Gefühlen des Gottes ausgesetzt.
+Chaosritter sind Spielzeuge des unberechenbaren Xom und sind der ständig
+wechselnden Stimmungslage des Gottes ausgesetzt.
+%%%%
+Cinder Acolyte
+
+Aschenakolythen verehren Ignis und schöpfen aus der Flamme eines sterbenden
+Gottes, bis nichts mehr übrig ist. Sie sind sowohl zum Nahkampf als auch zu
+Feuermagie befähigt.
 %%%%
 Conjurer
 
-Elementbeschwörer konfrontieren Probleme mit schädlichen Zaubersprüchen aus dem
-Buch der Elementbeschwörungen.
+Konjuranten beginnen mit dem Zauber Magisches Geschoss und können weitere
+nicht-elementare Zauber erlernen, um ihre Gegner zuverlässig zu vernichten.
 %%%%
-Death Knight
+Delver
 
-Todesritter sind Nahkämpfer, die die Untoten im Namen von Yredelemnul, dem
-Dunklen, kontrollieren.
+Entdecker beginnen ihre Suche fünf Ebenen unter der Oberfläche. Eine Reihe von
+mächtigen magischen Gegenstände helfen ihnen, die gefährliche Reise nach oben
+zu überleben.
 %%%%
 Earth Elementalist
 
-Erd-Elementalisten kennen den Sandstrahl-Zauber und tragen Steine mit sich, um
-die Kraft des Zaubers zu erhöhen. Mehr Erdzaubersprüche befinden sich in ihrem
-Buch der Geomantie.
+Erdmagier kennen den Sandstrahl-Zauber und können später weitere
+Erdzaubersprüche lernen, die zum heimlichen Erstechen oder für brutale
+Konjurationen geeignet sind.
 %%%%
 Enchanter
 
-Verzauberer benutzen Zaubersprüche, um sich selbst im Kampf zu stärken oder
-Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
+Verhexer kennen eine Vielzahl von Verhexungen um ihre Feinde außer Gefecht
+zu setzen und sind mit einem verzauberten Dolch und einem Trank der
+Unsichtbarkeit ausgerüstet.
+%%%%
+Fighter
+
+Kämpfer sind mit Rüstung und Schild ausgrüstet sowie mit einer Waffe ihrer
+Wahl und einem Trank der Macht.
 %%%%
 Fire Elementalist
 
-Feuer-Elementalisten starten mit dem Buch der Flammen und kennen den
-Flammenzungen-Zauber. Die anderen Zauber in ihrem Buch befassen sich ebenfalls
-mit Zerstörung.
+Feuermagier haben den Zauber Fuchsfeuer gelernt. Ihre anderen Startzauber sind
+ebenfalls auf feurige und explosive Zerstörung ausgerichtet.
 %%%%
 Gladiator
 
-Gladiatoren sind bereit für die Arena mit leichter Rüstung, Schild, Netzen und
-einer Waffe ihrer Wahl.
-%%%%
-Healer
-
-Heiler sind Anhänger Elyvilons, bereit sich selbst und andere zu heilen. Solche
-Heilung kann Bestien und Barbaren befrieden, was Erfahrung einbringt.
-%%%%
-Hunter
-
-Jäger können aus der Ferne angreifen ohne auf nervtötende Magie zurückgreifen
-zu müssen.
-%%%%
-Ice Elementalist
-
-Eis-Elementalisten starten mit dem Buch des Frosts und dem Gefrierzauber. Die
-anderen Zauber in ihrem Buch sind recht vielseitig.
-%%%%
-Monk
-
-Mönche sind bereit, allen im Verlies lauernden Gefahren nur mit einem Gewand
-und ihrem unbewaffneten Körper entgegenzutreten.
-%%%%
-Necromancer
-
-Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren. Sie beginnen
-mit dem Schmerzfluch.
-%%%%
-Summoner
-
-Boten fangen mit dem Buch von Callings an und sind im Stande sich zu werfen
-Fordern Kleines Säugetier vom Anfang Auf.
-%%%%
-Transmuter
-
-Verwandler ändern ihre Form in die eines Monsters. Sie können außerdem Stäbe in
-Schlangen verwandeln.
-%%%%
-Venom Mage
-
-Giftmagier starten mit dem Handbuch des jungen Giftmörders und dem
-Stich-Zauberspruch. Sie haben es am Anfang ziemlich leicht.
-%%%%
-Wanderer
-
-Wanderer beginnen mit zufälliger Ausrüstung und Fertigkeiten.
-%%%%
-Warper
-
-Teleporter starten mit einer Waffe ihrer Wahl und einer
-Kurzstreckenteleport-Schriftrolle(?). Sie können Zaubersprüche aus dem Buch der
-räumlichen Bewegungen lernen.
+Gladiatoren sind bereit für die Arena mit leichter Rüstung, einer Waffe ihrer
+Wahl und ein paar Wurfwaffen und Netzen.
 %%%%
 Hedge Wizard
 
-Zauberer starten mit einem Buch der kleinen Magie, das eine breite Auswahl an
-Zaubersprüchen enthält. Sie haben mehr magische Reserven als irgendein anderer
-Beruf(?).
+Heckenzauberer sind magische Generalisten und gut darin, eine Vielzahl von
+Werkzeugen einzusetzen, um ihre Gegner zu frustieren und sich einen Vorteil auf
+dem Schlachtfeld zu verschaffen.
+%%%%
+Hunter
+
+Jäger tragen einen Kurzbogen, leichte Rüstung und eine Schriftrolle der
+Schmetterlinge.
+%%%%
+Hexslinger
+
+Bannschützen tragen eine Schleuder und nutzen Verhexungen, um ihre Feinde
+anfälliger für Fernangriffe zu machen.
+%%%%
+Ice Elementalist
+
+Eismagier starten mit dem Zauber Einfrieren. Ihre späteren Zauber bieten starke
+Angriffs- und Verteidigungsmöglichkeiten, können jedoch ihre Bewegungsfreiheit
+einschränken.
+%%%%
+Monk
+
+Mönche beginnen mit einer einfachen Waffe ihrer Wahl, einer Kugel des Lichts,
+einem Trank der Ambrosia und einem Trank der Erleuchtung. Sie erhalten
+zusätzliche Pietät beim ersten Gott, den sie verehren.
+%%%%
+Mystic
+
+Mystiker verwandeln ihre Körper mit Talismanen, um besser mit der Magie im
+Einklang zu sein. Ihre Zaubersprüche erfordern Beweglichkeit im Kampf, können
+jedoch aus allen vier Elementen schöpfen.
+%%%%
+Necromancer
+
+Nekromanten beginnen mit dem Seelensplitter-Zauber. Später können sie die Toten
+zu Verbündeten machen und den Lebenden die Lebenskraft entziehen, um sie selbst
+aufzunehmen.
+%%%%
+Reaver
+
+Plünderer beginnen mit einer Waffe ihrer Wahl und tödlicher Magie als Ergänzung
+bei Bedarf. Sie starten mit dem Zauber Kuss des Todes.
+%%%%
+Summoner
+
+Beschwörer können am Anfang kleine Säugetiere beschwören und beginnen mit
+anderen Zaubern in ihrer Sammlung, die stärkere und exotischere Verbündete
+beschwören.
+%%%%
+Forgewright
+
+Magieschmiede sind Magier, die sich auf die Erschaffung von Geschütztürmen und
+mechanischen Verbündeten spezialisieren und an deren Seite kämpfen.
+%%%%
+Shapeshifter
+
+Gestaltwandler verwenden Talismane, um ihre Form zu verändern und starke
+Nahkämpfer zu werden (vor allem unbewaffnet). Dafür geben sie Rüstungen auf.
+%%%%
+Stalker
+
+Pirscher verwandeln ihre Körper mit Talismanen, um ihre Gegner besser zu
+täuschen und außer Gefecht zu setzen. Später können sie sogar Tränke in einen
+Sprühnebel schädlicher Wolken verwandeln.
+%%%%
+Alchemist
+
+Alchemisten starten mit dem Zauber Giftige Ausdünstungen und ihre Magie ist sehr
+effektiv gegen Feinde, die für Gift anfällig sind.
+%%%%
+Wanderer
+
+Wanderer beginnen mit zufälliger Ausrüstung und zufälligen Fertigkeiten.
+%%%%
+Warper
+
+Warper beginnen mit einer Waffe ihrer Wahl, einer Schriftrolle des Blinzelns,
+Wurfpfeilen der Disjunktion und einigen Translokationszaubern in ihrer Sammlung.
 %%%%
