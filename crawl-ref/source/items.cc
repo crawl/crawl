@@ -2226,19 +2226,19 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
     {
         case OBJ_POTIONS:
             for (const char& key : Options.potion_shortcuts)
-                if (isalpha(key) > 0)
+                if (isaalpha(key))
                     reserved[letter_to_index(key)] = true;
             break;
         case OBJ_SCROLLS:
             for (const char& key : Options.scroll_shortcuts)
-                if (isalpha(key) > 0)
+                if (isaalpha(key))
                     reserved[letter_to_index(key)] = true;
             break;
         case OBJ_WANDS:
         case OBJ_MISCELLANY:
         case OBJ_BAUBLES:
             for (const char& key : Options.evokable_shortcuts)
-                if (isalpha(key))
+                if (isaalpha(key))
                     reserved[letter_to_index(key)] = true;
             break;
         default:
@@ -2254,7 +2254,7 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
         for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
         {
             if (!you.inv[i].defined() || you.inv[i].is_identified()
-                || !isalpha(you.inv[i].slot))
+                || !isaalpha(you.inv[i].slot))
             {
                 continue;
             }
@@ -2272,7 +2272,7 @@ static int _letter_for_consumable(item_def& item, bool first_pickup)
     for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
     {
         if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
-            && isalpha(you.inv[i].slot))
+            && isaalpha(you.inv[i].slot))
         {
             used_slots[letter_to_index(you.inv[i].slot)] = true;
         }
