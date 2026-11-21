@@ -799,6 +799,27 @@ llllvv----lOl----vvllll
         lllllll
 ENDMAP
 
+NAME:   tekkud_hell_entry_souls_on_fire
+TAGS:   transparent patrolling
+MONS:   balrug, spectral thing
+NSUBST: 2 = 2:2 / * = 2''
+FTILE:  '+12 = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "mid")
+MAP
+.............
+.v.v.v.v.v.v.
+..vvvvvvvvv..
+.vv'''1'''vv.
+..v'2'''2'v..
+.vv2''O''2vv.
+..v'''''''v..
+.vv'''''''vv.
+..vvv+++vvv..
+.v.v.....v.v.
+.............
+ENDMAP
+
 ##############################################################################
 # Vestibule of Hell and Geryon
 ##############################################################################
@@ -953,7 +974,7 @@ KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie
 KMONS:  b = revenant soulmonger / lich / vampire mage / ancient lich / \
-            mummy priest / curse skull / dread lich
+            mummy priest / dread lich
 TILE:   c = dngn_stone_dark
 MAP
 .......dd...............dd.......

@@ -421,6 +421,10 @@ NAME:   uniq_mlioglotl
 DEPTH:  Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Mlioglotl")
 
+NAME:   uniq_boreas
+DEPTH:  Swamp, Snake, Shoals, Spider
+: place_unique(_G, "Boreas")
+
 NAME:   uniq_wiglaf
 DEPTH:  Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Wiglaf")

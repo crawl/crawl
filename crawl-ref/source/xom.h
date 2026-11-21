@@ -21,6 +21,8 @@ using std::string;
 #define XOM_DISGUISE_OBSERVER_KEY "xom_disguise_observers"
 #define XOM_DISGUISE_RECOVERY_KEY "xom_disguise_recovery"
 
+#define XOM_EARLY_JOIN_KEY "xom_early_join"
+
 struct item_def;
 
 enum xom_message_type
@@ -105,8 +107,11 @@ enum xom_event_type
     XOM_BAD_MAKE_TRAPS,
     XOM_LAST_BAD_ACT = XOM_BAD_MAKE_TRAPS,
 
-    // Not 'real' events, but in this enum so they can be triggered easily in wizmode
-    XOM_BLESSING_CLEAVE,
+    // Not 'normal' events, but in this enum so they can be triggered easily in wizmode.
+    // Note that these are marshalled, and thus their enum order matters for
+    // save compat (unlike any of the ones above).
+    XOM_FIRST_BLESSING = 1000,
+    XOM_BLESSING_CLEAVE = XOM_FIRST_BLESSING,
     XOM_BLESSING_CHAOS_EISEGESIS,
     XOM_BLESSING_GUARDIAN,
     XOM_BLESSING_SPELLSTRIDE,
@@ -120,7 +125,7 @@ enum xom_event_type
 
     XOM_LAST_REAL_ACT = XOM_BLESSING_RANDOM,
 
-    XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
+    XOM_PLAYER_DEAD = 10000, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
 };
 
@@ -146,6 +151,7 @@ void xom_give_blessing();
 string xom_remove_blessing();
 
 void xom_maybe_reverts_banishment();
+void xom_revert_banishment();
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
@@ -159,7 +165,8 @@ void debug_xom_effects();
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
-void xom_reduce_floor_lock();
+void xom_check_floor_lock();
+void xom_maybe_reduce_floor_lock(const monster& mon_killed);
 
 void xom_maybe_disguise_self(monster* observer);
 void xom_disguise_self();

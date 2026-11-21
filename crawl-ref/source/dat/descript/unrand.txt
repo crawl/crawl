@@ -940,7 +940,7 @@ Evidently intended for use by mounted hexslingers, its magic wards and sigils
 are in a hopeless state of disrepair. Nevertheless, some traces of their power
 still remain.
 %%%%
-bone scales
+bone dragon armour
 
 The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
 may call it that) into a truly wretched piece of armour. Its jagged bones seem
@@ -954,3 +954,10 @@ imagery, but the focus of the scene is obscured by a great dark stain {{
         return "that smells strongly "
     end
 }}of ashes and salt. It seems somehow blasphemous to wear.
+%%%%
+boreal bulwark
+
+A towering wall of ancient tamarack and patterned steel, said to have been
+quenched in the sweat of the North Wind itself. Despite its weight, those who
+carry it find their steps bolstered by bracing gusts and given the strength to
+endure even the toughest hardships.

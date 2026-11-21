@@ -33,6 +33,7 @@
 #include "notes.h"
 #include "output.h"
 #include "player.h"
+#include "player-notices.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
@@ -45,8 +46,6 @@
 #include "tag-version.h"
 #include "transform.h"
 #include "xom.h"
-
-static void _mark_unseen_monsters();
 
 static bool _use_slots(unrand_type item, bool count_melded, bool count_items)
 {
@@ -1867,7 +1866,7 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
             mpr("You feel strangely numb.");
 
         if (proprt[ARTP_SEE_INVISIBLE])
-            _mark_unseen_monsters();
+            mark_unseen_monsters();
 
         if (is_unrandom_artefact(item))
         {
@@ -2456,7 +2455,7 @@ static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded)
         if (!you.can_see_invisible())
         {
             mpr("You feel less perceptive.");
-            _mark_unseen_monsters();
+            mark_unseen_monsters();
         }
         break;
 
@@ -2784,7 +2783,7 @@ static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded
         break;
 
     case RING_SEE_INVISIBLE:
-        _mark_unseen_monsters();
+        mark_unseen_monsters();
         break;
 
     case RING_PROTECTION:
@@ -2845,13 +2844,6 @@ static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
-}
-
-static void _mark_unseen_monsters()
-{
-    for (monster_iterator mi; mi; ++mi)
-        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
-            mi->sense_if_invisible();
 }
 
 // This brand is supposed to be dangerous because it does large

@@ -1627,6 +1627,38 @@ xx.....O.....xx
        x
 ENDMAP
 
+# (An Unfavorable Semicircle reference of a vault.)
+NAME:   tekkud_abyss_golden
+WEIGHT: 2
+KFEAT:  T = dry_fountain
+KFEAT:  s = abandoned_shop
+KFEAT:  m = iron_grate
+NSUBST: . = 3:0 / 6:0. / 1:$ / * = .:670 +:25 x
+MAP
+ xxxxxxxxxxxxxx
+xxxT..........+x
+xx.............x
+xT.xx.......xx.x
+x..xxx.....xxx.xxxxxx
+x...xxx...xxx.......xx
+x....xx...xx.........xx
+x......x.x.......xxxxxx
+x..s....x.......x.....x
+x.....xx........x.....x
+xx0..xxxx.xx.....x....x
+ @....xx...x..GG..xxxxx
+ @................x
+ @.....x...xG.s..Gx
+xxxxxx.xx.xxG....Gx
+xxxxx.............x
+xxx....x...x..GG..++  G
+xxx.G.xx...xmxxxx+'+
+xxx...xx...xm    +++x
+xxxxxxxx...x       xx
+xxxxxxxx@@@x         x
+ xxxxxxx   xG    G
+ENDMAP
+
 ###############################################################################
 # Abyss rune vaults
 #
@@ -1728,7 +1760,7 @@ ENDMAP
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
-KMONS:  2 = golden eye / glass eye w:4
+KMONS:  2 = golden eye / glass eye w:2
 KMONS:  3O = laughing skull
 KMONS:  4 = small abomination / weeping skull w:3
 KMONS:  5 = zykzyl
@@ -1777,7 +1809,7 @@ KFEAT:  a = x
 KFEAT:  A = stone_arch
 KFEAT:  t = demonic_tree
 KFEAT:  " = runelight
-NSUBST: 1 = 1:1 / / 3:2 / 2:3 / 3:5 / 1:15 / 10 = 11. / * = .
+NSUBST: 1 = 3:1 / 3:2 / 3:3 / 4:5 / 8 = 11. / * = .
 NSUBST: ' = 1:d / 4:d / * = d:1 .:199
 SUBST:  t = tbb
 TILE:   a = wall_wax
@@ -1791,14 +1823,14 @@ MAP
       xxxxattOttaaxxx
     xxxaaaad1t1daaaxxx
    xxaa1aa21'1'12aa1axxx
-  xxaa'a'1"a"."a"1'a'aaxx
- xxaa4aaa1aaa4aaa1aaa4aaxx
-xxaa..'a'."a"."a".'a'.'aaxx
-xaa.'a'.'a'.'a'.'a'.'a'.aax
-xaa1aaa1aaa1aaa1aaa1aaa1aax
-xa..'a'.'a'.'a'.'a'.'a'..ax
+  xxaa'a'1"a"1"a"1'a'aaxx
+ xxaa4aaa1aaa.aaa1aaa4aaxx
+xxaa.1'a'."a"4"a".'a'1'aaxx
+xaa.'a'1'a'.'a'.'a'1'a'.aax
+xaa1aaa.aaa1aaa1aaa.aaa1aax
+xa..'a'1'a'.'a'.'a'1'a'..ax
 aa.a'."a".'a'.'a'."a".'a.aa
-F.aaa1aaa1aaa1aaa1aaa1aaa.F
+F.aaa.aaa.aaa.aaa.aaa.aaa.F
  ..a.."a".'a'.'a'."a"..a..
    ..........F..........
         .....A......
@@ -1886,13 +1918,13 @@ ENDMAP
 
 NAME:   doesnt_abyss_rune_brain_food
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   neqoxec / brain worm w:1, very ugly thing, glowing orange brain
+MONS:   neqoxec / brain worm w:2, very ugly thing, glowing orange brain
 MONS:   cognitogaunt, starcursed mass, orange crystal statue
 KITEM:  O = abyssal rune of Zot
 KFEAT:  " = runelight
 COLOUR: n = lightmagenta
 NSUBST: - = 4:d / 2 = d. / *:.
-NSUBST: . = 2:1 / 1:3 / 1:4 / 1:15 / 1:114 / 2 = 224... / *:.
+NSUBST: . = 2:1 / 1:3 / 1:4 / 1:115 / 2 = 124... / *:.
 SUBST:  l : lw
 : dgn.delayed_decay(_G, 'd', 'minotaur corpse / troll corpse / ogre corpse')
 MAP
@@ -1957,12 +1989,14 @@ ENDMAP
 
 NAME:   spicy_pingpong_abyss_rune
 TAGS:   abyss_rune unrand
-# Four starflowers, 2 inside, 2 outside (1). Four wretched stars maximum, with
+# Four starflowers, 2 inside, 2 outside (1). Three wretched stars maximum, with
 # chances for monsters similiar to starflowers or generic abyss monsters
 # who don't mind their target being moved around.
 MONS:   starflower, wretched star
-MONS:   tentacled starspawn / starcursed mass / demonic plant / oklob plant w:30
-MONS:   cognitogaunt w:5 / occultist / thrashing horror / screaming refraction w:2
+MONS:   tentacled starspawn / starcursed mass w:5 / \
+        demonic plant / oklob plant w:35
+MONS:   occultist / thrashing horror / \
+        cognitogaunt w:2 / screaming refraction w:2
 MONS:   demonic plant
 KITEM:  O = abyssal rune of Zot
 KFEAT:  - = runelight
@@ -1970,8 +2004,8 @@ KFEAT:  A = stone_arch
 KFEAT:  n = iron_grate
 KFEAT:  P = demonic_tree w:30 / petrified_tree / tree
 KFEAT:  t : demonic_tree / altar_lugonu / granite_statue
-NSUBST: F = 2:1 / *:3
-SUBST:  2 = 223, 3 = 3334
+NSUBST: F = 2:1 / *:3, 3 = 1:. / *:3, 2 = 1:. / * = 223
+SUBST:  3 = 334
 COLOUR: cbO = magenta
 COLOUR: n- = lightmagenta
 FTILE:  AO = floor_crystal_squares
@@ -2045,33 +2079,38 @@ KMONS:  1 = generate_awake lightning spire
 KMONS:  2 = raiju
 KMONS:  3 = smoke demon
 KMONS:  4 = blizzard demon
+KMONS:  5 = storm dragon zombie
 KMONS:  O = abyssal acolyte
 KITEM:  O = abyssal rune of Zot
 KFEAT:  O = shallow_water
+KFEAT:  5 = deep_water
 KFEAT:  A = stone_arch
 KFEAT:  1 = runelight
 FTILE:  A234OwW = floor_crystal_squares
 MAP
-www1w1www
-www2w4www
-123WOW321 A
-www4w2www
-www1w1www
+wwww w wwww
+wwww1w1wwww
+www52w4wwww
+ 123WOW321 A
+wwww4w25www
+wwww1w1wwww
+wwww w wwww
 ENDMAP
 
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
-MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage / abyssal acolyte w:4
-KMONS:  KL = lich
+MONS:   unseen horror / harpy simulacrum, chaos spawn
+MONS:   cognitogaunt, ogre mage / abyssal acolyte w:4
+KMONS:  L = lich
 KMONS:  OP = ancient lich / dread lich
-KITEM:  KO = abyssal rune of Zot
+KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  ^ = trap_harlequin / trap_devourer w:4
 KFEAT:  ' = runelight
-NSUBST: L = 1:KKO / 1:LLP / *:L
+NSUBST: L = 1:O / 1:LLP / *:L
 MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-            size = 1, walk_dist = 1, spread_rate = 16 }
+            size = 2, walk_dist = 1, spread_rate = 16 }
 SUBST:  ! = V, X = x', x = xc, C : c.
 FTILE:  @A+V1234LOx = floor_crystal_squares
 COLOUR: @12LO = lightmagenta
@@ -2087,10 +2126,10 @@ cccc+c++.4xx X X
  cccLcC.c.3xx X X
 X ccccx4.1.2xx X
   X X xx3.1.2xx X
-   X X xx2.!..xxx
-    X X xx2....xx
-     X X xx....+'
-      X X xx...+'
+   X X xx2....xxx
+    X X xx2...!xx
+     X X xx..^.+'
+      X X xx!..+'
        X X xx++x@
         X X x''@A
 ENDMAP
@@ -2142,7 +2181,7 @@ KFEAT:   " = runelight
 # with one to three (mostly two) pairs of opposite sides made floor or wall.
 SHUFFLE: HIJKL, MNOPQ
 SUBST:   HIMN = l, J : ll., KL = ., O : llP, PQ : xxxxb, c : ccv
-NSUBST:  ' = 1:4 / 1:8 / 1 = 22248 / 10 = 2216 / *:., d = 1:dddd. / *:.
+NSUBST:  ' = 1:4 / 1:8 / 1 = 22248 / 8 = 2216 / *:., d = 1:dddd. / *:.
 : single_cloud(_G, "F", "translocational energy", true)
 FTILE:   AF3579_OG+ = floor_crystal_squares
 COLOUR:  F3579 = lightmagenta
@@ -2200,36 +2239,37 @@ WEIGHT:  5
 KMONS:   1 = great orb of eyes perm_ench:shapeshifter
 KMONS:   2 = guardian serpent perm_ench:shapeshifter
 KMONS:   3 = crystal guardian
-KMONS:   4 = unseen horror
-KMONS:   5 = thrashing horror
-KMONS:   6 = lurking horror
+KMONS:   48 = bone dragon
+KMONS:   5 = unseen horror
+KMONS:   6 = thrashing horror
+KMONS:   79 = lurking horror
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
-KITEM:   4d = scroll of noise w:15 q:1 / \
+KITEM:   5d = scroll of noise w:15 q:1 / \
          club w:6 / stone q:1 / dart q:1 ego:atropa / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of flame / whip w:2 / hat mundane w:5
-KITEM:   6e = abyssal rune of zot mimic
+KITEM:   689 = wand of flame / mundane dire flail / whip w:2 / hat mundane w:5
+KITEM:   7e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
 KFEAT:   " = runelight
 SHUFFLE: 12
-SUBST:   X = xxxxc, c = cccvb
-FTILE:   Ade456O = floor_crystal
-FTILE:   .@12 = floor_crystal_squares
-COLOUR:  de456O = lightmagenta
+SUBST:   8 = 668, X = xxxxc, c = cccvb
+FTILE:   Ade56789O = floor_crystal
+FTILE:   .@1234 = floor_crystal_squares
+COLOUR:  de56789O = lightmagenta
 MAP
     .....  . X ".@
   ........cXXXXX. X
- ...xmxmxcx c2c.c" .
- ..mxd4dxm1......c..
-..xxd5d4dxx.......X"
-."md6ddd5d+3.....cX
-@.x4d4O4d4+...e..1XXA
-."md5ddd6d+3.....cX
-..xxd4d5dxx.......X"
- ..mxd4dxm1......c..
- ...xmxmxxx c2c.c" .
+ ...cncnccx c2c.c" .
+ ..ncd5dcn1......c..
+..ccd6d5dcc.......X"
+."nd7d5d6d+3.....cX
+@.c8d9O9d5+4..e..1XXA
+."nd6d5d7d+3.....cX
+..ccd5d6dcc.......X"
+ ..ncd5dxn1......c..
+ ...cncnccx c2c.c" .
   ........XXXXXX. X
     .....  . X ".@
 ENDMAP
@@ -2285,38 +2325,37 @@ ENDMAP
 
 NAME:    evilmike_nicolae_abyss_rune_betentacled_crabyss
 TAGS:    abyss_rune unrand transparent no_pool_fixup patrolling
-KMONS:   1P = apocalypse crab
+KMONS:   1 = apocalypse crab
 KMONS:   2 = fire crab
 KMONS:   3 = ghost crab
 KMONS:   K = kraken
 KMONS:   T = tentacled monstrosity
 KMONS:   S = shambling mangrove
 KITEM:   OP = abyssal rune of Zot
-KFEAT:   TS1P = W
+KFEAT:   MS1P = W
 KFEAT:   K = w
 KFEAT:   A = stone_arch
 KFEAT:   " = runelight
-SHUFFLE: O1 / O1 / P'
+NSUBST:  23 = 1:1 / 1:.
 SUBST:   D : cw, ' = w
-FTILE:   A23O = floor_crystal_squares
+FTILE:   -A23OT = floor_crystal_squares
 COLOUR:  23O = lightmagenta
 MAP
-  .............
-  .cc.......cc.
-....c"ccccc"c....
-.cccccccOccccccc.
-.."cc1WWWWW1cc"..
-.cccWWDWSWDWWccc.
-.."cTWWWWWWWTc"..
-.ccccccWWWcccccc.
-..."cc"WWW"cc"...
- ..cc""WWW""cc..
- ..c"""WWW"""c..
- ..c"""WwW"""c..
- .cccWWwwwWWccc.
- .c22WwKwKwW33c.
- .cccWWwwwWWccc.
- ...""""A""""...
+  ...........
+  .cc.....cc.
+....c"ccc"c....
+.ccccccOcccccc.
+.."cc1WWW1cc"..
+.cccWWDWDWWccc.
+.."cWWWWWWWc"..
+.ccccccScccccc.
+..."cc-S-cc"...
+ ..ccT-w-Tcc..
+ ..c3-www-2c..
+ .cccWKwKWccc.
+ .c22wwwww33c.
+ .cccWwwwWccc.
+ ..."""A"""...
 ENDMAP
 
 ###############################################################################

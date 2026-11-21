@@ -1855,8 +1855,8 @@ int player_spec_death()
 {
     int sd = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
-        sd += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
+        sd += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
@@ -1871,8 +1871,8 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_FIRE))
-        sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_FIRE))
+        sf += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
@@ -1889,8 +1889,8 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_COLD))
-        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_COLD))
+        sc += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
 
@@ -1907,8 +1907,8 @@ int player_spec_earth()
     int se = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_EARTH))
-        se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_EARTH))
+        se += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     se += you.wearing_ego(OBJ_ARMOUR, SPARM_EARTH);
 
@@ -1925,8 +1925,8 @@ int player_spec_air()
     int sa = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_AIR))
-        sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_AIR))
+        sa += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sa += you.wearing_ego(OBJ_ARMOUR, SPARM_AIR);
 
@@ -1942,8 +1942,8 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_CONJURATION))
-        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_CONJURATION))
+        sc += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 
@@ -1975,15 +1975,15 @@ int player_spec_alchemy()
 {
     int sp = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
-        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
+        sp += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sp += you.wearing_jewellery(AMU_CHEMISTRY);
 
     sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (you.unrand_equipped(UNRAND_OLGREB))
-        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
+        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     return sp;
 }
@@ -2979,22 +2979,22 @@ void apply_exp()
         you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
-    unsigned int skill_xp = exp_gained;
+    unsigned int scaled_xp = exp_gained;
     if (crawl_state.game_is_sprint())
-        skill_xp = sprint_modify_exp(skill_xp);
+        scaled_xp = sprint_modify_exp(scaled_xp);
 
     // xp-gated effects that use sprint inflation
-    _recharge_xp_evokers(skill_xp);
-    _reduce_abyss_xp_timer(skill_xp);
-    _handle_hp_drain(skill_xp);
-    _handle_banes(skill_xp);
-    _handle_ostracism(skill_xp);
-    _handle_breath_recharge(skill_xp);
-    _handle_cacophony_recharge(skill_xp);
-    _handle_batform_recharge(skill_xp);
-    _handle_watery_grave_recharge(skill_xp);
+    _recharge_xp_evokers(scaled_xp);
+    _reduce_abyss_xp_timer(scaled_xp);
+    _handle_hp_drain(scaled_xp);
+    _handle_banes(scaled_xp);
+    _handle_ostracism(scaled_xp);
+    _handle_breath_recharge(scaled_xp);
+    _handle_cacophony_recharge(scaled_xp);
+    _handle_batform_recharge(scaled_xp);
+    _handle_watery_grave_recharge(scaled_xp);
 
-    _handle_xom_blessing(skill_xp);
+    _handle_xom_blessing(scaled_xp);
 
     _log_form_xp(exp_gained);
 
@@ -3011,11 +3011,11 @@ void apply_exp()
     else
         you.experience += exp_gained;
 
-    you.exp_available += 10 * skill_xp;
+    gain_skill_experience(10 * scaled_xp);
 
     train_skills();
     while (check_selected_skills()
-           && you.exp_available >= calc_skill_cost(you.skill_cost_level))
+           && you.skill_points_available > 0)
     {
         train_skills();
     }
@@ -5726,7 +5726,6 @@ player::player()
     hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
     experience       = 0;
-    total_experience = 0;
     experience_level = 1;
     experience_pool  = 0;
     gold             = 0;
@@ -5783,7 +5782,9 @@ player::player()
     skill_menu_view = SKM_NONE;
 
     skill_cost_level = 1;
-    exp_available = 0;
+    skill_exp_available = 0;
+    skill_exp_spent = 0;
+    skill_points_available = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5949,8 +5950,6 @@ player::player()
     wind_category_inc.init(false);
     prevailing_wind = -1;
     gave_wind_change_warning = false;
-
-    gave_invis_clear_prompt = false;
 
     reset_escaped_death();
     on_current_level    = true;

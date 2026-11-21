@@ -582,7 +582,7 @@ kryias KRYIAS
 talos TALOS
 justicar JUSTICAR
 arcane_splint ARCANE_SPLINT
-bone_scales BONE_SCALES
+bone_dragon_armour BONE_DRAGON_ARMOUR
 forgewarden FORGEWARDEN
 
 %sdir player/transform
@@ -644,6 +644,8 @@ glove_short_blue
 %syn GLOVE_SHORT_BLUE
 glove_short_gray
 %syn GLOVE_SHORT_GRAY
+crab_claws
+%syn GLOVE_CRAB_CLAWS
 ## mutations
 claws CLAWS
 player/mutations/octopode1 OCTOPODE_SPIKE
@@ -1152,6 +1154,7 @@ kite_shield_storm_queen KITE_SHIELD_STORM_QUEEN
 
 tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
 tower_shield_louise TOWER_SHIELD_LOUISE
+boreal_bulwark BOREAL_BULWARK
 
 %sdir player/hand2/doll_only
 

@@ -453,9 +453,9 @@ SUBVAULT: e : grunt_profane_temple
 SUBVAULT: f : grunt_profane_temple
 SUBVAULT: g : grunt_profane_temple
 : grunt_profane_halls_setup(_G)
-TILE:     G = dngn_statue_imp / dngn_statue_dragon / dngn_statue_maw / \
-              dngn_statue_demonic_bust / dngn_statue_tentacles / \
-              dngn_statue_wraith / dngn_statue_sigmund
+TILE:     G = dngn_statue_depths_zot_tentacles w:25 / dngn_statue_depths_asmodeus / \
+              dngn_statue_depths_zot_cerebov / dngn_statue_depths_zot_devil w:25 / \
+              dngn_statue_depths_fangs w:15 / dngn_statue_depths_zot_ancient_evil w:1
 TILE:     C = depths_column
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 : set_feature_name("metal_statue", "iron statue")

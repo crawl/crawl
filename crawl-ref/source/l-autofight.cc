@@ -96,8 +96,11 @@ static int _shot_score(coord_def target, coord_def aim, bool pierce, bool primar
         {
             map_cell& cell = env.map_knowledge(g);
             monster_info *mi = cell.monsterinfo();
-            if (mi && !mi->can_shoot_through_monster && mi->type != MONS_BUSH)
+            if (mi && !mi->is(MB_REMEMBERED_INVIS)
+                && !mi->can_shoot_through_monster && mi->type != MONS_BUSH)
+            {
                 num_blockers++;
+            }
         }
     }
     if (!found_main_target || (primary_must_be_first && !found_main_target_first))

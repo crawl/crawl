@@ -38,6 +38,7 @@ poison_more MORE_POISON
 poison_max MAX_POISON
 sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
+inner_flame_large INNER_FLAME_LARGE
 constricted CONSTRICTED
 berserk BERSERK
 frenzied FRENZIED

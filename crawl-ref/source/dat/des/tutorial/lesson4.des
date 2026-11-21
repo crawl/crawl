@@ -31,13 +31,11 @@ DESC:    Lesson 4: Magic and Spellcasting
 ORDER:   4
 ORIENT:  encompass
 KFEAT:   ABCDEFG = .
-# TODO: pad g here was for spell hunger, what else could go here?
 COLOUR:  ABCDEFGdef = lightblue
 FTILE:   ABCDEFGdef = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart&mephitic_cloud title:Introductory_Spellcasting owner:player
 ITEM:    ring of magical power
 ITEM:    ring of wizardry
-# TODO: g was rations for spell hunger, replace with something more modern
 MONS:    training dummy ; stone q:20
 MONS:    bat zombie, goblin zombie
 MONS:    rat, goblin

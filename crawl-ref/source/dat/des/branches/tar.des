@@ -1168,6 +1168,22 @@ xx@@@xx
            xx@@@xx
 ENDMAP
 
+NAME:   tekkud_tar_oblivion_access
+TAGS:   transparent
+DEPTH:  Tar:2-, !Tar:$
+MONS:   oblivion hound / reaper w:2
+NSUBST: + = 2:+ / *:x, ' = 2:1 / 4 = 1. / *:.
+SUBST:  - = x.
+MAP
+xxxxxxxxxxxx
+x'x-{-x.'.xx+x
+x.-.x-..xx-.'x
++......-x.''.x
+x.-.---..-.-.+
+xxx..x.x.x.x.x
+ xxx+xxxxx+xxx
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################
@@ -1614,7 +1630,7 @@ MAP
 ENDMAP
 
 NAME:   tar_grunt_small_loot
-TAGS:   tar_grunt_small_loot allow_dup unrand no_exits
+TAGS:   tar_grunt_small_loot allow_dup unrand no_exits no_tele_into
 MONS:   oblivion hound w:20 / profane servitor w:15 / shadow wraith w:10 / \
         putrid mouth w:5
 NSUBST: x = 1:m / *:x

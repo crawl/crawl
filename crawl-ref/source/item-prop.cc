@@ -2249,7 +2249,7 @@ string launched_projectile_name(const item_def &item)
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
-bool is_throwable(const actor *actor, const item_def &wpn)
+bool is_throwable(const actor *actor, const item_def &wpn, bool base)
 {
     if (wpn.base_type != OBJ_MISSILES)
         return false;
@@ -2258,7 +2258,8 @@ bool is_throwable(const actor *actor, const item_def &wpn)
 
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();
-    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
+    return wpn.sub_type != MI_JAVELIN
+           || actor->body_size(PSIZE_TORSO, base) >= SIZE_MEDIUM;
 }
 
 /**

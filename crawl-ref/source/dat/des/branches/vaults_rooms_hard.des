@@ -2025,7 +2025,7 @@ ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:30 / \
         phial of floods w:3 / tin of tremorstones w:5 / gold w:40
 KFEAT:  _ = altar_sif_muna
 KFEAT:  ~ = W
-KPROP:  ~ = no_tele_into
+KPROP:  2~ = no_tele_into
 FTILE:  ._+123d = floor_crystal
 MAP
                                      bbbbbbbbbbbbb

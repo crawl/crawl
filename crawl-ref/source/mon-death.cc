@@ -3542,7 +3542,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         // Xom's mannquin 'reaping'
         if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_MANNEQUINS
             && (mons.base_attitude == ATT_HOSTILE || mons.base_attitude == ATT_NEUTRAL)
-            && YOU_KILL(killer) && mons_can_be_mannequin(mons))
+            && (YOU_KILL(killer) || pet_kill)
+            && mons_can_be_mannequin(mons))
         {
             CrawlVector& vec = you.props[XOM_MANNEQUIN_TROUPE].get_vector();
             vec.push_back(mons.type);
@@ -3571,8 +3572,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
 
-    if (!crawl_state.game_is_arena() && count_kill && !in_transit)
+    if (!crawl_state.game_is_arena() && count_kill && !in_transit
+        && mons.base_attitude != ATT_FRIENDLY)
+    {
         you.kills.record_kill(&mons, killer, pet_kill);
+    }
 
     if (mount_death)
     {
@@ -3673,12 +3677,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         beogh_follower_banished(mons);
     }
 
-    if (you.attribute[ATTR_XOM_FLOOR_LOCK]
-        && !mons.is_summoned() && !mons.is_peripheral()
-        && mons.base_attitude == ATT_HOSTILE)
-    {
-        xom_reduce_floor_lock();
-    }
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK] && !RESET_KILL(killer))
+        xom_maybe_reduce_floor_lock(mons);
 
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons, reset);

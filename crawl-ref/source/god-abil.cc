@@ -4166,10 +4166,11 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
             message        = "A storm cloud blasts the area with cutting wind!";
             break;
         case 3:
-            beam.name    = "blast of rubble";
-            beam.flavour = BEAM_FRAG;
-            beam.colour  = BROWN;
-            message      = "The ground shakes violently, spewing rubble!";
+            beam.name      = "blast of rubble";
+            beam.flavour   = BEAM_FRAG;
+            beam.colour    = BROWN;
+            beam.tile_beam = TILE_BOLT_DECONSTRUCT_RUBBLE_BROWN;
+            message        = "The ground shakes violently, spewing rubble!";
             break;
         default:
             break;

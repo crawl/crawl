@@ -1415,8 +1415,14 @@ step to create a living beam spell in your trail.
 %%%%
 Troupe status
 
-Slaying corporeal foes yourself will cause Xom to gift you mannequins in their
-image once the battle is ended.
+Slaying corporeal foes will cause Xom to gift you mannequins in their image once
+the battle is ended.
+%%%%
+Troupe+ status
+
+Slaying corporeal foes will cause Xom to gift you mannequins in their image once
+the battle is ended. (The number beside this indicates how many mannequins are
+currently waiting to be gifted.)
 %%%%
 Battleshape status
 
@@ -1455,3 +1461,8 @@ ends, and there is nobody else around to see you, its cooldown will be skipped.
 
 You have recently disguised yourself and must explore some more before being
 able to do so again.
+%%%%
+-2ndWind status
+
+Your Boreal Bulwark must spend some time recharging its power before it can
+regenerate your health.

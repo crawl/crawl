@@ -325,9 +325,10 @@ ORIENT: float
 MONS:   orc, orc wizard / orc priest, orc warrior
 KFEAT:  O = enter_orcish_mines
 NSUBST: 1 = 4:2 / * = 1 2:1
-SUBST:  ? = x., ! : $.
+SUBST:  ? = x., ! : $., _ = x_
+CLEAR:  _
 MAP
-x??@....@....@??x
+x_?@....@....@?_x
 xx??.........??xx
  xx??1111111??xx
   xx??11111??xx

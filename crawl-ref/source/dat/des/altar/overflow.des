@@ -457,8 +457,7 @@ NAME:   cheibriados_altar_2
 TAGS:   transparent decor buniq_s_overflow_glass
 WEIGHT: 1
 MONS:   torpor snail
-KPROP:  1 = no_tele_into
-KMASK:  1 = opaque
+: display_closet_setup(_G, "1")
 : standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
 MAP
 .......
@@ -636,14 +635,18 @@ NAME:   nicolae_cheibriados_the_sands_of_time
 TAGS:   transparent decor
 COLOUR: ` = brown
 FTILE:  ` = floor_sand
+: if you.in_branch("Depths") then
+FTILE:  '_ = floor_pebble_lightcyan
+TILE:   c = dngn_stone_wall_white
+: end
 : standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
 MAP
  ccc+ccc
 .n`````n.
 .nn```nn.
-..nn.nn..
+..nn'nn..
 @..n_n..@
-..nn.nn..
+..nn'nn..
 .nn```nn.
 .n`````n.
  ccc+ccc
@@ -652,6 +655,9 @@ ENDMAP
 NAME:  nicolae_cheibriados_time_spiral
 TAGS:  transparent decor
 SUBST: c : ccvvb
+: if you.in_branch("D") and you.depth() < 7 then
+SUBST: b = c
+: end
 : standard_overflow_setup(_G, { { "cheibriados",  "_" } },  true)
 MAP
    ......
@@ -1452,9 +1458,7 @@ TAGS:   buniq_s_overflow_glass
 DEPTH:  D:3-, Vaults, !Vaults:$, Depths
 WEIGHT: 2
 KITEM:  $ = gold
-KPROP:  $ = no_tele_into
-KMASK:  $ = opaque
-KMASK:  $ = no_monster_gen
+: display_closet_setup(_G, "$")
 TILE:   n = dngn_transparent_stone_yellow
 TILE:   m = dngn_transparent_wall_yellow
 FTILE:  ._Gmn$U = floor_limestone
@@ -1914,11 +1918,7 @@ TAGS:   transparent decor buniq_s_overflow_glass
 : end
 : kmons("1 = " .. mons)
 KMONS:  2 = ancestor
-KMASK:  12` = opaque
-KMASK:  12` = no_monster_gen
-KMASK:  12` = no_item_gen
-KMASK:  12` = no_trap_gen
-KPROP:  12` = no_tele_into
+: display_closet_setup(_G, "12`")
 MARKER: ` = lua:fog_machine {cloud_type = "thin mist", size = 1, pow_min = 5, \
   pow_max = 7, delay = 10, start_clouds = 1, walk_dist = 5, spread_rate = 10}
 : standard_overflow_setup(_G, { { "hepliaklqana", "_" } }, true)
@@ -2234,11 +2234,9 @@ ENDMAP
 
 NAME:  makhleb_altar_promises_db
 TAGS:  transparent buniq_s_overflow_glass
-KPROP: 12 = no_tele_into
-KMASK: 12 = no_trap_gen
-KMASK: 12 = opaque
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
+: display_closet_setup(_G, "12`")
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
 MAP
   ccc
@@ -2450,11 +2448,11 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-TAGS:   no_pool_fixup no_monster_gen no_item_gen decor no_rotate
-TAGS:   layout_rooms layout_city layout_open buniq_s_overflow_glass
+TAGS:   transparent no_pool_fixup decor no_rotate layout_rooms layout_city
+TAGS:   layout_open buniq_s_overflow_glass
 SUBST:  e : dd', d : n', g : f', f : nn', i : hh', h : nn', k : j' , j : n'
 SUBST:  G : GGTTUUbl
-KPROP:  'RS = no_tele_into
+: display_closet_setup(_G, "'RS")
 MARKER: R = lua:fog_machine { cloud_type="calcifying dust", walk_dist=1, \
             size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
@@ -2592,15 +2590,14 @@ MAP
 ENDMAP
 
 NAME:    nemelex_goblin_sharper_dolorous
-TAGS:    transparent no_item_gen no_monster_gen no_trap_gen decor
+TAGS:    transparent no_item_gen no_monster_gen decor
 TAGS:    buniq_s_overflow_glass
 WEIGHT:  7
 MONS:    generate_awake goblin god:nemelex_xobeh name:sharper n_suf n_des n_noc
-KMASK:   1 = opaque
-KPROP:   1 = no_tele_into
 COLOUR:  b = lightmagenta
 FTILE:   'G_1m+ = floor_pebble_magenta
 TILE:    b = dngn_crystal_lightmagenta
+: display_closet_setup(_G, "1")
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "_" } }, true)
 MAP
@@ -3054,9 +3051,9 @@ MAP
 ENDMAP
 
 NAME:  nicolae_qazlal_eye_of_the_storm
-TAGS:  no_trap_gen no_item_gen no_monster_gen decor buniq_s_overflow_glass
-KPROP: 'd = no_tele_into
+TAGS:  no_trap_gen decor buniq_s_overflow_glass
 KMONS: d = diamond obelisk
+: display_closet_setup(_G, "'d")
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
 MAP
  ccccccccccccc
@@ -3076,11 +3073,9 @@ ENDMAP
 
 NAME:    nicolae_qazlal_style_of_elements
 # Doesn't count as a glass exhibit due to the escapees.
-TAGS:    no_trap_gen no_item_gen no_monster_gen transparent decor
+TAGS:    transparent decor
 SHUFFLE: Cf / Da / Ee / Fw
 DEPTH:   D:5-, Elf
-KPROP:   faew = no_tele_into
-KMASK:   faew = opaque
 # Deliberately let the earthen wallwalking monster leave,
 # to play on all the other vaults where they can't.
 : if you.in_branch("D") then
@@ -3097,7 +3092,7 @@ KMONS:   w = water elemental
 KFEAT:   f = lava
 KFEAT:   w = deep_water
 KFEAT:   CDEF = c
-KPROP:   e = no_tele_into
+: display_closet_setup(_G, "faew")
 : single_cloud(_G, "a", "thin mist", false)
 : single_cloud(_G, "e", "sparse dust", false)
 : standard_overflow_setup(_G, { { "qazlal", "_" } }, true)
@@ -4091,11 +4086,7 @@ NAME:   dancing_weapons_uskayaw
 TAGS:   transparent buniq_s_overflow_glass
 MONS:   generate_awake dancing weapon ; dagger | hand axe
 NSUBST: ' = 2:1 / *:'
-KMASK:  1' = no_monster_gen
-KMASK:  1' = no_item_gen
-KMASK:  1' = no_trap_gen
-KMASK:  1' = opaque
-KPROP:  1' = no_tele_into
+: display_closet_setup(_G, "1'")
 : standard_overflow_setup(_G, { { "uskayaw", "_" } }, true)
 MAP
 .......
@@ -4163,15 +4154,12 @@ ENDMAP
 
 NAME:   nicolae_uskayaw_en_pointe
 TAGS:   transparent no_trap_gen generate_awake decor buniq_s_overflow_glass
-KPROP:  'D = no_tele_into
 MONS:   dancing weapon ; mundane short sword
 MONS:   dancing weapon ; mundane falchion, dancing weapon ; mundane spear
 MONS:   dancing weapon ; mundane dagger
 NSUBST: D = 2=1 / 2=2 / 2=3 / 2=4
 KFEAT:  _ = altar_uskayaw
-KMASK:  '1234n = opaque
-KMASK:  '1234 = no_item_gen
-KMASK:  '1234 = no_monster_gen
+: display_closet_setup(_G, "1234'")
 TILE:   n = dngn_transparent_stone_red
 TILE:   c = dngn_stone_wall_lightred
 COLOUR: n = red
@@ -4279,16 +4267,12 @@ WEIGHT: 7
 :           "dwarf " .. a .. " / merfolk " .. a .. " / naga " .. " / oni ".. a)
 KFEAT:  ` = .
 NSUBST: ` = 5=1 / 4=1` / `
-KPROP:  1` = no_tele_into
-KMASK:  1` = opaque
-KMASK:  1` = no_trap_gen
-KMASK:  1` = no_item_gen
-KMASK:  1` = no_monster_gen
 # I've already used disco color for an Uskayaw vault, so instead use Uskayaw's
 # altar's elemental console color. Still looks pretty rave-y.
 COLOUR: 1m` = incarnadine
 FTILE:  1m` = floor_nerves
 FTILE:  -_ = floor_pebble
+: display_closet_setup(_G, "1`")
 : standard_overflow_setup(_G, { { "uskayaw", "_" } }, true)
 MAP
 .....
@@ -4546,7 +4530,7 @@ xxxxxx.xxxxxx
 ENDMAP
 
 NAME:   pdpol_wu_jian_five_deadly_venoms
-TAGS:   no_item_gen no_monster_gen decor buniq_s_overflow_glass
+TAGS:   no_monster_gen decor buniq_s_overflow_glass
 KPROP:  F = no_tele_into
 : single_cloud(_G, "F", "thin mist", false)
 {{
@@ -4567,6 +4551,7 @@ KPROP:  F = no_tele_into
   lua_marker("_", trig_marker)
   lua_marker("F", portal_desc { positions = "five_deadly_venoms" })
 }}
+: display_closet_setup(_G, "F")
 : standard_overflow_setup(_G, { { "wu_jian", "_" } }, true)
 MAP
    ccc
@@ -5542,10 +5527,7 @@ NAME:   nicolae_yredelemnul_rated_r_for_profanity
 TAGS:   transparent decor buniq_s_overflow_glass
 WEIGHT: 3
 KMONS:  1 = profane servitor
-KMASK:  1 = opaque
-KMASK:  1 = no_trap_gen
-KMASK:  1 = no_item_gen
-KPROP:  1 = no_tele_into
+: display_closet_setup(_G, "1")
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
 xxxxxxxxxxx
@@ -5999,7 +5981,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_tso_fravashi_hole
-TAGS:   transparent decor no_monster_gen no_item_gen no_trap_gen
+TAGS:   transparent no_monster_gen decor
 TAGS:   buniq_s_overflow_holy_glass
 WEIGHT: 3
 KMONS:  1 = fravashi
@@ -6007,11 +5989,10 @@ KMONS:  2 = deep elf blademaster ; short sword ego:holy_wrath . \
               short sword ego:holy_wrath . pearl dragon scales
 KMONS:  3 = spriggan defender ; rapier ego:holy_wrath | flail ego:holy_wrath . \
               pearl dragon scales
-KMASK:  123 = opaque
-KPROP:  123 = no_tele_into
 COLOUR: c = white
 FTILE:  _n123`+ = floor_limestone
 TILE:   c = wall_church
+: display_closet_setup(_G, "123")
 : standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
 MAP
  xxxxxxxxx
@@ -6026,12 +6007,11 @@ ENDMAP
 NAME:   nicolae_tso_holy_fire
 TAGS:   transparent decor no_item_gen no_monster_gen no_trap_gen
 TAGS:   buniq_s_overflow_holy_glass
-KMASK:  ` = opaque
-KPROP:  ` = no_tele_into
 COLOUR: `. = yellow
 COLOUR: cn = white
 FTILE:  c`n._ = floor_limestone
 TILE:   c = wall_church
+: display_closet_setup(_G, "`")
 : single_cloud(_G, "`", "blessed fire", false)
 : standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
 MAP
@@ -6053,12 +6033,11 @@ TAGS:   buniq_s_overflow_holy_glass
 : kitem("d = hand axe " .. p .. " / mace " .. p .. " / falchion " .. p ..
 :           " / spear " .. p .. " / dagger " .. p .. " / whip " .. p ..
 :           " / short sword " .. p)
-KMASK:  d = opaque
-KPROP:  d = no_tele_into
 COLOUR: cn = white
 COLOUR: . = yellow
 FTILE:  ._nd+ = floor_limestone
 TILE:   c = wall_church
+: display_closet_setup(_G, "d")
 : standard_overflow_setup(_G, { { "the_shining_one", "_" } }, true)
 MAP
 xxxcc+ccxxx
@@ -6214,8 +6193,7 @@ KFEAT:  C = rock_wall
 KFEAT:  KL = floor
 KFEAT:  - = closed_door
 KFEAT:  N = clear_stone_wall
-KPROP:  12 = no_tele_into
-KMASK:  12 = opaque
+: display_closet_setup(_G, "12")
 COLOUR: c = white
 COLOUR: C = magenta
 : single_cloud(_G, "K", "blessed fire", false)
@@ -6251,11 +6229,7 @@ TAGS:  transparent decor
 : mons("angel god:zin dbname:zin_angel generate_awake perm_ench:" ..
 :       util.random_choose_weighted{{"confusion", 10}, {"mute", 1},
 :                                    {"mad", 1}, {"dumb", 1}})
-KPROP: _1 = no_tele_into
-KMASK: _1 = opaque
-KMASK: _1 = no_trap_gen
-KMASK: _1 = no_item_gen
-KMASK: _ = no_monster_gen
+: display_closet_setup(_G, "_1")
 FTILE: n_1 = floor_limestone
 : standard_overflow_setup(_G, { { "xom", "A" }, { "zin", "B" } }, true)
 MAP
@@ -6280,11 +6254,10 @@ KFEAT:   N = clear_stone_wall
 SUBST:   ; = -_, - = --_, X = C-
 SHUFFLE: 12nN / 12nN / Gg''
 KPROP:   -1 = bloody / nothing w:5
-KPROP:   12gG = no_tele_into
-KMASK:   12gG = opaque
 COLOUR:  C = white
 FTILE:   _BN2 = floor_limestone
 TILE:    C = wall_church
+: display_closet_setup(_G, "12gG")
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
 : vault_metal_statue_setup(_G, "g", "silver statue")
 : standard_overflow_setup(_G, { { "makhleb", "A" }, { "zin", "B" } }, true)
@@ -6309,7 +6282,7 @@ TILE:   b = dngn_crystal_lightmagenta
 FTILE:  ' = floor_limestone
 COLOUR: b = lightmagenta
 COLOUR: ' = brown
-KMASK:  12 = opaque
+: display_closet_setup(_G, "12")
 : standard_overflow_setup(_G, { { "nemelex_xobeh", "A" }, { "zin", "B" } }, true)
 MAP
  ....bbbb+vvvv....
@@ -6540,9 +6513,7 @@ NAME:    regret_index_temple_of_mockery
 KMONS:   1 = spectral ugly thing
 SHUFFLE: AB
 SUBST:   G = G...
-KPROP:   1D' = no_tele_into
-KMASK:   1D' = no_item_gen
-KMASK:   1D' = no_trap_gen
+: display_closet_setup(_G, "1D'")
 KMASK:   ' = no_monster_gen
 MARKER:  1 = lua:fog_machine { cloud_type = "thin mist", \
              pow_min = 20, pow_max = 50, delay = 1, size = 1, \
@@ -6754,18 +6725,18 @@ xxc..cdc..cxx
 ENDMAP
 
 NAME:    dolorous_overflow_abandoned_chaos_spawn_temple
-TAGS:    transparent no_item_gen no_monster_gen no_trap_gen decor
+TAGS:    transparent decor
 SHUFFLE: DEF
 NSUBST:  G = 2:g / *:G
 NSUBST:  H = 1:+ / *:b
 NSUBST:  . = 1:i / *:.
-KPROP:   1 = no_tele_into
 MONS:    generate_awake chaos spawn
 KMONS:   g = pile of debris
 KITEM:   i = any damaged weapon ego:chaos pre_id
 COLOUR:  b = lightred
 TILE:    b = dngn_crystal_lightred
 KMASK:   1 = opaque
+: display_closet_setup(_G, "1")
 : vault_granite_statue_setup(_G, "G", "scintillating statue")
 : set_feature_name("crystal_wall", "wall of orange crystal")
 : standard_overflow_setup(_G, { { "xom", "D" }, { "makhleb", "E" },

@@ -683,6 +683,8 @@ void player_reacts_to_monsters()
 
     _handle_hoarding();
 
+    xom_check_floor_lock();
+
     you.props.erase(PYROMANIA_TRIGGERED_KEY);
     you.shouted_pos.reset();
 

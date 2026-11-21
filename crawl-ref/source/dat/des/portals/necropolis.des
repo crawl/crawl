@@ -3223,17 +3223,17 @@ SUBST:   d = **%, e = %, fghij = $
 NSUBST:  - = 1 = 1-- / 1:2 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 SUBST:   d = *, e = *%, f = %$$$, ghij = $
-NSUBST:  - = 1:1 / 1 = 1- / 1:24 / -, R = 1:R / 1:? / *:T, $ = 1:! / *:$
+NSUBST:  - = 1:1 / 1:124 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 SUBST:   f = *, g = *%, h = %$$$, hij = $
-NSUBST:  - = 3:3 / 4 = 3- / 1:46 / 1:5EH--- / -, R = 1:R / 2:? / *:T
+NSUBST:  - = 2:3 / 2 = 3- / 1:465EH--- / *:-, R = 1:R / 2:? / *:T
 NSUBST:  $ = 2:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 SUBST:   f = *, g = %$, hij = $
-NSUBST:  - = 2:3 / 4 = 3- / 46 / -, R = 1:R / 2:? / *:T, $ = 2:! / *:$
+NSUBST:  - = 2:3 / 2 = 3- / 1:46 / -, R = 1:R / 2:? / *:T, $ = 2:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 SUBST:   fgh = |*, i = *%, j = !
-NSUBST:  - = 5 = 5EH / 5 = 5EH--- / 6FJ / K- / -, R = 1:R / *:?
+NSUBST:  - = 4 = 5EH / 4 = 5EH--- / 1:6FJ / 1:K- / -, R = 1:R / *:?
 : end
 : ghost_flavour_unrand_chance(_G, "$", "Z", "dark_maul")
 MARKER:  P = lua:transp_loc("necropolis_smash_entry")
@@ -3706,7 +3706,7 @@ NSUBST: - = 1:qqrs / 1:qqqr--- / 1:2 / 1:3u-- / *:-
 :     "    . buckler good_item | kite shield good_item")
 MONS:   troll / two-headed ogre
 MONS:   tengu warrior / orc knight
-MONS:   deep troll / stone giant
+MONS:   deep troll / stone giant w:1
 SUBST:  f = |*, g = **%, h = %$, ij = ?
 NSUBST: - = 1:1 / 1:1- / 2=2 / 2=2- / 1:zD / 1:zD-- / 1:4EF-- / *:-
 : elseif dgn.persist.necropolis_difficulty == "lair" then
@@ -3716,7 +3716,7 @@ NSUBST: - = 1:1 / 2:2 / 2 = 2- / 1:H / 1:H- / *:-
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 MONS:   orc warrior / troll / two-headed ogre, deep troll
 SUBST:  f = |*, g = *%, h = %$$$, ij= ?
-NSUBST: - = 1:1 / 1:1- / 2:2 / 2 = 2- / 1:DDDEF3 / *:-
+NSUBST: - = 1:1 / 1:1- / 1:2 / 2 = 2- / 1:2D3 / *:-
 : elseif necropolis_in_lair_branch() then
 {{
 kmons("q = naga warrior ; " .. wrathful_weapon("warrior", "randart") ..

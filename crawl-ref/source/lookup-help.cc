@@ -527,7 +527,8 @@ static bool _mutation_filter(string key, string /*body*/)
     if (!strip_suffix(key, " mutation"))
         return true;
 
-    return starts_with(key, "potion of"); // hack alert!
+    // Don't list form mutations and the potion.
+    return mutation_from_name(key, false) == NUM_MUTATIONS;
 }
 
 static bool _bane_filter(string key, string /*body*/)

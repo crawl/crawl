@@ -757,7 +757,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Xom
         { ABIL_XOM_CHAOS_EISEGESIS, "Chaos Eisegesis",
-            0, 0, 0, -1, {fail_basis::xl}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
@@ -2422,15 +2422,21 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
 
+        const monster* ancestor = hepliaklqana_ancestor_mon();
         if (abil.ability != ABIL_HEPLIAKLQANA_RECALL)
         {
-            monster* ancestor = hepliaklqana_ancestor_mon();
             if (!ancestor || !you.can_see(*ancestor))
             {
                 if (!quiet)
                     mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
                 return false;
             }
+        }
+        else if (companions_are_adjacent())
+        {
+            if (!quiet)
+                mprf("%s is already by your side!", ancestor->name(DESC_THE).c_str());
+            return false;
         }
 
         return true;
@@ -2561,6 +2567,22 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+
+    case ABIL_BEOGH_RECALL_APOSTLES:
+    {
+        if (companions_are_adjacent())
+        {
+            if (!quiet)
+            {
+                if (get_num_apostles() > 1)
+                    mpr("Your apostles are already by your side.");
+                else
+                    mpr("Your apostle is already by your side.");
+            }
+            return false;
+        }
+        return true;
+    }
 
     case ABIL_BEOGH_BLOOD_FOR_BLOOD:
         if (you.duration[DUR_BLOOD_FOR_BLOOD])

@@ -74,6 +74,9 @@ static xom_event_type _find_xom_event_from_string(const string &event_name)
 
     for (int i = 0; i <= XOM_LAST_REAL_ACT; ++i)
     {
+        if (i > XOM_LAST_BAD_ACT && i < XOM_FIRST_BLESSING)
+            continue;
+
         const xom_event_type xi = static_cast<xom_event_type>(i);
         const string x_name = lowercase_string(xom_effect_to_name(xi));
 
@@ -492,8 +495,6 @@ void wizard_set_all_skills()
 
         you.redraw_title = true;
 
-        // We're not updating skill cost here since XP hasn't changed.
-
         calc_hp(true);
         calc_mp();
 
@@ -844,7 +845,7 @@ static void debug_uptick_xl(int newxl, bool train)
 {
     if (train)
     {
-        you.exp_available += 10 * (exp_needed(newxl) - you.experience);
+        gain_skill_experience(10 * (exp_needed(newxl) - you.experience));
         train_skills();
     }
     you.experience = exp_needed(newxl);
@@ -874,8 +875,6 @@ static void debug_downtick_xl(int newxl)
     you.experience = exp_needed(newxl);
     level_change();
     reset_ds_muts_from_schedule(newxl); // needs to happen after the level change
-    you.skill_cost_level = 0;
-    check_skill_cost_change();
     // restore maxhp loss
     you.hp_max_adj_perm -= 1000;
     calc_hp();

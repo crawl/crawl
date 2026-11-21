@@ -647,6 +647,7 @@ static const mutation_def mut_data[] =
    "", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_WIELD_OFFHAND,
 },
 
 { MUT_SLOW_WIELD, 0, 1, mutflag::bad,
@@ -656,6 +657,7 @@ static const mutation_def mut_data[] =
    "", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_SLOW_WIELD,
 },
 
 { MUT_INITIALLY_ATTRACTIVE, 4, 2, mutflag::bad,
@@ -680,6 +682,7 @@ static const mutation_def mut_data[] =
    "", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_WARMUP_STRIKES,
 },
 
 { MUT_NO_JEWELLERY, 0, 1, mutflag::bad,
@@ -689,6 +692,7 @@ static const mutation_def mut_data[] =
    "", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_NO_JEWELLERY,
 },
 
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good,
@@ -2147,6 +2151,7 @@ static const mutation_def mut_data[] =
   {"You have an uncanny knack for detecting items.", "", ""},
   {"You suddenly feel aware of treasure.", "", ""},
   {"You no longer feel aware of treasure.", "", ""},
+  TILEG_MUT_TREASURE_SENSE,
 },
 
 { MUT_ACID_RESISTANCE, 0, 1, mutflag::good | mutflag::substance,
@@ -2164,6 +2169,7 @@ static const mutation_def mut_data[] =
   {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
   {"Two of your arms shrink away.", "", ""},
   {"You grow two extra arms.", "", ""},
+  TILEG_MUT_FOUR_STRONG_ARMS,
 },
 
 { MUT_NO_DRINK, 0, 1, mutflag::bad,
@@ -2235,6 +2241,7 @@ static const mutation_def mut_data[] =
   {"Your experience applies equally to all skills.", "", ""},
   {"Your experience now applies equally to all skills.", "", ""},
   {"Your experience no longer applies equally to all skills.", "", ""},
+  TILEG_MUT_DISTRIBUTED_TRAINING,
 },
 
 { MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good | mutflag::anatomy,
@@ -2246,6 +2253,7 @@ static const mutation_def mut_data[] =
    "You feel very comfortable near water.", ""},
   {"You feel less comfortable near water.",
    "You feel less comfortable near water.", ""},
+  TILEG_MUT_NIMBLE_SWIMMER,
 },
 
 { MUT_TENTACLE_ARMS, 0, 1, mutflag::good | mutflag::anatomy,
@@ -2254,6 +2262,7 @@ static const mutation_def mut_data[] =
   {"You have tentacles for arms and can constrict enemies.", "", ""},
   {"Your arms feel tentacular.", "", ""},
   {"Your arms no longer feel tentacular.", "", ""},
+  TILEG_MUT_TENTACLES,
 },
 
 { MUT_MERTAIL, 0, 1, mutflag::good | mutflag::anatomy,
@@ -2326,6 +2335,7 @@ static const mutation_def mut_data[] =
       "", ""},
     {"The darkness flees at your approach.", "", ""},
     {"The shadows grow bolder once more.", "", ""},
+  TILEG_MUT_DAYSTALKER,
 },
 
 { MUT_DIVINE_ATTRS, 0, 1, mutflag::good,
@@ -2395,6 +2405,7 @@ static const mutation_def mut_data[] =
   {"You can use scrolls of enchantment on lesser artefacts.", "", ""},
   {"You can now use scrolls of enchantment on lesser artefacts.", "", ""},
   {"You can no longer use scrolls of enchantment on lesser artefacts.", "", ""},
+  TILEG_MUT_ARTEFACT_ENCHANTING,
 },
 
 { MUT_RUNIC_MAGIC, 0, 1, mutflag::good,
@@ -2402,6 +2413,7 @@ static const mutation_def mut_data[] =
   {"Your spellcasting is much less encumbered by armour.", "", ""},
   {"Your spellcasting becomes less encumbered by armour.", "", ""},
   {"Your spellcasting no longer less encumbered by armour.", "", ""},
+  TILEG_MUT_RUNIC_MAGIC,
 },
 
 { MUT_FORMLESS, 0, 2, mutflag::good,

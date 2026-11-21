@@ -1616,8 +1616,8 @@ near the player.
 Plane Rend spell
 
 Summons some of the greater threats from one of the Pits of Slime, the Elven
-Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
-specific branch varies with each cast of the spell.
+Halls, the Abyss, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of
+Zot; the specific branch varies with each cast of the spell.
 %%%%
 Plasma Beam spell
 
