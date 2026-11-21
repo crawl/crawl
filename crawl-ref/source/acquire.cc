@@ -428,6 +428,15 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
             acqweight = 100;
         }
 
+        // Give slings modest weight for coglin so it's not almost exclusively hand cannons
+        if (skill == SK_RANGED_WEAPONS
+            && you.has_mutation(MUT_WIELD_OFFHAND)
+            && !acqweight
+            && you.hands_reqd(item_considered) == HANDS_ONE)
+        {
+            acqweight = 7;
+        }
+
         if (!acqweight)
             continue;
 
@@ -440,8 +449,16 @@ static int _acquirement_weapon_subtype(int & /*quantity*/, int agent)
         // Shields skill and very rarely to Coglins.
         if (you.has_mutation(MUT_WIELD_OFFHAND))
         {
-            if (two_handed)
-                acqweight /= 10;
+            if (!two_handed)
+            {
+                // 1h Ranged weapons need an extra boost because ranged weapons
+                // aren't balanced with 50/50 1h/2h acquirement weight and
+                // coglin strongly prefers 1h weapons.
+                if (skill == SK_RANGED_WEAPONS)
+                    acqweight *= 18;
+                else
+                    acqweight *= 10;
+            }
         }
         else if (two_handed)
             acqweight = acqweight * (54 - _skill_rdiv(SK_SHIELDS)) / 54;
