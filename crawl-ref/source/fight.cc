@@ -465,8 +465,16 @@ bool player_fight(monster* defender, bool is_rampage,
 {
     if (!simu && you.weapon() && !you.confused())
     {
-        if (Options.auto_switch && _autoswitch_to_melee())
-            return true; // Is this right? We did take time, but we didn't melee
+        if (Options.auto_switch
+            // No weapon switching as part of a rampage/stampede
+            && you.pos() == you.pos_at_turn_start
+            && _autoswitch_to_melee())
+        {
+            // XXX returning true here is not great; it gives a path to
+            // switching weapons while counting as an attack for the purposes
+            // of berserking.
+            return true;
+        }
 
         // If wielding a ranged weapon, perform a ranged attack instead.
         if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
