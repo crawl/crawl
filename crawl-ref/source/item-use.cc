@@ -2547,7 +2547,10 @@ bool enchant_armour(item_def &arm, bool quiet)
     string iname = _item_name(arm);
 
     arm.plus++;
+
     // Make sure newly enchanted items appear as such.
+    arm.props[ITEM_TILE_NAME_KEY] = make_stringf("%s_ENCH", tile_main_name(tileidx_item(arm)));
+    bind_item_tile(arm);
     item_set_appearance(arm);
 
     if (!quiet)

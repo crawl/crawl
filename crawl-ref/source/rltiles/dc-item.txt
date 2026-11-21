@@ -693,6 +693,11 @@ helmet2
 helmet3
 helmet4
 helmet5
+helmet1_ench THELM_HELM_ENCH
+helmet2_ench THELM_HELM_1_ENCH
+helmet3_ench THELM_HELM_2_ENCH
+helmet4_ench THELM_HELM_3_ENCH
+helmet5_ench THELM_HELM_4_ENCH
 %enchant_variation THELM_HELM shiny runed glowing
 helmet_ego1 THELM_HELM_MAGIC
 helmet_ego2
