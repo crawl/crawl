@@ -928,6 +928,7 @@ static bool _try_stampede(const coord_def& target)
 static bool _handle_player_step(const coord_def& targ, int& delay, const int delay_scale,
                                 bool rampaging,
                                 bool first_step,
+                                bool attack_confirmed,
                                 bool& did_stampede,
                                 bool& did_move, bool& did_attack, bool& did_open_door)
 {
@@ -963,8 +964,13 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
         // Attempt to attack the monster.
         if (!mon->wont_attack() || you.confused())
         {
-            if (you.duration[DUR_STAMPEDE] && !you.confused() && first_step
-                && _try_stampede(targ))
+            const bool stampeding = you.duration[DUR_STAMPEDE]
+                                    && !you.confused() && first_step;
+            const bool confirmed = attack_confirmed || stampeding;
+            if (stampeding && !confirm_player_fight(*mon))
+                return false;
+
+            if (stampeding && _try_stampede(targ))
             {
                 if (you_worship(GOD_WU_JIAN))
                     did_attack |= wu_jian_post_move_effects(false, initial_pos, false);
@@ -986,7 +992,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
                 if (invalid_monster(mon) || (mon->pos() - you.pos()) != (targ - initial_pos))
                     return false;
             }
-            if (!player_fight(mon, rampaging && !first_step))
+            if (!player_fight(mon, rampaging && !first_step, nullptr, false, confirmed))
             {
                 stop_running();
                 return false;
@@ -1226,6 +1232,9 @@ void move_player_action(coord_def move)
             return;
     }
 
+    if (rampage_attack && !confirm_player_fight(*mon_target))
+        return;
+
     const bool did_tailwind = num_steps > 1 && you.duration[DUR_TAILWIND];
     if (did_tailwind)
         you.duration[DUR_TAILWIND] = 0;
@@ -1273,7 +1282,8 @@ void move_player_action(coord_def move)
         }
 
         if (!_handle_player_step(targ, delay, delay_scale,
-                                 num_steps > 1, steps_taken == 0, did_stampede,
+                                 num_steps > 1, steps_taken == 0,
+                                 rampage_attack, did_stampede,
                                  did_move, did_attack, did_open_door))
         {
             // Need to mark another step here so that move delay will avoid a div-by-0

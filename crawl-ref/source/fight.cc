@@ -383,6 +383,22 @@ static bool _can_shoot_with(const item_def *weapon)
         && !you.berserk();
 }
 
+static bool _fight_is_ranged()
+{
+    return you.weapon() && !you.confused()
+           && _can_shoot_with(you.weapon())
+           && !you.duration[DUR_CONFUSING_TOUCH];
+}
+
+bool confirm_player_fight(const monster &defender)
+{
+    if (!you.aware_of(defender))
+        return true;
+    if (_fight_is_ranged())
+        return check_warning_inscriptions(*you.weapon(), OPER_FIRE);
+    return wielded_weapon_check();
+}
+
 static void _do_medusa_stinger()
 {
     vector<monster*> targs;
@@ -461,7 +477,7 @@ static void _knight_pinning_attack(monster* mon)
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
 bool player_fight(monster* defender, bool is_rampage,
-                  bool *did_hit, bool simu)
+                  bool *did_hit, bool simu, bool confirmed)
 {
     if (!simu && you.weapon() && !you.confused())
     {
@@ -475,28 +491,25 @@ bool player_fight(monster* defender, bool is_rampage,
             // of berserking.
             return true;
         }
+    }
 
-        // If wielding a ranged weapon, perform a ranged attack instead.
-        if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
+    // If wielding a ranged weapon, perform a ranged attack instead.
+    if (!simu && _fight_is_ranged())
+    {
+        if (!confirmed && !confirm_player_fight(*defender))
+            return false;
+
+        defender->sense_if_invisible();
+        if (do_west_wind_shot())
+            return true;
+        else if (do_player_ranged_attack(defender->pos()))
         {
-            if (you.can_see(*defender)
-                && !check_warning_inscriptions(*you.weapon(), OPER_FIRE))
-            {
-                return false;
-            }
-
-            defender->sense_if_invisible();
-            if (do_west_wind_shot())
-                return true;
-            else if (do_player_ranged_attack(defender->pos()))
-            {
-                you.time_taken = you.attack_delay().roll();
-                you.turn_is_over = true;
-                return true;
-            }
-            else
-                return false;
+            you.time_taken = you.attack_delay().roll();
+            you.turn_is_over = true;
+            return true;
         }
+        else
+            return false;
     }
 
     melee_attack attk(&you, defender);
@@ -509,7 +522,7 @@ bool player_fight(monster* defender, bool is_rampage,
 
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
-    if (you.can_see(*defender) && !simu && !wielded_weapon_check())
+    if (!simu && !confirmed && !confirm_player_fight(*defender))
     {
         you.turn_is_over = false;
         return false;

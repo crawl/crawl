@@ -32,7 +32,9 @@ enum stab_type
 bool mons_fight(monster* attacker, actor* defender,
                 bool* did_hit = nullptr, bool simu = false);
 bool player_fight(monster* defender, bool is_rampage = false,
-                  bool* did_hit = nullptr, bool simu = false);
+                  bool* did_hit = nullptr, bool simu = false,
+                  bool confirmed = false);
+bool confirm_player_fight(const monster &defender);
 
 void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
                              actor* primary_target = nullptr);
