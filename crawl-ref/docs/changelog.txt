@@ -1,4 +1,4 @@
-Stone Soup 0.35 (through 0.35-a0-1436-9be42e2d0b)
+Stone Soup 0.35 (through 0.35-a0-1622-ea936a0fb2)
 
 --------------------------------------------------
 
@@ -41,6 +41,8 @@ Artefacts
    chance to produce spectral mist clouds when striking foes or casting spells.
  - the swamp witch's dragon scales, a +5 set of swamp dragon scales that
    inflicts poison upon enemies the wearer afflicts with debuffs.
+* New shield unrand: the Boreal Bulwark, a tower shield that makes the wearer
+  Indomitable when badly wounded.
 * The Amulet of the Four Winds has been renamed the Amulet of Tranquillity.
 * The Glaive of Prune is now the Partisan of Prune, and is otherwise unchanged
   aside from the new base weapon type.
@@ -55,6 +57,8 @@ Artefacts
 
 Branches, Environment
 ---------------------
+* The Shoals now contains more decorative vaults, as well as increased
+  chances to see decorative vaults each game on the last two floors.
 * A new timed portal: the Gulch, appearing in the Vaults.
   - Entering the Gulch inflicts three transient bad mutations.
   - It contains seven new enemies, many of them chaotic mutant beasts and
@@ -70,6 +74,7 @@ Branches, Environment
   of themselves and slowly regrow it whenever it dies.
 * Mutagenic fog clouds now apply magic contamination to monsters, which will
   explode violently after standing in them for several turns.
+* Zot traps can no longer paralyze the player.
 * The Abyss has received multiple changes:
   * The guaranteed entrance has been moved from Depths to D:13-15, where it
     appears as part of a serial vault, with many new entry vaults added.
@@ -119,15 +124,19 @@ Character
   their foes before dispatching them with lethal precision.
 * Djinni and Gargoyles are no longer immune to the draining weapon brand,
   Vampiric Draining, Drain Life, Fear, Soul Splinter, or Umbral Torchlight.
+* Felids may now start as Hexslingers.
 * Gnolls have received multiple changes.
   - Spellcasting and all magic aptitudes are decreased by 1. Shapeshifting, all
     weapon aptitudes, and Invocations are increased by 1.
   - Gnoll skills at XL 1 are heavily reduced, but train rapidly over the first
     few experience levels (approximately catching up to their old levels by
     XL 7-10)
+* Mountain dwarves may now use scrolls of brand weapon on randarts.
 * Oni now get their cleaving attack on drinking any potion, rather than just
   healing potions.
 * Oni now have -1 Polearms aptitude (down from +0).
+* Poltergeist Trickster AC decays faster and has greater diminishing returns
+  when the bonus is high.
 * Revenant's spellclaw attacks while Enkindled now properly heal from enhancer
   staff damage.
 * Revenants now have -2 Staves and Evocations aptitude (down from -1).
@@ -136,6 +145,8 @@ Character
 * Chaos Knights now start with a scroll of summoning in addition to their
   scroll of butterflies.
 * Monks now also start with a potion of enlightenment.
+* Hexslingers now start with a scroll of fear instead of a scroll of poison.
+* Hunters now also start with two scrolls of poison.
 * New mutation: spark swarm, which makes fire and electric damage you deal
   have a high chance to outline foes in light.
 * Removed species: Armataurs.
@@ -148,6 +159,9 @@ Gods
   increase.
 * Worshippers are completely forbidden from using or equipping items and spells
   directly hated by their god, rather than enforcing penance.
+* Divine Recall abilities (provided by Beogh, Hepliaklqana, and Yredelemnul)
+  now try to reliably place allies next to the player rather than failing
+  to move them at all when two or three tiles away.
 * Ashenzari's Curse Item ability has been renamed and rethemed to Ritual of
   Binding. Rather than offering boosts to two random groups of related skills,
   Ashenzari offers boosts to three different individual skills (aside from melee
@@ -163,6 +177,8 @@ Gods
     effect.
   * Elyvilon's worshippers are now prevented from directly harming neutral
     monsters (such as those they have pacified).
+* Gozag's Potion Petition ability has been renamed to Purchase Blessing (with
+  no mechanical changes).
 * Hepliaklqana's knight ancestor has received multiple changes.
   * At XL 15, they can bind enemies they hit with their melee attack in place.
   * At XL 19, they learn Bolster (giving them Might + Resistance) instead of
@@ -321,6 +337,8 @@ Items
 * Armour of Resonance now only provides its damage boost when adjacent to a
   Forgecraft construct, but this boost is increased to 2% per level of
   Forgecraft skill.
+* Potions of experience now provide less skill at low experience levels and much
+  more at higher experience levels.
 * Potions of lignification now transform players into sacred banyan trees, which
   have rN+++ and rTorment.
 
@@ -338,6 +356,7 @@ Monsters
   - Sewage sovereigns, monstrous pigs who stampede rapidly over their foes.
   - Telencephalons, floating brain experiments with psychokinetic retaliation
     effects.
+* New unique: Boreas, a Gale Centaur scion of the North Wind.
 * New unique: Goji, a spear-wielding goblin riding a ghost moth.
 * Other new monsters:
   - abyssal acolytes, which grant their allies Manifold Assault.
@@ -366,6 +385,7 @@ Monsters
 * Kirke can no longer cast Invisibility at low HP.
 * Merfolk aquamancers and revenant soulmongers can now cast Blink even
   when not at low HP.
+* Orbs of entropy now do slightly less Acid Ball damage.
 * Quicksilver elementals are now amorphous, making them immune to
   constriction-themed effects and resistant to Shatter.
 * Screaming refractions are now nonliving, rather than undead.
@@ -405,28 +425,33 @@ Spells
     different properties depending on the vein's element.
 * Apportation now moves every item in a single space closer, rather than
   just whatever's on top.
+* Fortress Blast now prevents its caster being displaced while it is channeled.
 * The Imbue Servitor and Attune Weapon abilities for Spellspark Servitor and
   Platinum Paragon are now usable by any Sif Muna worshipper with access
   to Divine Exegesis, as long as those spells are in your library.
 * Malign Gateway's portals can now spawn over shallow water and most decorative
   features, and more than one can exist on a level at the same time (so long
   as each was opened by a different caster).
+* Yara's Violent Unravelling now has a contamination cost on use.
 
 Tiles
 -----
 * New tiles for existing game elements:
-  - Monsters: bear simulacra.
+  - Monsters: bear / manticore and sphinx / iron dragon simulacra.
   - Features: altars to Elyvilon, Okawaru, and Kikubaaqudgha.
-  - Items: the partisan of Prune.
-  - Player paper dolls: nearly all melee randart weapons, tree form.
+  - Items: riddle talismans, +0 helmets enchanted via scrolls, the partisan of Prune.
+  - Player paper dolls: nearly all melee randart weapons, naga, tree form.
   - Spell icons: Cold Breath, Fire Breath, Quicksilver Bolt, Steam Ball,
                  Spit Poison, Steam Ball, Summon Drakes, Summon Eyeballs,
                  Summon Scorpions.
-  - Mutation icons: Reflexive headbutt, hooves.
-  - VFX: Leda's Liquefaction, Eringya's Noxious Bog, Permafrost Eruption, the
-         Singing Sword singing, the shillelagh "Devastator"'s blasts, slime
-         creatures merging, Drain Life, Mlioglotl's Corruption, nearly all
-         electric spell effects.
+  - Mutation icons: +LOS, artefact enchanting, distributed training, four strong
+                    arms, hooves, nimble swimmer, no jewellery, offhand
+                    wielding, slow wielding, treasure sense, warm-up strikes,
+                    reflexive headbutt, runic magic, tentacles.
+  - VFX: Leda's Liquefaction, Lee's Rapid Deconstruction, Eringya's Noxious Bog,
+         Permafrost Eruption, the Singing Sword singing, the shillelagh
+         "Devastator"'s blasts, slime creatures merging, Drain Life, Mlioglotl's
+         Corruption, nearly all electric spell effects.
 * New floor tiles for vaults: necromantic floor tiling, rainbow etchings, Lom
   Lobon's realm.
 * Spectral monster tiles have been changed and updated, now covering even more
