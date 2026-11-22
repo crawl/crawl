@@ -6,11 +6,19 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
-#include "god-conduct.h"
-#include "religion.h"
-#include "spl-util.h"
-#include "spl-zap.h"
+#include "coord.h"
 #include "describe.h"
+#include "env.h"
+#include "god-conduct.h"
+#include "los.h"
+#include "losparam.h"
+#include "map-knowledge.h"
+#include "quiver.h"
+#include "ray.h"
+#include "religion.h"
+#include "spl-cast.h"
+#include "spl-util.h"
+#include "terrain.h"
 
 /*** Is this spell memorised?
  * @tparam string spellname
@@ -97,73 +105,98 @@ LUAFN(l_spells_min_range)
     PLUARET(integer, calc_spell_range(spell, 0, true));
 }
 
-
-/*** If this spell is aimed at (x,y), what path will it actually take?
- * @tparam string spell the name of the spell
- * @tparam int x coordinate to aim at, in player coordinates
- * @tparam int y coordinate to aim at, in player coordinates
- * @tparam[opt=0] int source_x coordinate of spell source, in player coordinates
- * @tparam[opt=0] int source_y coordinate of spell source, in player coordinates
- * @tparam[opt=true] boolean aimed_at_spot if true, aim at the target; if
- * false, shoot past it.
- * @treturn table|nil a table of {x,y} of the path the spell will take, in
- * player coordinates.
- * Nil is returned if the spell does not follow a path (eg. smite-targeted
- * spells) or if the spell has zero range.
- * @function path
+/*** What path would a beam aimed at (x,y) take?
+ *
+ * This uses player knowledge, assuming that unknown squares are empty. The
+ * beam will exclude the source. If it stops at a monster, it will include that
+ * monster. If it stops at a wall, it will not include it (unless it has a
+ * monster in it and the beam is non-digging).
+ *
+ * @tparam int x coordinate of the ray destination, in player coordinates
+ * @tparam int y coordinate of the ray destination, in player coordinates
+ * @tparam[opt=0] int x_src coordinate of ray source, in player coordinates
+ * @tparam[opt=0] int y_src coordinate of ray source, in player coordinates
+ * @tparam[opt=true] boolean piercing if true, the beam pierces monsters and
+ * the player.
+ * @tparam[opt=false] boolean digging if true, the beam pierces diggable walls.
+ * @treturn table a table of {x,y} of the path the ray will take, in
+ * player coordinates. Empty if either source or destination is unknown or if
+ * they are equal.
+ * @function beam_path
  */
-LUAFN(l_spells_path)
+LUAFN(l_spells_beam_path)
 {
-    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    zap_type zap = spell_to_zap(spell);
-    int power = calc_spell_power(spell);
-    int range = calc_spell_range(spell, power, true);
-    // return nil for non-zap or zero-range spells
-    if (range <= 0 || zap >= NUM_ZAPS)
-    {
-        lua_pushnil(ls);
-        return 1;
-    }
     coord_def a;
-    a.x = luaL_safe_checkint(ls, 2);
-    a.y = luaL_safe_checkint(ls, 3);
+    a.x = luaL_safe_checkint(ls, 1);
+    a.y = luaL_safe_checkint(ls, 2);
     coord_def aim = player2grid(a);
 
     coord_def s;
-    s.x = lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : 0;
-    s.y = lua_isnumber(ls, 5) ? lua_tointeger(ls, 5) : 0;
+    s.x = lua_isnumber(ls, 3) ? lua_tointeger(ls, 3) : 0;
+    s.y = lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : 0;
     coord_def src = player2grid(s);
 
-    bolt beam;
-    beam.set_agent(&you);
-    beam.source = src;
-    beam.attitude = ATT_FRIENDLY;
-    zappy(zap, power, false, beam);
-    beam.set_is_tracer(true);
-    beam.range = range;
-    beam.target = aim;
-    beam.ex_size = 0;
-    beam.aimed_at_spot = true;
-    if (lua_isboolean(ls, 6))
-        beam.aimed_at_spot = lua_toboolean(ls, 6);
-    beam.path_taken.clear();
-    beam.fire();
+    bool piercing = true;
+    if (lua_isboolean(ls, 5))
+        piercing = lua_toboolean(ls, 5);
 
-    lua_createtable(ls, beam.path_taken.size(), 0);
-    int index = 0;
-    for (auto g : beam.path_taken)
+    bool digging = false;
+    if (lua_isboolean(ls, 6))
+        digging = lua_toboolean(ls, 6);
+
+    lua_newtable(ls);
+    if (!map_bounds(aim) || !map_bounds(src) || src == aim
+        || !env.map_knowledge(src).known()
+        || !env.map_knowledge(aim).known())
     {
-        coord_def p = grid2player(g);
+        return 1;
+    }
+
+    // mirrors bolt::choose_ray with player knowledge.
+    ray_def ray;
+    if (!find_ray(src, aim, ray, opc_map_solid_see)
+        && !find_ray(src, aim, ray, opc_map_default))
+    {
+        fallback_ray(src, aim, ray);
+    }
+    ray.advance();
+
+    int index = 0;
+    while (map_bounds(ray.pos()))
+    {
+        const coord_def p = ray.pos();
+        const map_cell &cell = env.map_knowledge(p);
+        const dungeon_feature_type feat =
+            cell.known() ? cell.feat() : DNGN_UNSEEN;
+        const bool known_solid = feat != DNGN_UNSEEN && feat_is_solid(feat);
+        const bool known_undiggable = known_solid && !feat_is_diggable(feat);
+        const bool known_mons = cell.monsterinfo() != nullptr;
+        const bool known_actor = known_mons || p == you.pos();
+        const bool blocked = known_solid && (!digging || known_undiggable);
+        const bool wall_mons = blocked && known_mons && !digging;
+
+        // Terminate before a solid square, unless there's a monster in it.
+        if (blocked && !wall_mons)
+            break;
+
+        const coord_def pp = grid2player(p);
         lua_createtable(ls, 2, 0);
-        lua_pushinteger(ls, p.x);
+        lua_pushinteger(ls, pp.x);
         lua_rawseti(ls, -2, 1);
-        lua_pushinteger(ls, p.y);
+        lua_pushinteger(ls, pp.y);
         lua_rawseti(ls, -2, 2);
         lua_rawseti(ls, -2, ++index);
+
+        // Add a monster (or player) square but go no further.
+        if (wall_mons || (!piercing && known_actor))
+            break;
+
+        if (p == aim)
+            break;
+        ray.advance();
     }
     return 1;
 }
-
 
 /*** The failure rate of the spell as a number in [0,100].
  * @tparam string name
@@ -360,7 +393,7 @@ static const struct luaL_Reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
     { "letter"        , l_spells_letter },
-    { "path"          , l_spells_path },
+    { "beam_path"     , l_spells_beam_path },
     { "level"         , l_spells_level },
     { "mana_cost"     , l_spells_mana_cost },
     { "range"         , l_spells_range },
