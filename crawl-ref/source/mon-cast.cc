@@ -9755,6 +9755,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad((!mon->friendly() || mon->get_foe())
                                       && !find_battlesphere(mon));
 
+    case SPELL_LAUNCH_SPORANGIUM:
+        return ai_action::good_or_bad(foe != nullptr);
+
     case SPELL_INJURY_BOND:
         for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
             if (_can_injury_bond(*mon, **mi) && !mi->has_ench(ENCH_INJURY_BOND))
