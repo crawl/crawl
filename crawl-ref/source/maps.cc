@@ -1407,6 +1407,31 @@ static bool _load_map_cache(const string &filename, const string &cachename)
     return _load_map_index(cachename, descache_base, mtime);
 }
 
+static string _cache_tmp_path(const string &file)
+{
+    return file + ".tmp";
+}
+
+// Helpers for atomic writes using temporary files. We open the file with
+// _open_atomic_file, then after all writes close it with _close_atomic_file.
+static FILE *_open_atomic_file(const string &file)
+{
+    string tmp_name = _cache_tmp_path(file);
+    FILE *fp = fopen_u(tmp_name.c_str(), "wb");
+    if (!fp)
+        end(1, true, "Failed to open %s for writing", tmp_name.c_str());
+    return fp;
+}
+
+static void _close_atomic_file(FILE *fp, const string &file)
+{
+    const string tmp_name = _cache_tmp_path(file);
+    if (fclose(fp) != 0)
+        end(1, true, "Error writing to %s", tmp_name.c_str());
+    if (rename_u(tmp_name.c_str(), file.c_str()) != 0)
+        end(1, true, "Failed to rename %s to %s", tmp_name.c_str(), file.c_str());
+}
+
 static void _write_map_prelude(const string &filebase, time_t mtime)
 {
     const string luafile = filebase + ".lux";
@@ -1416,22 +1441,20 @@ static void _write_map_prelude(const string &filebase, time_t mtime)
         return;
     }
 
-    FILE *fp = fopen_u(luafile.c_str(), "wb");
+    FILE *fp = _open_atomic_file(luafile);
     writer outf(luafile, fp);
     write_save_version(outf, save_version::current());
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     lc_global_prelude.write(outf);
-    fclose(fp);
+    _close_atomic_file(fp, luafile);
 }
 
 static void _write_map_full(const string &filebase, size_t vs, size_t ve,
                             time_t mtime)
 {
     const string cfile = filebase + ".dsc";
-    FILE *fp = fopen_u(cfile.c_str(), "wb");
-    if (!fp)
-        end(1, true, "Unable to open %s for writing", cfile.c_str());
+    FILE *fp = _open_atomic_file(cfile);
 
     writer outf(cfile, fp);
     write_save_version(outf, save_version::current());
@@ -1439,16 +1462,14 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
     marshallSigned(outf, mtime);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
-    fclose(fp);
+    _close_atomic_file(fp, cfile);
 }
 
 static void _write_map_index(const string &filebase, size_t vs, size_t ve,
                              time_t mtime)
 {
     const string cfile = filebase + ".idx";
-    FILE *fp = fopen_u(cfile.c_str(), "wb");
-    if (!fp)
-        end(1, true, "Unable to open %s for writing", cfile.c_str());
+    FILE *fp = _open_atomic_file(cfile);
 
     writer outf(cfile, fp);
     write_save_version(outf, save_version::current());
@@ -1463,7 +1484,7 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
         vdefs[i].place_loaded_from.clear();
         vdefs[i].strip();
     }
-    fclose(fp);
+    _close_atomic_file(fp, cfile);
 }
 
 static void _write_map_cache(const string &filename, size_t vs, size_t ve,
