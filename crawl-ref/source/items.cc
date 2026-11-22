@@ -2884,7 +2884,7 @@ void drop_last()
     for (const auto &entry : you.last_pickup)
     {
         const item_def* item = &you.inv[entry.first];
-        if (item->quantity > 0)
+        if (item->quantity > 0 && item_is_droppable(*item))
             items_to_drop.emplace_back(entry.first, entry.second, item);
     }
 
