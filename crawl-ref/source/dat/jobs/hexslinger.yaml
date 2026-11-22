@@ -14,7 +14,7 @@ spells:
   - SPELL_DIMENSIONAL_BULLSEYE
 equipment:
   - "robe"
-  - "scroll of poison"
+  - "scroll of fear"
   - "sling plus:1"
 recommended_species:
   - formicid

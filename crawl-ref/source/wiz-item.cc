@@ -870,7 +870,7 @@ static void _debug_acquirement_stats()
     if (!you_worship(GOD_NO_GOD))
         godname += " of " + god_name(you.religion);
 
-    fprintf(ostat, "%s %s, Level %d %s %s%s\n\n",
+    fprintf(ostat, "%s%s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species::name(you.species).c_str(),

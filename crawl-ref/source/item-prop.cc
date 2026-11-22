@@ -1962,11 +1962,15 @@ bool convert2bad(item_def &item)
 
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 {
-    if (wpn.base_type != OBJ_WEAPONS)
+    if (wpn.base_type != OBJ_WEAPONS || wpn.summoned())
         return false;
 
-    if (is_artefact(wpn) || wpn.summoned())
+    if (is_artefact(wpn)
+        && (is_unrandom_artefact(wpn)
+            || !you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
+    {
         return false;
+    }
 
     if (!allow_ranged && is_range_weapon(wpn)
 #if TAG_MAJOR_VERSION == 34
@@ -2245,7 +2249,7 @@ string launched_projectile_name(const item_def &item)
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
-bool is_throwable(const actor *actor, const item_def &wpn)
+bool is_throwable(const actor *actor, const item_def &wpn, bool base)
 {
     if (wpn.base_type != OBJ_MISSILES)
         return false;
@@ -2254,7 +2258,8 @@ bool is_throwable(const actor *actor, const item_def &wpn)
 
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();
-    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
+    return wpn.sub_type != MI_JAVELIN
+           || actor->body_size(PSIZE_TORSO, base) >= SIZE_MEDIUM;
 }
 
 /**

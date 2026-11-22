@@ -880,6 +880,8 @@ Xom reaching
 
 "No, no, those are much too short."
 
+"Let's see how stretchy you are!"
+
 Xom meddles with your body plan.
 
 {{if you.has_bones() then
@@ -1301,6 +1303,16 @@ Xom has second-thoughts about your captivity.
 Xom sneaky congratulations
 
 "What a clever toy you are!"
+
+"Oh, I should have thought of that."
+%%%%
+Xom floor lock rescue
+
+"You looked lonely over there, so I brought you some friends."
+
+Xom relocates some company for you.
+
+"It's not healthy to spend all of your time hiding in a corner."
 %%%%
 Xom knowledge
 

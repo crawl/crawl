@@ -353,7 +353,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Gozag
         {   { 0, "", "", "Gozag turns your defeated foes' bodies to gold." },
             { 0, "", "", "Your enemies may become distracted by gold." },
-            { 0, ABIL_GOZAG_POTION_PETITION, "petition Gozag for potion effects" },
+            { 0, ABIL_GOZAG_PURCHASE_BLESSING, "purchase blessings with gold" },
             { 0, ABIL_GOZAG_CALL_MERCHANT,
                  "fund merchants seeking to open stores in the dungeon" },
             { 0, ABIL_GOZAG_BRIBE_BRANCH,
@@ -1474,7 +1474,7 @@ static bool _give_sif_gift(bool forced)
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    if (!forced && (you.piety() < piety_breakpoint(5) || !one_chance_in(3)))
+    if (!forced && (you.piety() < piety_breakpoint(4) || !one_chance_in(3)))
         return false;
 
     // Sif Muna special: Keep quiet if acquirement fails
@@ -3082,6 +3082,13 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_GOZAG:
+    {
+        const int fee = you.gold / 2;
+        if (fee > 0)
+        {
+            mprf(MSGCH_GOD, "Gozag exacts a cancellation fee of %d gold.", fee);
+            you.del_gold(fee);
+        }
         if (you.attribute[ATTR_GOZAG_SHOPS_CURRENT])
         {
             mprf(MSGCH_GOD, old_god, "Your funded stores close, unable to pay "
@@ -3096,6 +3103,7 @@ void excommunication(bool voluntary, god_type new_god)
         shopping_list.remove_gozag_shops();
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
+    }
         break;
 
     case GOD_QAZLAL:
@@ -3321,6 +3329,7 @@ static bool _god_rejects_loveless(god_type god)
     case GOD_HEPLIAKLQANA:
     case GOD_FEDHAS:
     case GOD_YREDELEMNUL:
+    case GOD_XOM:
         return true;
     default:
         return false;
@@ -3863,6 +3872,9 @@ static void _join_xom()
     you.gift_timeout = 4;
 
     you.attribute[ATTR_XOM_BLESSING_TIMER] = 80;
+
+    if (you.experience_level <= 8)
+        you.props[XOM_EARLY_JOIN_KEY] = true;
 }
 
 /// What special things happen when you join a god?

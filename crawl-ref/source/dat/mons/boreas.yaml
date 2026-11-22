@@ -1,0 +1,21 @@
+name: "Boreas"
+glyph: {char: "c", colour: lightblue}
+flags: [speaks, fighter, warm_blood, unique, male]
+resists: {cold: 2}
+exp: 1700
+species: centaur
+will: 100
+attacks:
+ - {type: hit, damage: 28}
+ - {type: kick, damage: 22}
+hd: 15
+hp_10x: 1300
+ac: 5
+ev: 10
+spells: boreas
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: large
+shape: centaur

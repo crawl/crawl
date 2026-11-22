@@ -9,6 +9,7 @@ equipment:
   - "shortbow"
   - "leather armour"
   - "scroll of butterflies no_exclude"
+  - "scroll of poison q:2"
 recommended_species:
   - minotaur
   - gnoll

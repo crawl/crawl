@@ -168,8 +168,9 @@ void recall_orders(monster *mons)
     mons->patrol_point = coord_def(0, 0);
     mons->travel_path.clear();
 
-    // Don't wander
-    mons->behaviour = BEH_SEEK;
+    // Don't wander (but don't automatically break fear, either).
+    if (!mons->has_ench(ENCH_FEAR))
+        mons->behaviour = BEH_SEEK;
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
@@ -187,16 +188,10 @@ bool try_recall(mid_t mid)
         return recall_offlevel_ally(mid);
     if (!mons->alive())
         return false;
-    // Don't recall monsters that are already close to the player
-    if (mons->pos().distance_from(you.pos()) < 3
-        && mons->see_cell_no_trans(you.pos()))
-    {
-        recall_orders(mons);
-        return false;
-    }
-    coord_def empty;
-    if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
-        || !mons->move_to(empty, MV_TRANSLOCATION, true))
+
+    coord_def spot = find_newmons_square(mons->type, you.pos(), 1, 3);
+    if (spot.origin()
+        || !mons->move_to(spot, MV_TRANSLOCATION, true))
     {
         return false;
     }
@@ -374,10 +369,9 @@ bool passwall_path::check_moveto() const
 
 }
 
-int passwall_ac(int pow, bool random)
+int passwall_ac(int pow)
 {
-    return 5 + (random ? div_rand_round(pow, 10)
-                       : div_round_near(pow, 10));
+    return 500 + pow * 10;
 }
 
 spret cast_passwall(const coord_def& c, int pow, bool fail)
@@ -413,7 +407,7 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
 
         // Give bonus AC while moving through the wall.
-        you.props[PASSWALL_ARMOUR_KEY].get_int() = passwall_ac(pow, true);
+        you.props[PASSWALL_ARMOUR_KEY].get_int() = passwall_ac(pow);
         you.redraw_armour_class = true;
 
         return spret::success;

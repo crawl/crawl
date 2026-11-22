@@ -327,7 +327,7 @@ The fountain of blood pulses a joyous rhythm of life and death.
 %%%%
 Vehumet fountain_blood
 
-You sense the potent destructive power at rest in within this fountain.
+You sense the potent destructive power at rest within this fountain.
 %%%%
 Wu Jian peaceful fountain_blue
 

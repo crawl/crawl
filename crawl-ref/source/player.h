@@ -208,8 +208,6 @@ public:
     int hit_points_regeneration;
     int magic_points_regeneration;
     unsigned int experience;
-    unsigned int total_experience; // 10 * amount of xp put into skills, used
-                                   // only for skill_cost_level
     int experience_level;
     int gold;
     int zigs_completed, zig_max;
@@ -289,8 +287,17 @@ public:
     skill_menu_state skill_menu_do;
     skill_menu_state skill_menu_view;
 
+    // Higher levels increase the skill xp cost to gain a skill point
     int  skill_cost_level;
-    int  exp_available; // xp pool, scaled by 10 from you.experience
+    // You gain 10 skill xp for every regular xp you gain and it accumulates
+    // here until you have enough to gain a skill point
+    int  skill_exp_available;
+    // The total amount of skill xp that has been spent to gain skill points.
+    // It is used to determine skill_cost_level
+    int skill_exp_spent;
+    // The amount of skill points that are available to be spent on increasing
+    // skills
+    int skill_points_available;
 
     FixedVector<int, NUM_GODS> exp_docked;
     FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
@@ -482,8 +489,6 @@ public:
     FixedVector<bool, 4> wind_category_inc;
     int prevailing_wind;
     bool gave_wind_change_warning;
-
-    bool gave_invis_clear_prompt;
 
     // ---------------------------
     // Volatile (same-turn) state:
@@ -924,7 +929,7 @@ public:
     bool res_petrify(bool include_temp = true) const override;
     bool res_constrict() const override;
     int res_blind() const override;
-    int willpower() const override;
+    int willpower(bool items = true) const override;
     bool no_tele(bool blink = false, bool include_temp = true) const override;
     string no_tele_reason(bool blink = false, bool include_temp = true) const;
     int slaying(bool throwing = false, bool random = true) const override;
@@ -1210,7 +1215,7 @@ int player_res_poison(bool allow_random = true, bool include_temp = true,
                       bool items = true, bool forms = true);
 int player_res_corrosion(bool allow_random = true, bool include_temp = true,
                          bool items = true);
-int player_willpower(bool include_temp = true);
+int player_willpower(bool include_temp = true, bool items = true);
 
 int player_shield_class(int scale = 1, bool random = true,
                         bool include_temp = true);

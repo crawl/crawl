@@ -3970,7 +3970,7 @@ int monster::res_corr() const
  *
  * @return              The monster's willpower value.
  */
-int monster::willpower() const
+int monster::willpower(bool items) const
 {
     if (mons_invuln_will(*this))
         return WILL_INVULN;
@@ -4002,26 +4002,29 @@ int monster::willpower() const
     if (HD < get_experience_level())
         u = u * HD / get_experience_level();
 
-    // Resistance from artefact properties.
-    u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
+    if (items)
+    {
+        // Resistance from artefact properties.
+        u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
 
-    // Ego equipment resistance.
-    const int armour    = inv[MSLOT_ARMOUR];
-    const int aux       = inv[MSLOT_AUX_ARMOUR];
-    const int shld      = inv[MSLOT_SHIELD];
-    const int jewellery = inv[MSLOT_JEWELLERY];
+        // Ego equipment resistance.
+        const int armour = inv[MSLOT_ARMOUR];
+        const int aux = inv[MSLOT_AUX_ARMOUR];
+        const int shld = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
-    if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[armour], false);
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[armour], false);
 
-    if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[aux], false);
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[aux], false);
 
-    if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
-        u += get_armour_willpower(env.item[shld], false);
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
+          u += get_armour_willpower(env.item[shld], false);
 
-    if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
-        u += get_jewellery_willpower(env.item[jewellery], false);
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY)
+          u += get_jewellery_willpower(env.item[jewellery], false);
+    }
 
     if (has_ench(ENCH_STRONG_WILLED)) //trog's hand
         u += 80;
@@ -4824,6 +4827,7 @@ bool monster::is_patrolling() const
 bool monster::needs_abyss_transit() const
 {
     return (mons_is_unique(type)
+            || mons_is_xom_guardian(*this)
             || (flags & MF_BANISHED)
                && get_experience_level() > 8 + random2(25)
                && mons_can_use_stairs(*this))
@@ -5177,6 +5181,13 @@ bool monster::can_polymorph() const
     if (type == MONS_ORC_APOSTLE)
         return false;
 
+    // Polymorping these can bypass tesseract activation, and while it is
+    // possible to track their original form, an alarm going off because you
+    // killed what appeared to be, say, a dire elephant is quite unexpected.
+    // Instead, just don't polymorph them.
+    if (type == MONS_ORB_GUARDIAN)
+        return false;
+
     return can_mutate();
 }
 
@@ -5208,7 +5219,7 @@ bool monster::cannot_move() const
 bool monster::cannot_keep_channelling() const
 {
     return is_silenced() || cannot_act() || confused() || asleep()
-            || has_ench(ENCH_FEAR);
+            || has_ench(ENCH_FEAR) || has_ench(ENCH_FRENZIED);
 }
 
 bool monster::can_burrow() const
@@ -6187,6 +6198,19 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (x_chance_in_y(scan_artefacts(ARTP_SILENCE), 100))
         silence_monster(*this, oppressor, (4 + random2(7) * BASELINE_DELAY));
 
+    if (mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED
+        && unrand_equipped(UNRAND_BOREAL_BULWARK)
+        && !has_ench(ENCH_REGENERATION)
+        && !has_ench(ENCH_ORB_COOLDOWN))
+    {
+        if (you.can_see(*this))
+        {
+            mprf("A bracing wind gives %s the strength to keep fighting!",
+                 name(DESC_THE).c_str());
+            add_ench(mon_enchant(ENCH_REGENERATION, this, random_range(80, 110)));
+            add_ench(mon_enchant(ENCH_ORB_COOLDOWN, this, random_range(550, 750)));
+        }
+    }
 
     if (mons_species() == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE

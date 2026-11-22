@@ -960,7 +960,7 @@ bool melee_attack::handle_phase_hit()
         do_valour_beam();
 
     if (damage_brand == SPWPN_CONCUSSION || xom_extra_brand() == SPWPN_CONCUSSION)
-        handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
+        handle_concussion_brand(weapon && is_unrandom_artefact(*weapon, UNRAND_CARINA));
 
     if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
         handle_centipede_poison(weapon->plus);
@@ -1390,7 +1390,7 @@ void melee_attack::handle_phase_killed()
         makhleb_execution_activate();
 
     if (attacker->is_player() && you.form == transformation::werewolf
-        && defender->is_monster())
+        && !defender->is_firewood() && !defender->friendly())
     {
         _handle_werewolf_kill_bonus(*defender->as_monster(), is_bestial_takedown);
     }
@@ -1968,7 +1968,16 @@ bool melee_attack::attack()
 
     if (is_sunder && !cleaving && is_sundering_weapon() && you.can_see(*attacker))
     {
-        mprf("%s %s flashes viciously!", attacker->name(DESC_ITS).c_str(),
+        // XXX: For now, this is only Xom's cleaving blessing while unarmed.
+        //      Change this code if that ever changes.
+        if (!weapon)
+        {
+            bool is_plural = false;
+            string hands = you.hand_name(true, &is_plural);
+            mprf("Your %s flash%s viciously!", hands.c_str(), !is_plural ? "es" : "");
+        }
+        else
+            mprf("%s %s flashes viciously!", attacker->name(DESC_ITS).c_str(),
                                          weapon->name(DESC_PLAIN).c_str());
         draw_ring_animation(attacker->pos(), 2, WHITE, WHITE, true, 25, TILE_BOLT_SUNDERING);
     }
@@ -4958,7 +4967,8 @@ void melee_attack::do_valour_beam()
     if (!found_targ)
         return;
 
-    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon_damage());
+    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon ? weapon_damage()
+                                                 : 3 + attacker->skill_rdiv(SK_UNARMED_COMBAT, 2, 3));
     beam.source = attacker->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
@@ -5012,7 +5022,7 @@ bool melee_attack::do_knockback(bool slippery)
         // Prevent trample/drown combo when flight is expiring
         || defender->is_player() && need_expiration_warning(new_pos)
         || defender->is_constricted()
-        || defender->resists_dislodge(needs_message ? "being knocked back" : ""))
+        || defender->resists_dislodge(""))
     {
         if (needs_message)
         {

@@ -5561,7 +5561,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.base_type = OBJ_BOOKS;
         result.sub_type = BOOK_PARCHMENT;
 
-        strip_tag(s, "of");
+        // Strip the first 'of' (but don't mess up spells with 'of' in their names...)
+        if (starts_with(s, "of "))
+            s = s.substr(3);
 
         // Allow specifing the school of spell, rather than the spell itself.
         string school_str = strip_tag_prefix(s, "disc:");

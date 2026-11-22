@@ -437,10 +437,8 @@ Bat Form ability
 %%%%
 Bend Time ability
 
-“It's astounding
- Time is fleeting
- Madness takes its toll”
-    -Richard O'Brien, “Time Warp”. 1975.
+“The touch of time does more than the club of Hercules.”
+    -James Branch Cabell, “The Way of Ecben”. 1929.
 %%%%
 Brain Bite spell
 
@@ -715,11 +713,14 @@ Slimify ability
 %%%%
 Slouch ability
 
-“I remember doing the Time Warp
- Drinking those moments when
- The blackness would hit me
- And the void would be calling”
-    -Richard O'Brien, “Time Warp”. 1975.
+“Time is a greedy gambler who wins at every turn of the wheel
+ Without cheating
+ Such is the law
+ The day declines, the night deepens
+ The thirst of the abyss knows no end;
+ The hourglass drains”
+    -Charles Baudelaire, _Flowers of Evil_, 85: The Clock. 1861.
+     trans. Ruth White, 1969.
 %%%%
 Spellspark Servitor spell
 
@@ -733,12 +734,12 @@ Sticky Flame spell
 %%%%
 Step From Time ability
 
-“It's so dreamy
- Oh, fantasy free me
- So you can't see me
- No, not at all
- In another dimension”
-    -Richard O'Brien, “Time Warp”. 1975.
+“Time moves differently under the glass moon, you see. Unevenly.
+ Sometimes it crawls. Sometimes it smears.
+ Sometimes it even runs backward, waves peeling back from the shore...
+ You might have just left- just stepped into another room. A moment.
+ Or your friends could have been dead for decades.”
+    -Anthony Oliverira, _Avengers Academy: Marvel Voices_, #17. 2024.
 %%%%
 Summon Demon spell
 
@@ -801,10 +802,10 @@ Swiftness spell
 %%%%
 Temporal Distortion ability
 
-“With a bit of a mind flip
- You're into the time slip
- And nothing can ever be the same”
-    -Richard O'Brien, “Time Warp”. 1975.
+“So he’s saving the world and destroying it, all at once?”
+
+“Family trait,” said Wen. “It is what Time does at every instant.”
+    -Terry Pratchett, “Thief of Time”. 2001.
 %%%%
 Waterstrike spell
 
@@ -955,13 +956,6 @@ buckler
  But who can get another life again?”
     -Archilochos. 7th cent. B.C.
      trans. William H. Goodwin, 1878.
-%%%%
-cloak of the Thief
-
-“so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
- when the cloud dissipates im lying completely dead on the pavement”
-    -wint, @dril Twitter. July 26, 2016
-# https://twitter.com/dril/status/757914951868485632/
 %%%%
 chain mail
 
@@ -3366,7 +3360,7 @@ lost soul
   Her feet leave no tracks on the dew-covered ground.
  Her hand gently beckons, she whispers your name—
   But those who go with her are never the same.”
-    -Magic: the Gathering
+    -Magic: the Gathering, 1994.
 %%%%
 manticore
 
@@ -3943,18 +3937,6 @@ skeletal warrior
  Why dost thou haunt me?”
     -Henry Wadsworth Longfellow, “The Skeleton in Armor”. 1841.
 %%%%
-skeleton
-
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
-%%%%
-sky beast
-
-“Her own mother lived the latter years of her life in the horrible suspicion
- that electricity was dripping invisibly all over the house.”
-    -James Thurber, _My Life and Hard Times_. 1934.
-%%%%
 slime creature
 
 “The very deep did rot: O Christ!
@@ -4204,6 +4186,7 @@ two-headed ogre
 <ogre>
 %%%%
 tyrant leech
+
  Scully: “Where the hell did it come from?”
  Mulder: “I don’t know, but it looks like I’m going to have to tell Skinner
           that his suspect is a giant bloodsucking worm after all.”

@@ -1763,8 +1763,8 @@ Tengu (Te)
 Oni (On)
   Oni are large, rowdy creatures who love a good fight. They are exceptionally
   strong and robust, and their fondness for drink allows them to heal twice as
-  much from healing potions and even perform free melee swings around themselves
-  while they chug them.
+  much from healing potions and gain twice as much magic from magic potions.
+  They also perform free melee swings around themselves while they chug potions.
 
   They are proficient with most melee weapons and forms of magic, but lack the
   dexterity or inclination to use ranged weapons or magical devices well. They
@@ -2041,7 +2041,8 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a shortbow, a scroll of butterflies, and a set of leathers.
+  starts with a shortbow, two scrolls of poison, a scroll of butterflies, an
+  leather armour.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2134,7 +2135,7 @@ Warpers
 Hexslinger
   Hexslingers use debilitating spells to assist their ranged attacks. They
   begin the game with a sling, some spells to support its use, a scroll of
-  poison to keep foes at a distance, and a robe.
+  fear to use in a pinch, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly

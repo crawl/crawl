@@ -19,3 +19,5 @@ void notice_queued_monsters();
 void seen_monster(monster* mons, bool do_encounter_message = true);
 
 string multimonster_name_string(vector<monster*> monsters, bool force_visible = false);
+
+void mark_unseen_monsters();

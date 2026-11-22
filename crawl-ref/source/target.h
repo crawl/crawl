@@ -584,6 +584,13 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_mephitic : public targeter_beam
+{
+public:
+    targeter_mephitic(const actor *act, int r, int pow);
+    bool affects_monster(const monster_info& mon) override;
+};
+
 class targeter_boulder : public targeter_beam
 {
 public:

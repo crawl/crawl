@@ -700,7 +700,7 @@ void bolt::initialise_fire()
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || ranged_atk);
-    ASSERTM(range >= 0, "beam '%s', source '%s', has range -1",
+    ASSERTM(aimed_at_feet || range > 0, "beam '%s', source '%s', has range < 1",
             name.c_str(),
             (source_id == MID_PLAYER ? "player" :
                           monster_by_mid(source_id) ?
@@ -3840,10 +3840,14 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CHARM:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(5 + random2(3));
+    {
+        const string msg = make_stringf("lash out against %s attempt to control you!",
+                                        agent() ? agent()->name(DESC_ITS).c_str() : "the");
+        you.vex(agent(), random_range(3, 5),
+                agent() ? agent()->name(DESC_A).c_str() : "something", msg);
         obvious_effect = true;
-        break;     // charming - confusion?
+    }
+        break;
 
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
@@ -7370,11 +7374,11 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_SHADOW_TORPOR:
         case BEAM_DIGGING:
             return false;
+        case BEAM_BECKONING:
         case BEAM_INNER_FLAME:
-            // Co-aligned inner flame is fine.
+            // Co-aligned inner flame or beckoning is fine.
             return !mons_aligned(mon, agent());
         case BEAM_TELEPORT:
-        case BEAM_BECKONING:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
         case BEAM_ROOTS:

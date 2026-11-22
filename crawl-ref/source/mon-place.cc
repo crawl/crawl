@@ -274,7 +274,7 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena())
         return;
 
-    if (!player_on_orb_run()
+    if (!(player_on_orb_run() && !player_in_branch(BRANCH_ARENA))
         && !player_in_branch(BRANCH_ABYSS)
         && !player_in_branch(BRANCH_PANDEMONIUM))
     {
@@ -300,8 +300,7 @@ void spawn_random_monsters()
 
     // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
     // players that get banished there on the orb run.
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
-        && !player_in_branch(BRANCH_ARENA))
+    if (player_on_orb_run())
     {
         mg.proximity = PROX_CLOSE_TO_PLAYER;
         mg.foe = MHITYOU;
@@ -943,6 +942,11 @@ static void _assign_living_spell_appearance(monster* mon)
         case SPELL_ICEBLAST:
             mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ICE;
             mon->colour = LIGHTBLUE;
+            break;
+
+        case SPELL_FORCE_LANCE:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_WARP;
+            mon->colour = MAGENTA;
             break;
 
         case SPELL_CORROSIVE_BOLT:
@@ -1650,6 +1654,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->target = foe->pos();
         }
     }
+
+    if (mg.flags & MG_CHAOSLACE)
+        mon->add_ench(mon_enchant(ENCH_CHAOS_LACE, nullptr, INFINITE_DURATION));
 
     // Random Abyss monster spawns.
     if (mg.announce_type == SC_ABYSS)

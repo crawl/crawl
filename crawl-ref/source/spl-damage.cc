@@ -1479,6 +1479,93 @@ static bool _init_frag_effect(frag_effect &effect, const actor &caster,
     return _init_frag_grid(effect, target, what);
 }
 
+static tileidx_t _frag_tile(const frag_effect &effect)
+{
+    if (effect.damage == frag_damage_type::ice)
+        return TILE_BOLT_DECONSTRUCT_ICE;
+    else if (effect.damage == frag_damage_type::metal
+             || effect.damage == frag_damage_type::crystal)
+    {
+        switch (effect.colour)
+        {
+            case BLUE:
+            case LIGHTBLUE:
+                return TILE_BOLT_DECONSTRUCT_SHARD_BLUE;
+
+            case RED:
+            case LIGHTRED:
+                return TILE_BOLT_DECONSTRUCT_SHARD_RED;
+
+            case GREEN:
+            case LIGHTGREEN:
+                return TILE_BOLT_DECONSTRUCT_SHARD_GREEN;
+
+            case MAGENTA:
+            case LIGHTMAGENTA:
+                return TILE_BOLT_DECONSTRUCT_SHARD_MAGENTA;
+
+            case CYAN:
+            case LIGHTCYAN:
+                return TILE_BOLT_DECONSTRUCT_SHARD_CYAN;
+
+            case BROWN:
+                return TILE_BOLT_DECONSTRUCT_SHARD_BROWN;
+
+            case YELLOW:
+                return TILE_BOLT_DECONSTRUCT_SHARD_YELLOW;
+
+            case LIGHTGREY:
+            case WHITE:
+                return TILE_BOLT_DECONSTRUCT_SHARD_WHITE;
+
+            case DARKGREY:
+            case BLACK:
+                return TILE_BOLT_DECONSTRUCT_SHARD_BLACK;
+        }
+    }
+    else
+    {
+        switch (effect.colour)
+        {
+            case BLUE:
+            case LIGHTBLUE:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_BLUE;
+
+            case RED:
+            case LIGHTRED:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_RED;
+
+            case GREEN:
+            case LIGHTGREEN:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_GREEN;
+
+            case MAGENTA:
+            case LIGHTMAGENTA:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_MAGENTA;
+
+            case CYAN:
+            case LIGHTCYAN:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_CYAN;
+
+            case BROWN:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_BROWN;
+
+            case YELLOW:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_YELLOW;
+
+            case LIGHTGREY:
+            case WHITE:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_WHITE;
+
+            case DARKGREY:
+            case BLACK:
+                return TILE_BOLT_DECONSTRUCT_RUBBLE_BLACK;
+        }
+    }
+
+    return TILE_BOLT_DECONSTRUCT_RUBBLE_YELLOW;
+}
+
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what)
@@ -1531,6 +1618,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
     beam.source_name = caster->name(DESC_PLAIN, true);
     beam.target = target;
+    beam.tile_explode = _frag_tile(effect);
 
     return true;
 }
@@ -3038,7 +3126,7 @@ void do_eel_melee_jolt(coord_def pos)
     targets.push_back(pos);
 
     targets = _get_chain_targets(you, targets, true, true);
-    targets.resize(random_range(3, 6));
+    targets.resize(min(targets.size(), (size_t)random_range(3, 6)));
     _do_chain_jolt(you, targets, get_form()->get_special_damage());
 }
 
@@ -3678,6 +3766,9 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
+    if (warn_about_contam_cost(360))
+        return spret::abort;
+
     const actor* victim = actor_at(target);
     if ((!victim || !you.aware_of(*victim))
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
@@ -3722,6 +3813,8 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     beam.source = beam.target = target;
     beam.ex_size = 1;
     beam.fire();
+
+    contaminate_player(random_range(165, 360));
 
     return spret::success;
 }
@@ -5240,7 +5333,7 @@ spret cast_fortress_blast(actor& caster, int pow, bool fail)
     {
         const int delay = 70 - div_rand_round(pow * 10, 25);
         you.duration[DUR_FORTRESS_BLAST_TIMER] = delay;
-        mprf("You steady yourself in place and focus your resilience into a mighty blast.");
+        mprf("You anchor yourself in place and focus your resilience into a mighty blast.");
     }
     // Todo: Add monster implementation here
 

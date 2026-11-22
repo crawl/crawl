@@ -692,8 +692,10 @@ void seen_monster(monster* mons, bool do_encounter_message)
         && coinflip()
         && mons->get_experience_level() >= random2(you.experience_level))
     {
-        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
-                mons->name(DESC_THE).c_str());
+        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag grants %s a complimentary blessing in "
+                                   "exchange for %s services.",
+                mons->name(DESC_THE).c_str(),
+                mons->pronoun(PRONOUN_POSSESSIVE).c_str());
         gozag_incite(mons);
     }
 
@@ -714,4 +716,13 @@ void seen_monster(monster* mons, bool do_encounter_message)
 
     if (you.form == transformation::maw)
         maw_hunger_check(mons);
+}
+
+// Have the player remember the locations of all previously-visible invisible
+// monsters after they lose the ability to see them.
+void mark_unseen_monsters()
+{
+    for (monster_iterator mi; mi; ++mi)
+        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
+            mi->sense_if_invisible();
 }

@@ -2210,7 +2210,7 @@ bool trigger_chaos_battleshape_spell(int spell_level)
     }
 
     _chaos_battleshape_random_zaps(targs, num_targs, is_aoe);
-    schedule_stardust_fineff(battleshape, 20 + you.experience_level * 2,
+    schedule_stardust_fineff(battleshape, 30 + you.experience_level * 3,
                              shooting_stars, SHOOTING_STAR_BATTLESHAPE);
     place_cloud(CLOUD_CHAOS, battleshape->pos(), random_range(3, 5), battleshape);
     monster_die(*battleshape, KILL_RESET, NON_MONSTER);

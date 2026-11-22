@@ -1928,7 +1928,7 @@ TILE:    urand_crown_of_vainglory
 TILE_EQ: VAINGLORY
 VALUE:   550
 DESCRIP: Majesty:   You are bathed in light that prevents you from turning
- invisible. Whenever you enter a new floor, you announce yourself to nearby
+ invisible. Whenever you enter another floor, you announce yourself to nearby
  enemies and refuse to leave the floor again for some time.
 +Ring++:   You can equip two additional rings.
 
@@ -2089,14 +2089,14 @@ BOOL:    elec
 DESCRIP: Corona: Enemies hit by the wearer's projectiles are outlined in light.
 
 # This is internally a pds so small/large species can acquire and use it
-ENUM:    BONE_SCALES
-NAME:    bone scales
+ENUM:    BONE_DRAGON_ARMOUR
+NAME:    bone dragon armour
 OBJ:     OBJ_ARMOUR/ARM_PEARL_DRAGON_ARMOUR
 BASE_ENCUMBRANCE: +7
 PLUS:    +6
 COLOUR:  ETC_BONE
-TILE:    urand_bone_scales
-TILE_EQ: BONE_SCALES
+TILE:    urand_bone_dragon_armour
+TILE_EQ: BONE_DRAGON_ARMOUR
 BRAND:   SPARM_DEATH
 SLAY:    +3
 SH:      +6
@@ -2126,12 +2126,24 @@ STR:     +4
 SLAY:    +4
 COLOUR:  ETC_MAGIC
 TILE:    urand_crab_claws
-TILE_EQ: GLOVE_GREEN
+TILE_EQ: GLOVE_CRAB_CLAWS
 BOOL:    evil, enh_necro, special
 DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
  or casts spells, and grants immunity from such clouds. Necromancy spells have
  a greater chance to produce spectral mist.
 MAX_LEVEL: 11
+
+NAME:    Boreal Bulwark
+OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
+INSCRIP: SecondWind
+COLOUR:  LIGHTBLUE
+TILE:    urand_boreal_bulwark
+TILE_EQ: BOREAL_BULWARK
+COLD:    1
+SLAY:    -4
+BOOL:    rampage
+DESCRIP: SecondWind: When you are badly injured, it rapidly regenerates a
+ percentage of your health.
 
 # This entry must always be last.
 ENUM:   DUMMY2

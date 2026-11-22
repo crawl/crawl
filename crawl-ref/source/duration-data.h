@@ -17,6 +17,7 @@
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "mon-transit.h" // untag_followers() in duration-data
+#include "player-notices.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "spl-summoning.h" // NEXT_OBLIVION_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
@@ -709,7 +710,7 @@ static const duration_def duration_data[] =
     { DUR_HIVE_COOLDOWN,
         YELLOW, "-Swarm",
         "on swarm cooldown", "swarm cooldown",
-        "Your swarm has recently come to your defense.", D_NO_FLAGS},
+        "Your swarm has recently come to your defence.", D_NO_FLAGS},
     { DUR_STARDUST_COOLDOWN,
         YELLOW, "-Star",
         "on stardust cooldown", "stardust cooldown",
@@ -830,8 +831,8 @@ static const duration_def duration_data[] =
       "Your limbs are incredibly long.", D_NO_FLAGS,
       {{ "Your limbs return to their normal size." }}},
     { DUR_IRRITATED,
-      LIGHTRED, "Irrate",
-      "irrate", "irrate",
+      LIGHTRED, "Irate",
+      "irate", "irate",
       "You are quickly growing irritated.", D_NO_FLAGS,
       {{ "", _sage_go_berserk }}},
     { DUR_RAMPAGE_MAX,
@@ -850,6 +851,14 @@ static const duration_def duration_data[] =
       "", D_NO_FLAGS,
       {{"", [](){ xom_end_disguise(true);}}}
     },
+    { DUR_STUMBLING, 0, "",
+      "stumbling", "stumbling",
+      "You are stumbling and have reduced evasion.", D_NEGATIVE },
+    { DUR_BOREAL_BULWARK_COOLDOWN,
+        YELLOW, "-2ndWind",
+        "on second wind cooldown", "second wind cooldown",
+        "You have recently used your second wind",
+        D_COOLDOWN, {{"You feel your endurance being bolstered by the wind."}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -912,7 +921,7 @@ static const duration_def duration_data[] =
           if (!player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
-    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
+    { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{"", mark_unseen_monsters}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},
     { DUR_TEMP_CLOUD_IMMUNITY, 0, "", "", "temp cloud immunity", "", D_EXPIRES},
     { DUR_ALLY_RESET_TIMER, 0, "", "", "ally reset timer", "", D_NO_FLAGS},
@@ -937,13 +946,14 @@ static const duration_def duration_data[] =
        {{"Your slimification abates."}}},
     { DUR_OOZE_REGEN, LIGHTBLUE, "OozeRegen", "ooze regen", "ooze regen", "coated in regenerative ooze", D_NO_FLAGS,
        {{"The regenerative ooze finishes dripping off of you."}}},
-    { DUR_INDOMITABLE, LIGHTBLUE, "Indom", "", "", "", D_NO_FLAGS},
-    { DUR_EXEGESIS, WHITE, "Exegesis", "", "", "", D_NO_FLAGS, {{"", _end_exegesis}}},
+    { DUR_INDOMITABLE, LIGHTBLUE, "Indom", "", "indomitable", "", D_NO_FLAGS},
+    { DUR_EXEGESIS, WHITE, "Exegesis", "", "exegesis", "", D_NO_FLAGS, {{"", _end_exegesis}}},
     { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
-    { DUR_XOM_MANNEQUIN_TIMER, 0, "", "", "", "", D_NO_FLAGS},
-    { DUR_XOM_BATTLESHAPE_COOLDOWN, 0, "", "", "", "", D_NO_FLAGS, {{""}}},
-    { DUR_XOM_PROTEAN_COOLDOWN, YELLOW, "-Flesh", "", "", "", D_COOLDOWN,
+    { DUR_XOM_MANNEQUIN_TIMER, 0, "", "", "mannequin timer", "", D_NO_FLAGS},
+    { DUR_XOM_BATTLESHAPE_COOLDOWN, 0, "", "", "battleshape cooldown", "", D_NO_FLAGS, {{""}}},
+    { DUR_XOM_PROTEAN_COOLDOWN, YELLOW, "-Flesh", "", "protean cooldown", "", D_COOLDOWN,
       {{"Your body feels full of potential once again."}}},
+    { DUR_XOM_FAKE_BANISH, 0, "", "", "Xom fake banish", "", D_NO_FLAGS, {{"", xom_revert_banishment}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

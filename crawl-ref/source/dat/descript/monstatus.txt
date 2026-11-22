@@ -305,9 +305,10 @@ substantially more strength.
 %%%%
 incited by Gozag monstatus
 
-This creature has been roused into great speed by the wrath of Gozag Ym Sagoz.
-Their haste or berserk state is permanent and will not wear off with time
-or through deliberate magical intervention.
+This creature has been blessed with great speed and power by the wrath of
+Gozag Ym Sagoz. Their haste, berserk, and empowered spells statuses are
+permanent and will not wear off with time or through deliberate magical
+intervention.
 %%%%
 indifferent monstatus
 

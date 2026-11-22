@@ -351,6 +351,16 @@ function crackle_def(e)
          "wall_stone_crackle_3 / wall_stone_crackle_4"
 end
 
+-- A reusable list of every mask and prop we'd give to a monster stuck
+-- behind glass, to help cut down on codebase boilerplate.
+function display_closet_setup(e, glyphs)
+  e.kmask(glyphs .. " = opaque")
+  e.kmask(glyphs .. " = no_monster_gen")
+  e.kmask(glyphs .. " = no_item_gen")
+  e.kmask(glyphs .. " = no_trap_gen")
+  e.kprop(glyphs .. " = no_tele_into")
+end
+
 -- A reusable poison / fire / snake theming for statues that show up in Snake.
 function snake_statue_setup (e, glyph)
   if crawl.x_chance_in_y(2, 3) then

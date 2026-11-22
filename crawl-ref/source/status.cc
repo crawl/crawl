@@ -933,8 +933,9 @@ bool fill_status_info(int status, status_info& inf)
             const int bonus = trickster_bonus();
             if (bonus > 0)
             {
-                inf.short_text = make_stringf("trickster (+%d AC)", bonus);
-                inf.long_text = make_stringf("You are bolstered by spread misfortune (+%d AC)", bonus);
+                double ac = bonus / 100.0;
+                inf.short_text = make_stringf("trickster (+%.1f AC)", ac);
+                inf.long_text = make_stringf("You are bolstered by spread misfortune (+%.1f AC)", ac);
             }
         }
         break;
@@ -1479,7 +1480,7 @@ static void _describe_xom_blessing(status_info& inf)
         {
             const int count = you.props.exists(XOM_MANNEQUIN_TROUPE)
                                 ? you.props[XOM_MANNEQUIN_TROUPE].get_vector().size() : 0;
-            inf.light_text = "Troupe";
+            inf.light_text = count > 1 ? "Troupe+" : "Troupe";
             string count_msg = make_stringf("<lightblue>(+%d)</lightblue>", count);
             inf.light_text_formatted = make_stringf("<red>T<yellow>r<green>o<cyan>u<lightblue>p<magenta>e %s",
                                                     count > 0 ? count_msg.c_str() : "");

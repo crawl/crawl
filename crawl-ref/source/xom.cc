@@ -45,6 +45,7 @@
 #include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
@@ -104,11 +105,15 @@
 static void _do_xom_event(xom_event_type event_type, int tension);
 static bool _explore_event_is_valid(xom_event_type event, int tension);
 
-static int _count_reachable_monsters();
+static int _count_reachable_monsters(bool include_temp_flight = false);
 
 static constexpr int XOM_EXPLORE_THRESHOLD = 910;
 
 #define XOM_QUEUED_EXPLORE_KEY "xom_queued_explore"
+
+// Timestamp of when we should next check if the player has somehow stranded
+// themselves.
+#define XOM_FLOOR_LOCK_TIME_KEY "xom_floor_lock_time"
 
 enum xom_explore_type
 {
@@ -840,7 +845,7 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   {  6, 12,  90, SEMI, MONS_SWAMP_DRAKE },
   {  7, 15,  60, SEMI, MONS_BOGGART },
   {  8, 14,  50, SEMI, MONS_ORANGE_DEMON },
-  {  8, 18, 155, SEMI, MONS_CHAOS_SPAWN },
+  {  8, 15,  90, SEMI, MONS_CHAOS_SPAWN },
   {  9, 13,  40, SEMI, MONS_ICE_DEVIL },
   {  9, 13,  40, SEMI, MONS_RED_DEVIL },
   {  9, 14,   5, FLAT, MONS_TOENAIL_GOLEM },
@@ -882,12 +887,12 @@ static const vector<random_pick_entry<monster_type>> _xom_summons =
   { 18, 33,  35, SEMI, MONS_REAPER },
   { 18, 23,  30, SEMI, MONS_DANCING_WEAPON },
   { 19, 26,   1, FLAT, MONS_ORANGE_STATUE },
-  { 20, 33,  30, SEMI, MONS_APOCALYPSE_CRAB },
+  { 20, 30,  30, SEMI, MONS_APOCALYPSE_CRAB },
   { 21, 33,  30, SEMI, MONS_TENTACLED_MONSTROSITY },
   { 22, 33,   1, FLAT, MONS_STARFLOWER },
   { 23, 33,  30, SEMI, MONS_HELLEPHANT },
-  { 24, 33,   5, SEMI, MONS_MOTH_OF_WRATH },
-  { 25, 33,   5, SEMI, MONS_NEKOMATA },
+  { 24, 30,   5, SEMI, MONS_MOTH_OF_WRATH },
+  { 25, 36,   5, SEMI, MONS_NEKOMATA },
 };
 
 // Whenever choosing a monster that obviously comes in bands, spawn a few more,
@@ -967,6 +972,42 @@ static int _xom_pal_counting(int roll, bool isFriendly)
     return count;
 }
 
+// Endgame and extended monsters Xom has some fondness for (in being jokes
+// or highly chaotic), but which are mostly meant to stay in their branches,
+// get a small extra chance to be picked in the appropriate branch or Zigs.
+// Makes it a little more dramatic. Guardian picks can access this pool in
+// general at XL 27, but with fairly low odds without 4+ runes.
+static monster_type _xom_chaos_branch_pal(monster_type mon_type, bool guard)
+{
+    int rune_roll = 1;
+    if (you.runes.count() > ZOT_ENTRY_RUNES)
+        rune_roll = div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES);
+
+    if ((player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_ZIGGURAT)
+         && one_chance_in(13)) || guard && x_chance_in_y(rune_roll, 27))
+    {
+        mon_type = random_choose_weighted(5, MONS_DEATH_COB,
+                                          4, MONS_KILLER_KLOWN,
+                                          3, MONS_PROTEAN_PROGENITOR,
+                                          2, MONS_CURSE_TOE);
+    }
+    else if (((player_in_branch(BRANCH_PANDEMONIUM)
+              || player_in_branch(BRANCH_ZIGGURAT)) && one_chance_in(13))
+              || guard && x_chance_in_y(rune_roll, 54))
+    {
+        mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
+                                         MONS_DEMONSPAWN_CORRUPTER;
+    }
+    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(4) ||
+            guard && x_chance_in_y(rune_roll, 81))
+    {
+        mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
+                                         MONS_PLAYER_GHOST;
+    }
+
+    return mon_type;
+}
+
 static monster_type _xom_random_pal(int roll, bool isFriendly)
 {
     monster_picker xom_picker;
@@ -1006,28 +1047,11 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
 
     monster_type mon_type = xom_picker.pick(_xom_summons, variance, MONS_CRIMSON_IMP);
 
-    // Endgame and extended monsters Xom has some fondness for (in being jokes
-    // or highly chaotic), but which are mostly meant to stay in their branches,
-    // get a small extra chance to be picked in the appropriate branch or Zigs.
-    // Makes it a little more dramatic.
-    if ((player_in_branch(BRANCH_ZOT) || player_in_branch(BRANCH_ZIGGURAT))
-         && one_chance_in(13))
+    if (player_in_branch(BRANCH_ZOT)
+        || player_in_branch(BRANCH_PANDEMONIUM)
+        || player_in_branch(BRANCH_ZIGGURAT))
     {
-        mon_type = random_choose_weighted(5, MONS_DEATH_COB,
-                                          4, MONS_KILLER_KLOWN,
-                                          3, MONS_PROTEAN_PROGENITOR,
-                                          2, MONS_CURSE_TOE);
-    }
-    else if ((player_in_branch(BRANCH_PANDEMONIUM) ||
-              player_in_branch(BRANCH_ZIGGURAT)) && one_chance_in(13))
-    {
-        mon_type = x_chance_in_y(3, 5) ? MONS_DEMONSPAWN_BLOOD_SAINT :
-                                         MONS_DEMONSPAWN_CORRUPTER;
-    }
-    else if (player_in_branch(BRANCH_ZIGGURAT) && one_chance_in(4))
-    {
-        mon_type = x_chance_in_y(5, 7) ? MONS_PANDEMONIUM_LORD :
-                                         MONS_PLAYER_GHOST;
+        mon_type = _xom_chaos_branch_pal(mon_type, false);
     }
 
     return mon_type;
@@ -4067,7 +4091,7 @@ static void _xom_summon_hostiles(int)
 // the player can make something of it anyway.
 static void _xom_send_in_clones(int)
 {
-    const int friendly_count = you.allies_forbidden() ? 0 : 1;
+    const int friendly_count = 1;
     const int hostile_count = 2;
     int hostiles_summon_count = 0;
     int friendly_summon_count = 0;
@@ -4211,37 +4235,6 @@ static void _xom_brain_drain(int)
     }
 }
 
-// XXX: Possibly this could be used elsewhere, like defaults for wizard spells
-// for those without speech, but we generally try to just give those custom
-// messages per-monster anyway currently.
-static const map<shout_type, string> speaking_keys = {
-    { S_SILENT,         "dramatically intoning" },
-    { S_SHOUT,          "shouting" },
-    { S_BARK,           "barking" },
-    { S_HOWL,           "howling" },
-    { S_SHOUT2,         "shouting twice-over" },
-    { S_ROAR,           "roaring" },
-    { S_SCREAM,         "screaming" },
-    { S_BELLOW,         "bellowing" },
-    { S_BLEAT,          "bleating" },
-    { S_TRUMPET,        "trumpeting" },
-    { S_SCREECH,        "screeching" },
-    { S_BUZZ,           "buzzing" },
-    { S_MOAN,           "chillingly moaning" },
-    { S_GURGLE,         "gurgling" },
-    { S_CROAK,          "croaking" },
-    { S_GROWL,          "growling" },
-    { S_HISS,           "hissing" },
-    { S_SKITTER,        "weaving" },
-    { S_FAINT_SKITTER,  "faintly weaving" },
-    { S_DEMON_TAUNT,    "sneering" },
-    { S_CHERUB,         "speaking" },
-    { S_SQUEAL,         "squealing" },
-    { S_LOUD_ROAR,      "roaring" },
-    { S_RUSTLE,         "scribing" },
-    { S_SQUEAK,         "squeaking" },
-};
-
 static bool _has_min_recall_level()
 {
     int min = you.penance[GOD_XOM] ? 3 : 5;
@@ -4286,9 +4279,9 @@ static void _xom_grants_word_of_recall(int)
     string xom_speech = "grant word of recall";
 
     shout_type shouting = get_monster_data(targetable[0]->type)->shouts;
-    phrasing = speaking_keys.find(shouting)->second;
-    if (phrasing == "dramatically intoning")
+    if (shouting == S_SILENT)
         xom_speech = "grant voiceless word of recall";
+    phrasing = get_speaking_type(shouting);
 
     god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
     mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
@@ -4338,6 +4331,12 @@ void xom_maybe_reverts_banishment()
         _revert_banishment(false);
 }
 
+void xom_revert_banishment()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+        _revert_banishment();
+}
+
 static void _xom_do_banishment(bool real)
 {
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
@@ -4345,7 +4344,15 @@ static void _xom_do_banishment(bool real)
     // Handles note taking
     banished("Xom");
     if (!real)
-        _revert_banishment();
+    {
+        // Will last for exactly one action (ie: just long enough to see it, but
+        // not for any monsters to do anything.)
+        if (you.experience_level < 9)
+            you.duration[DUR_XOM_FAKE_BANISH] = 1;
+        // Can last a little longer at higher XL, but not very long.
+        else
+            you.duration[DUR_XOM_FAKE_BANISH] = you.experience_level * 10 + random_range(20, 40);
+    }
 }
 
 static void _xom_banishment(int) { _xom_do_banishment(true); }
@@ -4578,6 +4585,7 @@ static void _xom_hall_of_mirrors(int)
 
     monster* orig = candidates[random2(candidates.size())];
     orig->add_ench(ENCH_HALL_OF_MIRRORS);
+    behaviour_event(orig, ME_ALERT, &you, you.pos(), false);
 
     coord_def spot = find_newmons_square(orig->type, you.pos(), 3, 5, 2);
     if (!spot.origin())
@@ -4765,8 +4773,8 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_SINGLE_ALLY, 300, 0, 50, [](int)
-        {return !you.allies_forbidden();},
+        XOM_GOOD_SINGLE_ALLY, 300, 0, 50,
+        nullptr,
         XOM_EXPLORE_NEXT_BATTLE
     },
     {
@@ -4775,7 +4783,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_ALLIES, 280, 0, 0, [](int tn)
-        {return tn > 4 && !you.allies_forbidden();}
+        {return tn > 4;}
     },
     {
         XOM_GOOD_FORCE_LANCE_FLEET, 230, 0, 0, [](int tn)
@@ -5002,8 +5010,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_ANIMATE_MON_WPN, 325, 0, 0, [](int tn)
-        {return tn > 4 && _find_monster_with_animateable_weapon()
-                       && !you.allies_forbidden();}
+        {return tn > 4 && _find_monster_with_animateable_weapon();}
     },
     {
         XOM_GOOD_SCENERY, 120, 135, 0, [](int tn)
@@ -5254,14 +5261,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                 || one_chance_in(3);}
     },
     {
-        XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 10, [](int /*tn*/)
+        XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 4, [](int /*tn*/)
         {return !you.penance[GOD_XOM]
                 && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
     {
         XOM_BAD_BANISHMENT, 0, 0, 1, [](int /*tn*/)
         {return _allow_xom_banishment()
-                && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
                 && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
     {
@@ -5279,7 +5285,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {
             return is_connected_branch(you.where_are_you)
                    && !you.attribute[ATTR_XOM_FLOOR_LOCK]
-                   && _count_reachable_monsters() > 5;
+                   && _count_reachable_monsters() >= 9;
         }
     },
     {
@@ -5794,13 +5800,13 @@ static void _xom_chaos_reinforcements(int)
     const int num = random_range(3, 8);
 
     mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, coord_def(), MHITNOT,
-                 MG_PERMIT_BANDS, GOD_XOM);
+                 MG_PERMIT_BANDS | MG_CHAOSLACE, GOD_XOM);
     mg.proximity = PROX_AWAY_FROM_PLAYER;
 
-    if (env.absdepth0 <= 20)
-        mg.place = level_id(BRANCH_DUNGEON, env.absdepth0 + 1);
+    if (you.experience_level <= 20)
+        mg.place = level_id(BRANCH_DUNGEON, you.experience_level);
     else
-        mg.place = level_id(BRANCH_DEPTHS, env.absdepth0 - 20);
+        mg.place = level_id(BRANCH_DEPTHS, you.experience_level - 20);
 
     vector<monster*> near_targs;
     for (monster_iterator mi; mi; ++mi)
@@ -5827,11 +5833,8 @@ static void _xom_chaos_reinforcements(int)
             mg.flags &= ~MG_FORCE_PLACE;
         }
 
-        if (monster* mon = place_monster(mg))
-        {
-            mon->add_ench(mon_enchant(ENCH_CHAOS_LACE, nullptr, INFINITE_DURATION));
+        if (place_monster(mg))
             created = true;
-        }
     }
 
     if (created)
@@ -5851,14 +5854,48 @@ static void _xom_duel(int)
 
     mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, you.pos(), MHITNOT,
                  MG_NONE, GOD_XOM);
+    mg.set_range(4, 8, 3);
 
     // Three major styles, chosen at random:
 
-    // 1) Some random floor-appropriate monsters
-    if (!one_chance_in(5))
+    // 1) Something completely harmless.
+    if (one_chance_in(20))
+    {
+        const int to_make = random_range(8, 12);
+        mg.cls = one_chance_in(3) ? MONS_TRAINING_DUMMY : MONS_BUTTERFLY;
+        if (mg.cls == MONS_BUTTERFLY)
+            mg.set_range(1, 5, 0);
+        for (int i = 0; i < to_make; ++i)
+        {
+            if (monster* mons = create_monster(mg))
+                mons->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, random_range(30, 60)));
+        }
+    }
+    // 2) A very sad Pan lord
+    else if (you.experience_level >= 14 && one_chance_in(6))
+    {
+        mg.cls = MONS_PANDEMONIUM_LORD;
+        mg.set_range(3, 5, 2);
+
+        if (monster* mons = create_monster(mg))
+        {
+            // Starting at XL 25, you can get real Pan lords!
+            if (!x_chance_in_y(you.experience_level - 24, 3))
+            {
+                ghost_demon ghd;
+                ghd.init_xom_pandemonium_lord(you.experience_level);
+                mons->spells.clear();
+                mons->set_ghost(ghd);
+                mons->ghost_demon_init();
+                mons->props[XOM_PAN_LORD_DESC] = "most pitiful";
+                behaviour_event(mons, ME_ANNOY, &you, you.pos());
+            }
+        }
+    }
+    // 3) Some random floor-appropriate monsters
+    else
     {
         mg.place = orig_place;
-        mg.set_range(4, 8, 3);
 
         // For places with no natural population table, use the dungeon's.
         if (orig_place.branch == BRANCH_TEMPLE
@@ -5890,39 +5927,9 @@ static void _xom_duel(int)
                 behaviour_event(mon, ME_ANNOY, &you, you.pos());
         }
     }
-    // 2) A very sad Pan lord
-    else if (!one_chance_in(4) && you.experience_level >= 14)
-    {
-        mg.cls = MONS_PANDEMONIUM_LORD;
-
-        if (monster* mons = create_monster(mg))
-        {
-            // Starting at XL 25, you can get real Pan lords!
-            if (!x_chance_in_y(you.experience_level - 24, 3))
-            {
-                ghost_demon ghd;
-                ghd.init_xom_pandemonium_lord(you.experience_level);
-                mons->spells.clear();
-                mons->set_ghost(ghd);
-                mons->ghost_demon_init();
-                mons->props[XOM_PAN_LORD_DESC] = "most pitiful";
-                behaviour_event(mons, ME_ANNOY, &you, you.pos());
-            }
-        }
-    }
-    // 3) Something completely harmless.
-    else
-    {
-        const int to_make = random_range(8, 12);
-        mg.cls = MONS_BUTTERFLY;
-        for (int i = 0; i < to_make; ++i)
-        {
-            if (monster* mons = create_monster(mg))
-                mons->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, random_range(30, 60)));
-        }
-    }
 
     god_speaks(GOD_XOM, _get_xom_speech("duel").c_str());
+    more();
 
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "duel"), true);
 }
@@ -5938,9 +5945,36 @@ static void _xom_chaos_cloud(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
+// Returns how many kills a given monster counts as, progressing the Xom floor
+// lock. (Since merged slime creatures count as multiple, while summons and
+// neutral monsters do not count at all.)
+//
+// If preferred_only is true, discount several types of monsters that we'd
+// rather not *expect* the player to find and kill (and thus factor into
+// whether the floor is lockable in the first place), but will still reward if
+// they actually kill them.
+static int _xom_floor_lock_value(const monster& mon, bool preferred_only = false)
+{
+    if (mon.is_summoned() || mon.is_peripheral() || mon.base_attitude != ATT_HOSTILE)
+        return 0;
+
+    // Wall monsters can sometimes wander very far out of the player's sight,
+    // making them hard to track down (and possibly making it look like the
+    // player is soft-locked, even when they aren't).
+    if (preferred_only && (mons_habitat(mon) & HT_WALLS_ONLY))
+        return 0;
+
+    if (mon.type == MONS_SLIME_CREATURE)
+        return mon.blob_size;
+    else if (mon.type == MONS_SLYMDRA)
+        return mon.props[SLYMDRA_SLIMES_EATEN_KEY].get_int() + 1;
+    else
+        return 1;
+}
+
 // A rough count of how many full hostile monsters are available within the
 // player's area (which could count for the floor lock effect).
-static int _count_reachable_monsters()
+static int _count_reachable_monsters(bool include_temp_flight)
 {
     // Pathfinding is a bit intensive, so first do a quick pass to make sure
     // that there's at least *something* on the floor (excluding monsters in
@@ -5949,8 +5983,7 @@ static int _count_reachable_monsters()
     bool found = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->is_summoned() && !mi->is_peripheral()
-            && mi->base_attitude == ATT_HOSTILE
+        if (_xom_floor_lock_value(**mi, true) > 0
             && !(env.pgrid(mi->pos()) & FPROP_NO_TELE_INTO))
         {
             found = true;
@@ -5968,7 +6001,8 @@ static int _count_reachable_monsters()
 
     monster_pathfind pf;
     monster fake_mons;
-    fake_mons.type = you.permanent_flight() ? MONS_PLAYER_ILLUSION
+    fake_mons.type = include_temp_flight && you.airborne() ? MONS_EFREET
+                     : you.permanent_flight() ? MONS_PLAYER_ILLUSION
                      : you.can_swim(true) ? MONS_MERFOLK
                      : MONS_ORC;
     fake_mons.position = you.pos();
@@ -5979,12 +6013,9 @@ static int _count_reachable_monsters()
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->is_summoned() && !mi->is_peripheral()
-            && mi->base_attitude == ATT_HOSTILE
-            && pf.is_reachable(mi->pos()))
-        {
-            ++count;
-        }
+        const int value = _xom_floor_lock_value(**mi);
+        if (value > 0 && pf.is_reachable(mi->pos()))
+            count += value;
     }
 
     return count;
@@ -5996,11 +6027,14 @@ static void _xom_floor_lock(int)
 {
     int count = _count_reachable_monsters();
 
-    // Just in case.
-    if (count == 0)
+    // We leave a 'buffer' of monsters on the floor so that the player is never
+    // asked to track down every last one of them (since, if unlucky with
+    // monster wandering, the final ones can take so long to find that they
+    // may appear to not exist)
+    if (count <= 4)
         return;
 
-    const int to_kill = min(count, random_range(5, 12));
+    const int to_kill = min(count - 4, random_range(5, 12));
     you.attribute[ATTR_XOM_FLOOR_LOCK] = to_kill;
 
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -6021,6 +6055,7 @@ static void _xom_floor_lock(int)
     god_speaks(GOD_XOM, _get_xom_speech("floor lock").c_str());
     mpr("Xom locks all of the stairs on the floor! (Kill monsters to unlock them again.)");
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "floor lock"), true);
+    you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
 }
 
 static void _xom_minibane(int)
@@ -6032,16 +6067,121 @@ static void _xom_minibane(int)
 }
 
 // On an appropriate kill, maybe progress the floor lock.
-void xom_reduce_floor_lock()
+void xom_maybe_reduce_floor_lock(const monster& mon_killed)
 {
     if (!you.attribute[ATTR_XOM_FLOOR_LOCK])
         return;
 
-    if (--you.attribute[ATTR_XOM_FLOOR_LOCK] == 0)
+    const int value = _xom_floor_lock_value(mon_killed);
+    you.attribute[ATTR_XOM_FLOOR_LOCK] = max(0, you.attribute[ATTR_XOM_FLOOR_LOCK] - value);
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK] == 0)
     {
         god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
         end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
     }
+    // Check in on the player after 100 turns without a kill to see if they're stranded.
+    else if (value > 0)
+        you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
+}
+
+// Checks if the player is stuck, and if so attempts to free them.
+// Returns true if the player is in an okay situation (and the game shouldn't
+// keep checking). False if they remain stuck.
+static bool _ensure_player_is_not_stuck()
+{
+    // Formicids can dig themselves out of any problem if not at the bottom of a branch.
+    if (you.can_burrow() && is_valid_shaft_level(false)
+        && feat_is_shaftable(env.grid(you.pos())))
+    {
+        return true;
+    }
+
+    // Check if there are enough enemies in the player's reach to end the floor
+    // lock. (We include temporary flight in the reachability check so that Xom
+    // doesn't yank the player back to monsters the instant they fly acoss a
+    // river they are fully capable of flying out of again.
+    int count = _count_reachable_monsters(true);
+    if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+        return true;
+
+    // First use Xom's normal teleport action (which should be an 'invisible'
+    // interevention, as far as the player is concerned).
+    if (!you.no_tele(false, false))
+    {
+        xom_take_action(XOM_BAD_TELEPORT, 0);
+
+        count = _count_reachable_monsters();
+        if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            return true;
+
+        // Teleport failed to connect the player again. But Xom's teleport is
+        // unreliable, so instead try a reliable one (the only reason we don't
+        // do this first is that it's more conspicuous, and the former is
+        // usually sufficient).
+        hostile_teleport_player();
+
+        count = _count_reachable_monsters();
+        if (count >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            return true;
+    }
+
+    // Either the player is unable to teleport or teleport somehow failed to put
+    // them near monsters. Instead, bring the monsters to them.
+    vector<monster*> mon_list;
+    for (monster_iterator mi; mi; ++mi)
+        if (_xom_floor_lock_value(**mi, true) > 0)
+            mon_list.push_back(*mi);
+
+    shuffle_array(mon_list);
+    int sum = count;
+
+    for (monster* mon : mon_list)
+    {
+        coord_def spot;
+        if (find_habitable_spot_near(you.pos(), mon->type, LOS_RADIUS, spot))
+        {
+            mon->move_to(spot, MV_TRANSLOCATION);
+            sum += _xom_floor_lock_value(*mon);
+            if (sum >= you.attribute[ATTR_XOM_FLOOR_LOCK])
+            {
+                god_speaks(GOD_XOM, _get_xom_speech("floor lock rescue").c_str());
+                return true;
+            }
+        }
+    }
+
+    // Somehow, nothing we did was enough.
+    return false;
+}
+
+// Periodically sanity-check the floor lock to make sure that the required number
+// of monsters remains reachable from the player's location.
+//
+// If the player has somehow gotten themselves stranded, first try to teleport
+// them towards monsters. If this fails (possibly because they're a formicid),
+// try to teleport some monsters to them instead. If this also fails, just end
+// the lock.
+void xom_check_floor_lock()
+{
+    // No need to check.
+    if (!you.attribute[ATTR_XOM_FLOOR_LOCK]
+        || you.elapsed_time < you.props[XOM_FLOOR_LOCK_TIME_KEY].get_int())
+    {
+        return;
+    }
+
+    // Check if the player is stuck and possibly rescue them if needbe
+    if (_ensure_player_is_not_stuck())
+    {
+        // Schedule next check for another 100 turns (unless they kill something first).
+        you.props[XOM_FLOOR_LOCK_TIME_KEY] = you.elapsed_time + 1000;
+        return;
+    }
+
+    // Player is stuck and we failed to rescue them. End the floor lock immediately.
+    you.attribute[ATTR_XOM_FLOOR_LOCK] = 0;
+    god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
+    end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
 }
 
 static void _xom_cleaving()
@@ -6157,8 +6297,8 @@ static const vector<spell_type> _eisegesis_spells =
 
 static void _xom_eisegesis()
 {
-    const int spell_level = min(9, random_range(you.experience_level / 5 + 2,
-                                                you.experience_level / 3 + 3));
+    const int spell_level = max(3, min(9, random_range(
+        you.experience_level / 5 + 2, you.experience_level / 3 + 3)));
 
     vector<spell_type> choices;
     for (int i = 0; i < (int)_eisegesis_spells.size(); ++i)
@@ -6182,11 +6322,24 @@ static void _xom_guardian()
 {
     xom_remove_guardians();
 
-    monster_type mon_type = _xom_random_pal(0, true);
+    // Since _xom_random_pal has such high variablity, here we directly skip
+    // such to choose a specific short range boosted by extra runes.
+    monster_picker xom_picker;
+    int range = you.experience_level + random_range(-1, 1);
+    if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
+        range = min(33, range + div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES));
 
-    // No statues or butterflies.
-    while (mons_class_is_stationary(mon_type) || !mons_class_is_threatening(mon_type))
+    monster_type mon_type = xom_picker.pick(_xom_summons, range, MONS_CRIMSON_IMP);
+    if (you.experience_level == 27)
+        mon_type = _xom_chaos_branch_pal(mon_type, true);
+
+    // No butterflies (useless), statues (blocks off exploration in dead ends),
+    // or shapeshifters (incentivizes waiting for good rolls across stairs).
+    while (mons_class_is_stationary(mon_type) || !mons_class_is_threatening(mon_type)
+           || mon_type == MONS_SHAPESHIFTER || mon_type == MONS_GLOWING_SHAPESHIFTER)
+    {
         mon_type = _xom_random_pal(0, true);
+    }
 
     mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
     mg.non_actor_summoner = "Xom";
@@ -6200,6 +6353,8 @@ static void _xom_guardian()
                   && mons_class_intel(mon_type) == I_HUMAN
                     ? make_name()
                     : do_mon_name_replacements(getRandMonNameString("bland name"));
+    string other_name = coinflip() ? "Other " : "Not-";
+    string other_other_name = other_name + other_name;
     for (int i = 0; i < count; ++i)
     {
         if (monster *summons = create_monster(mg))
@@ -6212,7 +6367,7 @@ static void _xom_guardian()
 
             summons->mname = make_stringf("%s%s",
                                           i == 0 ? "" :
-                                          i == 1 ? "Other " : "Other Other ",
+                                          i == 1 ? other_name.c_str() : other_other_name.c_str(),
                                           name.c_str());
             summons->props[DBNAME_KEY] = mons_class_name(mon_type);
 
@@ -6282,7 +6437,7 @@ static void _xom_mannequins()
     you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_MANNEQUINS;
 
     god_speaks(GOD_XOM, _get_xom_speech("mannequin").c_str());
-    mprf("Xom raises dopplegangers of enemies you slay yourself.");
+    mprf("Xom raises dopplegangers of enemies you slay.");
 
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "blessing of mannequins"), true);
 }
@@ -6670,7 +6825,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_pseudo_banishment }},
     { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
-    { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
+    { XOM_BAD_FLOOR_LOCK, {"floor lock", _xom_floor_lock }},
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
     { XOM_BAD_HALL_OF_MIRRORS, {"hall of mirrors", _xom_hall_of_mirrors }},
     { XOM_BAD_MAKE_TRAPS, {"traps", _xom_make_traps }},
@@ -6707,6 +6862,9 @@ void validate_xom_events()
 
     for (int i = 0; i < XOM_LAST_REAL_ACT; ++i)
     {
+        if (i > XOM_LAST_BAD_ACT && i < XOM_FIRST_BLESSING)
+            continue;
+
         const xom_event_type event_type = static_cast<xom_event_type>(i);
         const xom_event *event = map_find(xom_events, event_type);
         if (!event)

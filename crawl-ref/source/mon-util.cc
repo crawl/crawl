@@ -59,6 +59,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "showsymb.h"
 #include "skills.h"
 #include "species.h"
@@ -1317,7 +1318,7 @@ int get_shout_noise_level(const shout_type shout)
 // "says" verb used for insults.
 static bool _shout_fits_monster(monster_type mc, int shout)
 {
-    if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS || shout == S_SILENT)
+    if (shout == S_SILENT || shout == NUM_SHOUTS || shout >= NUM_LOUDNESS)
         return false;
 
     // Chaos spawns can do anything but demon taunts, since they're
@@ -3592,7 +3593,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
 
-    xom_reduce_floor_lock();
+    xom_maybe_reduce_floor_lock(mon);
 
     // End constriction.
     mon.stop_constricting_all();
@@ -4380,7 +4381,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                           && invalid_monster_index(mons.foe)) ?
                              &you : mons.get_foe();
 
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
+    if (s_type == NUM_SHOUTS || s_type >= NUM_LOUDNESS)
         s_type = mons_shouts(mons.type);
 
     msg = maybe_pick_random_substring(msg);
@@ -4724,51 +4725,9 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
                                _get_species_insult(foe_genus, "noun"));
     }
 
-    static const char * sound_list[] =
-    {
-        "says",         // actually S_SILENT
-        "shouts",
-        "barks",
-        "howls",
-        "shouts",
-        "roars",
-        "screams",
-        "bellows",
-        "bleats",
-        "trumpets",
-        "screeches",
-        "buzzes",
-        "moans",
-        "gurgles",
-        "croaks",
-        "growls",
-        "hisses",
-        "skitters",
-        "skitters faintly",
-        "sneers",       // S_DEMON_TAUNT
-        "says",         // S_CHERUB -- they just speak normally.
-        "squeals",
-        "roars",
-        "rustles",      // dubious
-        "squeaks",
-        "buggily says", // NUM_SHOUTS
-        "breathes",     // S_VERY_SOFT
-        "whispers",     // S_SOFT
-        "says",         // S_NORMAL_VOLUME
-        "shouts",       // S_LOUD
-        "screams",      // S_VERY_LOUD
-        "caws",
-        "laughs",
-    };
-    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
+    string mon_says = get_says_type(static_cast<shout_type>(s_type));
 
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
-        msg = replace_all(msg, "@says@", "buggily says");
-    }
-    else
-        msg = replace_all(msg, "@says@", sound_list[s_type]);
+    msg = replace_all(msg, "@says@", mon_says.c_str());
 
     msg = maybe_capitalise_substring(msg);
 
@@ -5722,20 +5681,20 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         ancestor.spells.emplace_back(SPELL_DEFLECT_MISSILES, 200, MON_SPELL_WIZARD);
 
         if (HD < 10)
-            ancestor.spells.emplace_back(SPELL_SHOCK, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_SHOCK, 45, MON_SPELL_WIZARD);
         if (HD < 13)
-            ancestor.spells.emplace_back(SPELL_STONE_ARROW, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_STONE_ARROW, 45, MON_SPELL_WIZARD);
         if (HD >= 10 && HD < 16)
         {
-            ancestor.spells.emplace_back(SPELL_ICEBLAST, 35, MON_SPELL_WIZARD);
-            ancestor.spells.emplace_back(SPELL_BOLT_OF_MAGMA, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_ICEBLAST, 45, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_BOLT_OF_MAGMA, 45, MON_SPELL_WIZARD);
         }
         if (HD >= 13)
-            ancestor.spells.emplace_back(SPELL_LRD, 40, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_LRD, 50, MON_SPELL_WIZARD);
         if (HD >= 16)
-            ancestor.spells.emplace_back(SPELL_PLASMA_BEAM, 30, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_PLASMA_BEAM, 37, MON_SPELL_WIZARD);
         if (HD >= 16)
-            ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 30, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 37, MON_SPELL_WIZARD);
 
         break;
 

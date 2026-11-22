@@ -3047,13 +3047,12 @@ MAP
 ENDMAP
 
 NAME:   ploomutoo_gammafunk_necropolis_ghost_potion_laboratory
-: necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d",
-:                               "vaults_elf", "depths_crypt"})
+: necropolis_depth_tagging(_G, {"pre_lair_d", "post_lair_d", "depths_crypt"})
 MONS:   ugly thing, neqoxec, shapeshifter, glowing orange brain
 MONS:   very ugly thing, glowing shapeshifter, zykzyl
-KMONS:  C = crawling flesh cage
 KMONS:  D = tentacled monstrosity
 KMONS:  K = kobold fleshcrafter
+KMONS:  s = stack of scrap
 KMONS:  O = player ghost
 ITEM:   potion of mutation pre_id q:1
 : item(dgn.loot_potions)
@@ -3063,49 +3062,47 @@ ITEM:   hat good_item / robe good_item / pair of gloves good_item / \
 ITEM:   hat randart / robe randart / pair of gloves randart / \
         pair of boots randart / cloak randart
 KITEM:  O = potion of cancellation q:2 pre_id
-NSUBST: - = 2:P / 2 = P; / *:;, ' = 2 = P` / *:'
 : if dgn.persist.necropolis_difficulty == "pre_lair_d" then
-NSUBST: ; = 1:d~ / 2:e / 2:1 / 2 = 1; / 1:6; / *:;
-NSUBST: " = 1:d / 1:d" / 1:f / *:", ` = 2:3 / 2 = 3` / 1:2 / 1:2` / *:`
+NSUBST: ; = 1:d; / 2:e / 2:1 / 2 = 1; / *:;
+NSUBST: " = 1:d / 1:d" / 1:f / *:", ` = 1:2 / 2:3 / 1 = 23 / *:`
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
-NSUBST: ; = 1:d; / 2:e / 1:e; / 3:1 / 4 = 1; / 1:4; / 1:6 / *:;
-NSUBST: " = 2:d / 1:ffg / * = ", ` = 2:3 / 3 = 3` / 1:2 / 1 = 2` / 1:7D`` / *:`
-: elseif dgn.persist.necropolis_difficulty == "vaults_elf" then
-NSUBST: ; = d / d~ / 4=e / 2:C / 3 = C; / 1:4 / 1:4; / 4:6 / 3 = 6; / *:;
-NSUBST: " = 3:d / 1:d~ / 1:e / 1:h / *:"
-NSUBST: ` = 4=3 / 4=3` / 1:6 / 3=6` / 1:4 / 2=4` / *:`
+NSUBST: ; = 1:d; / 2:e / 1:e; / 3:1 / 4 = 1; / 1:5 / *:;
+NSUBST: " = 3:d / 1:ffg / * = ", ` = 2:3 / 3 = 3` / 1:2 / 1 = 2` / 1:47` / *:`
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
-NSUBST: ; = 1:d / 1:d; / 5:e / 2:5 / 2:K / 2 = 5; / 2:4 / 1:4; / 2:D / 1 = D; / *:;
-NSUBST: " = 4:d / 1:d" / 1:e / 1:h / *:"
-NSUBST: ` = 4:3 / 4 = 3` / 2:6 / 3 = 6` / 2:7 / 2 = 7` / *:`
+NSUBST: ; = 1:d / 1:d; / 5:e / 5:5 / 2 = 5; / *:;
+NSUBST: " = 5:d / 1:d" / 1:e / 1:h / *:"
+NSUBST: ` = 1:3 / 2:6 / 2 = 46 / 1 = 4D / 1:K / 1:7 / 2 = K7 / *:`
 : end
-MARKER: P = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
-                pow_max = 5, delay = 5, start_clouds = 3, size = 1, \
+MARKER: V = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 6, \
+                pow_max = 9, delay = 7, start_clouds = 3, size = 2, \
                 spread_rate = 0, excl_rad = 0 }
-MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
-                pow_max = 5, delay = 5, start_clouds = 3, size = 2, \
-                spread_rate = 0, excl_rad = 0 }
-KPROP:  -;`'"~defghPU1234567DO = no_tele_into
+KPROP:  -;`'"defghsFU1234567DOPQR = no_tele_into
+MARKER: P = lua:transp_loc("necropolis_laboratory_entry")
+MARKER: Q = lua:transp_dest_loc("necropolis_laboratory_entry")
+MARKER: p = lua:transp_loc("necropolis_laboratory_loot")
+MARKER: q = lua:transp_dest_loc("necropolis_laboratory_loot")
+MARKER: R = lua:transp_loc("necropolis_laboratory_exit")
+MARKER: S = lua:transp_dest_loc("necropolis_laboratory_exit")
 : necropolis_ghost_setup(_G)
 MAP
 ....................
 ....................
-..bbbbbbbbbc.....c..
-..bbU"P"Ubbnn...nn..
-..b"""O"""b.........
-..b'''''''b.c...c...
-..b'b'''b'b...c.....
-..b```````b.c...c...
-..bnn===nnbc.c.c.c..
-..c-------c.c...c...
-..c-c---c-c.........
-..cc-c-c-ccnn...nn..
-..c-c---c-c.........
-..c;;;c;;;c.b...b...
-..c;c;;;c;c.........
-..c;;;;;;;c.........
-..cnn===nncbT...Tb..
-..c.......cbbb.bbb..
+..bbbbbbbbbc..S..c..
+..bbU'p'Ubbnnnnnnn..
+..b``'O'``bcV'R'Vc..
+..b``'''``bcc's'cc..
+..b`b'''b`bcsscssc..
+..b``'Q'``bcc"""cc..
+..bnnnnnnnbc'cVc'c..
+..cV--P--Vccc"""cc..
+..c-c---c-ccV'G'Vc..
+..cc-cVc-ccnn's'nn..
+..c-c---c-cb'''''b..
+..c;;;c;;;cbbsesbb..
+..c;c;;;c;cb'''''b..
+..cV;;;;;Vcb'''''b..
+..cnn===nncbU'q'Ub..
+..c.......cbbbbbbb..
 ....................
 ....................
 ENDMAP
@@ -3226,17 +3223,17 @@ SUBST:   d = **%, e = %, fghij = $
 NSUBST:  - = 1 = 1-- / 1:2 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "pre_lair_d" then
 SUBST:   d = *, e = *%, f = %$$$, ghij = $
-NSUBST:  - = 1:1 / 1 = 1- / 1:24 / -, R = 1:R / 1:? / *:T, $ = 1:! / *:$
+NSUBST:  - = 1:1 / 1:124 / *:-, R = 1:R / 1:? / *:T, $ = 1:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "post_lair_d" then
 SUBST:   f = *, g = *%, h = %$$$, hij = $
-NSUBST:  - = 3:3 / 4 = 3- / 1:46 / 1:5EH--- / -, R = 1:R / 2:? / *:T
+NSUBST:  - = 2:3 / 2 = 3- / 1:465EH--- / *:-, R = 1:R / 2:? / *:T
 NSUBST:  $ = 2:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 SUBST:   f = *, g = %$, hij = $
-NSUBST:  - = 2:3 / 4 = 3- / 46 / -, R = 1:R / 2:? / *:T, $ = 2:! / *:$
+NSUBST:  - = 2:3 / 2 = 3- / 1:46 / -, R = 1:R / 2:? / *:T, $ = 2:! / *:$
 : elseif dgn.persist.necropolis_difficulty == "depths_crypt" then
 SUBST:   fgh = |*, i = *%, j = !
-NSUBST:  - = 5 = 5EH / 5 = 5EH--- / 6FJ / K- / -, R = 1:R / *:?
+NSUBST:  - = 4 = 5EH / 4 = 5EH--- / 1:6FJ / 1:K- / -, R = 1:R / *:?
 : end
 : ghost_flavour_unrand_chance(_G, "$", "Z", "dark_maul")
 MARKER:  P = lua:transp_loc("necropolis_smash_entry")
@@ -3709,7 +3706,7 @@ NSUBST: - = 1:qqrs / 1:qqqr--- / 1:2 / 1:3u-- / *:-
 :     "    . buckler good_item | kite shield good_item")
 MONS:   troll / two-headed ogre
 MONS:   tengu warrior / orc knight
-MONS:   deep troll / stone giant
+MONS:   deep troll / stone giant w:1
 SUBST:  f = |*, g = **%, h = %$, ij = ?
 NSUBST: - = 1:1 / 1:1- / 2=2 / 2=2- / 1:zD / 1:zD-- / 1:4EF-- / *:-
 : elseif dgn.persist.necropolis_difficulty == "lair" then
@@ -3719,7 +3716,7 @@ NSUBST: - = 1:1 / 2:2 / 2 = 2- / 1:H / 1:H- / *:-
 : elseif dgn.persist.necropolis_difficulty == "orc" then
 MONS:   orc warrior / troll / two-headed ogre, deep troll
 SUBST:  f = |*, g = *%, h = %$$$, ij= ?
-NSUBST: - = 1:1 / 1:1- / 2:2 / 2 = 2- / 1:DDDEF3 / *:-
+NSUBST: - = 1:1 / 1:1- / 1:2 / 2 = 2- / 1:2D3 / *:-
 : elseif necropolis_in_lair_branch() then
 {{
 kmons("q = naga warrior ; " .. wrathful_weapon("warrior", "randart") ..

@@ -1898,7 +1898,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // fallthrough to normal mut
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
-            drain_player(30, false, true, true);
+            drain_player(50, false, true, true);
             return true;
         case MUTCLASS_INNATE:
             // You can't miss out on innate mutations just because you're
@@ -3634,7 +3634,7 @@ int xl_to_remove_bane(bane_type bane, int mult)
 {
     int progress = 0;
     int you_skill_cost_level = you.skill_cost_level;
-    int you_xp = you.total_experience;
+    int you_xp = you.skill_exp_spent;
 
     const int cost_factor =
         (you.has_mutation(MUT_ACCURSED) || you.undead_state() != US_ALIVE) ? 2
@@ -3655,17 +3655,15 @@ int xl_to_remove_bane(bane_type bane, int mult)
         // It's max_xp/cost rounded up.
         const int max_skp = max((max_xp + cost - 1) / cost, 1);
 
-        skill_diff delta;
-        delta.skill_points = min<int>(abs((bane_xp - progress)),
-                                 max_skp);
-        delta.experience = delta.skill_points * cost;
+        int skill_points = min<int>(abs((bane_xp - progress)), max_skp);
+        int experience = skill_points * cost;
 
-        progress += delta.skill_points;
-        you_xp += delta.experience;
+        progress += skill_points;
+        you_xp += experience;
         you_skill_cost_level = calc_skill_cost_level(you_xp, you_skill_cost_level);
     }
 
-    const int xp_diff = you_xp - you.total_experience;
+    const int xp_diff = you_xp - you.skill_exp_spent;
     const int level_diff = xp_to_level_diff(xp_diff / 10, 10);
 
     return level_diff;

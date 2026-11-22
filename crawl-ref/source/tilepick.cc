@@ -1603,8 +1603,9 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_FROG:
     case TILEP_MONS_ZOMBIE_ELEPHANT:
     case TILEP_MONS_ZOMBIE_YAK:
-    case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SIMULACRUM_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
+        return TILEP_MONS_SIMULACRUM_QUADRUPED_WINGED;
     case TILEP_MONS_ZOMBIE_BAT:
     case TILEP_MONS_ZOMBIE_HARPY: // much less dangerous than shrikes
         return TILEP_MONS_SIMULACRUM_BAT;
@@ -1644,10 +1645,11 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SPIDER_SMALL:
         return TILEP_MONS_SIMULACRUM_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
-    case TILEP_MONS_ZOMBIE_IRON_DRAGON:
     case TILEP_MONS_ZOMBIE_GOLDEN_DRAGON:
     case TILEP_MONS_ZOMBIE_QUICKSILVER_DRAGON:
         return TILEP_MONS_SIMULACRUM_DRAGON;
+    case TILEP_MONS_ZOMBIE_IRON_DRAGON:
+        return TILEP_MONS_SIMULACRUM_IRON_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
     case TILEP_MONS_ZOMBIE_WYVERN:
         return TILEP_MONS_SIMULACRUM_DRAKE;
@@ -1985,6 +1987,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_DRACONIAN_SHIFTER,           TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
         { MONS_DRACONIAN_STORMCALLER,       TILEP_MONS_MANNEQUIN_DRACONIAN_NONBASE },
 
+        { MONS_ELECTRIC_EEL,                TILEP_MONS_MANNEQUIN_EEL},
+
         { MONS_JUGGERNAUT,                  TILEP_MONS_MANNEQUIN_JUGGERNAUT },
         { MONS_GUARDIAN_SERPENT,            TILEP_MONS_MANNEQUIN_GUARDIAN_SERPENT },
         { MONS_MOUNTAINSHELL,               TILEP_MONS_MANNEQUIN_TURTLE },
@@ -2011,6 +2015,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_IRONBOUND_CONVOKER,          TILEP_MONS_MANNEQUIN_IRONBOUND },
         { MONS_IRONBOUND_FROSTHEART,        TILEP_MONS_MANNEQUIN_IRONBOUND },
         { MONS_IRONBOUND_PRESERVER,         TILEP_MONS_MANNEQUIN_IRONBOUND },
+
+        { MONS_VAMPIRE_MOSQUITO,            TILEP_MONS_MANNEQUIN_MOSQUITO},
 
         { MONS_MELIAI,                      TILEP_MONS_MANNEQUIN_MELIAI},
 
@@ -2062,6 +2068,8 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_BEAR,                    TILEP_MONS_MANNEQUIN_BEAR },
         { MONS_KILLER_BEE,              TILEP_MONS_MANNEQUIN_BEE },
         { MONS_SCORPION,                TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_ENTROPY_WEAVER,          TILEP_MONS_MANNEQUIN_BEETLE },
+        { MONS_PHARAOH_ANT,             TILEP_MONS_MANNEQUIN_BEETLE },
         { MONS_CENTAUR,                 TILEP_MONS_MANNEQUIN_CENTAUR },
         { MONS_CRAB,                    TILEP_MONS_MANNEQUIN_CRAB },
         { MONS_DRACONIAN,               TILEP_MONS_MANNEQUIN_DRACONIAN },
@@ -2073,7 +2081,7 @@ static tileidx_t _mon_to_mannequin_tile(const monster_info &mon)
         { MONS_FLOATING_EYE,            TILEP_MONS_MANNEQUIN_EYE },
         { MONS_FAUN,                    TILEP_MONS_MANNEQUIN_FAUN },
         { MONS_FROG,                    TILEP_MONS_MANNEQUIN_FROG },
-        { MONS_FUNGUS,                  TILEP_MONS_MANNEQUIN_FAUN },
+        { MONS_FUNGUS,                  TILEP_MONS_MANNEQUIN_FUNGUS },
         { MONS_GNOLL,                   TILEP_MONS_MANNEQUIN_GNOLL },
         { MONS_GOBLIN,                  TILEP_MONS_MANNEQUIN_GOBLIN },
         { MONS_HARPY,                   TILEP_MONS_MANNEQUIN_BIRD },
@@ -2734,6 +2742,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return base + 1;
             return base;
 
+        case MONS_BOREAS:
+            if (mon.is(MB_STAMPEDE))
+                return TILEP_MONS_BOREAS_STAMPEDE;
+            return base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
@@ -3028,7 +3041,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_GLOWING, TILEI_GLOWING },
     { MB_CONFUSED, TILEI_CONFUSED },
     { MB_BURNING, TILEI_STICKY_FLAME },
-    { MB_INNER_FLAME, TILEI_INNER_FLAME },
     { MB_BERSERK, TILEI_BERSERK },
     { MB_FRENZIED, TILEI_FRENZIED },
     { MB_SLOWED, TILEI_SLOWED },
@@ -3107,7 +3119,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_SUNDERING_READY, TILEI_SUNDERING },
     { MB_MUTE, TILEI_MUTE },
     { MB_EXPOSED, TILEI_EXPOSED },
-    { MB_STAMPEDE, TILEI_STAMPEDE },
     { MB_KNOWN_INVIS, TILEI_UNSEEN_INVIS_KNOWN },
     { MB_INVISIBLE, TILEI_SEEN_INVIS },
     { MB_DIVINE_SHIELD, TILEI_DIVINE_SHIELD },
@@ -3136,6 +3147,15 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
         icons.insert(TILEI_PHASE_SHIFT);
     if (mons.is(MB_FULLY_CHARGED) && !mons_is_jade_crystal(mons.type))
         icons.insert(TILEI_FULLY_CHARGED);
+    if (mons.is(MB_STAMPEDE) && mons.type != MONS_BOREAS)
+        icons.insert(TILEI_STAMPEDE);
+    if (mons.is(MB_INNER_FLAME))
+    {
+        if (mons.body_size() == SIZE_GIANT)
+            icons.insert(TILEI_INNER_FLAME_LARGE);
+        else
+            icons.insert(TILEI_INNER_FLAME);
+    }
     return icons;
 }
 
@@ -4262,7 +4282,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_ELECTRIC_BLAST:
     case TILE_BOLT_ELECTRIC_ARC:
     case TILE_BOLT_IRRADIATE:
-    case TILE_BOLT_POTION_PETITION:
+    case TILE_BOLT_PURCHASE_BLESSING:
     case TILE_BOLT_SHADOW_BLAST:
     case TILE_BOLT_HAEMOCLASM:
     case TILE_BOLT_GHOSTLY_FIREBALL:
@@ -4869,8 +4889,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return TILEG_ABILITY_DITHMENOS_NIGHTFALL;
     // Gozag
-    case ABIL_GOZAG_POTION_PETITION:
-        return TILEG_ABILITY_GOZAG_POTION_PETITION;
+    case ABIL_GOZAG_PURCHASE_BLESSING:
+        return TILEG_ABILITY_GOZAG_PURCHASE_BLESSING;
     case ABIL_GOZAG_CALL_MERCHANT:
         return TILEG_ABILITY_GOZAG_CALL_MERCHANT;
     case ABIL_GOZAG_BRIBE_BRANCH:

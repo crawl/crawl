@@ -541,12 +541,15 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
+        const int sp_gain = (650 + 140 * you.skill_cost_level) * pow / 40;
+
         if (player_under_penance(GOD_HEPLIAKLQANA))
         {
             simple_god_message(" appreciates the memories.", false,
                                GOD_HEPLIAKLQANA);
-            reduce_xp_penance(GOD_HEPLIAKLQANA,
-                              750 * you.experience_level * pow / 40);
+            int skill_xp_gain = skill_experience_for_skill_points(sp_gain);
+            int xp_gain = skill_xp_gain / 10;
+            reduce_xp_penance(GOD_HEPLIAKLQANA, xp_gain);
             return true;
         }
 
@@ -562,14 +565,13 @@ public:
             mpr("A flood of memories washes over you.");
 
         // these are included in default force_more_message
-        const int exp = 7500 * you.experience_level * pow / 40;
+
+        // This shouldn't slow down future normal training
+        you.skill_points_available += sp_gain;
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        {
-            you.exp_available += exp;
             train_skills();
-        }
         else
-            skill_menu(SKMF_EXPERIENCE, exp);
+            skill_menu(SKMF_EXPERIENCE);
 
         // the player might meet training targets and need to choose
         // skills
@@ -787,7 +789,7 @@ public:
 
     bool effect(bool was_known = true, int=40, bool is_potion = true) const override
     {
-        if (you.form == transformation::death) // Gozag potion petition
+        if (you.form == transformation::death) // Gozag blessing
         {
             mpr("You're too dead to put down roots!");
             return false;

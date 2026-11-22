@@ -436,7 +436,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                                     && !caster.has_ench(ENCH_REGENERATION));
         },
         [](monster &caster, mon_spell_slot, bolt&) {
-            const string god = apostrophise(god_name(caster.god));
+            const string god = apostrophise(
+                                   god_has_name(caster.god) ? god_name(caster.god)
+                                                            : "something");
             const string msg = make_stringf(" invokes %s protection!",
                                             god.c_str());
             simple_monster_message(caster, msg.c_str(), false, MSGCH_MONSTER_SPELL);
@@ -7776,8 +7778,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         for (spell_type head_spell : *breaths)
         {
-            if (!mons->get_foe())
+            if (!mons->alive() || !mons->get_foe())
                 return;
+
             setup_mons_cast(mons, pbolt, head_spell);
             mons_cast(mons, pbolt, head_spell, slot_flags, do_noise);
         }
@@ -7859,6 +7862,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
     default:
         break;
+
+    case SPELL_CANTRIP:
+        return;
 
     case SPELL_WATERSTRIKE:
     {

@@ -19,7 +19,6 @@
 #include "unicode.h"
 #include "version.h"
 
-#define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
 
 // 64-bit luajit does not support custom allocators. Only checking
@@ -330,12 +329,9 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     while (!f.eof())
         script += f.get_line() + "\n";
 
-    if (script[0] == 0x1b)
-        abort();
-
     // prefixing with @ stops lua from adding [string "%s"]
-    return luaL_loadbuffer(ls, &script[0], script.length(),
-                           ("@" + file).c_str());
+    return luaL_loadbufferx(ls, script.c_str(), script.length(),
+                            ("@" + file).c_str(), "t");
 }
 
 int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
@@ -833,10 +829,11 @@ void CLua::init_lua()
 static int lua_loadstring(lua_State *ls)
 {
     const auto lua = luaL_checkstring(ls, 1);
-    if (lua[0] == 0x1b)
-        abort();
     lua_settop(ls, 0);
-    if (luaL_loadstring(ls, lua))
+    // only allow text and not bytecode as bytecode isn't validated and can
+    // crash when run if the user suplies bad bytecode
+    int err = luaL_loadbufferx(ls, lua, strlen(lua), lua, "t");
+    if (err)
     {
         lua_pushnil(ls);
         lua_insert(ls, 1);
@@ -1167,8 +1164,14 @@ static void _clua_throttle_hook(lua_State *ls, lua_Debug *dbg)
 {
     UNUSED(dbg);
 
+    // XXX: this won't kill the script early in local tiles unless the script
+    // is pumping the sdl event queue (e.g. by calling crawl.getch). However,
+    // it should still eventually be killed.
     if (crawl_state.seen_hups)
+    {
+        crawl_state.lua_script_killed = true;
         luaL_error(ls, "Aborting clua code on SIGHUP");
+    }
 
     CLua *lua = lua_call_throttle::find_clua(ls);
 
@@ -1240,12 +1243,8 @@ static int _clua_guarded_pcall(lua_State *ls)
     const int nargs = lua_gettop(ls);
     const int err = lua_pcall(ls, nargs - 1, LUA_MULTRET, 0);
 
-    if (err)
-    {
-        const char *errs = lua_tostring(ls, 1);
-        if (!errs || strstr(errs, BUGGY_SCRIPT_ERROR))
-            luaL_error(ls, errs? errs : BUGGY_PCALL_ERROR);
-    }
+    if (err && crawl_state.lua_script_killed)
+        lua_error(ls);
 
     lua_pushboolean(ls, !err);
     lua_insert(ls, 1);

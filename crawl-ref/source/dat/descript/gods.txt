@@ -292,11 +292,11 @@ Gozag powers
 
 For Gozag, both flesh and spirit are inferior to wealth, and therefore all
 monsters are turned to gold upon death. Other monsters may then be briefly
-distracted by imaginings of great wealth. Stalwarts can purchase immediate help
-in the form of potions, and may also pay to attract shopkeepers into the
-dungeon. Particularly well-off adherents may bribe the inhabitants of a branch
-of the dungeon to turn a blind eye to their presence, or even to change their
-allegiance.
+distracted by imaginings of great wealth. Stalwarts may purchase short-term
+blessings to help in the heat of battle and may also pay to attract shopkeepers
+into the dungeon. Particularly well-off adherents may bribe the inhabitants of a
+branch of the dungeon to turn a blind eye to their presence, or even to change
+their allegiance.
 %%%%
 Hepliaklqana powers
 
@@ -555,12 +555,12 @@ unlike some, Hepliaklqana has a long memory.
 Gozag wrath
 
 The first of Gozag's punishments is commercial: all shops opened through
-Gozag's intervention shut their doors forever. The disloyal are advised to
-finish their shopping before they launch their betrayal. For as long as Gozag
-remains angered, ex-worshippers may sometimes be bedazzled by the glint of coin,
-and their potions will have a chance to fail when quaffed. Any foes that are
-encountered may also be granted potions of their own to assist them against
-those who resign from Gozag's service.
+Gozag's intervention shut their doors forever and half of the ex-worshipper's
+gold is deducted as a cancellation fee. The disloyal are advised to finish
+their shopping before they launch their betrayal. For as long as Gozag remains
+angered, ex-worshippers may sometimes be bedazzled by the glint of coin and any
+foes that are encountered may also be granted complimentary blessings of their
+own to assist them against those who resign from Gozag's service.
 %%%%
 Ignis wrath
 

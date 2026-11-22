@@ -568,7 +568,7 @@ tutorial4 memorise2
 After forgetting one of your old spells to make space, memorise this new spell
 with <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
 <input>clicking</input> on the memorisation tab and selecting the spell
-tile</localtiles>. Then try your new spell and summon some demonic allies!
+tile</localtiles>. Then try your new spell and summon a demonic ally!
 %%%%
 tutorial4 displace_allies
 
@@ -578,11 +578,11 @@ a fight.
 %%%%
 tutorial4 order_allies
 
-Try to let your allies do the killing! If necessary, you can order them about
+Try to let your ally do the killing! If necessary, you can order it about
 with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
-wait with <input>$cmd[CMD_WAIT]</input> until your allies have caught
-up with you. Your summons will only stick around for a short time, so don't
-wait too long, or summon some new ones before starting a fight.
+wait with <input>$cmd[CMD_WAIT]</input> until your ally has caught up with you.
+Your summons will only stick around for a short time, so don't wait too long,
+or refresh your summon by casting it again before starting a fight.
 %%%%
 tutorial4 heavy_armour
 

@@ -2028,6 +2028,20 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
     return true;
 }
 
+targeter_mephitic::targeter_mephitic(const actor* caster, int r, int pow)
+    : targeter_beam(caster, r, ZAP_MEPHITIC, SPELL_MEPHITIC_CLOUD, pow,
+                    pow >= 100 ? 1 : 0, 1)
+{
+}
+
+bool targeter_mephitic::affects_monster(const monster_info& mon)
+{
+    if (!targeter_beam::affects_monster(mon))
+        return false;
+
+    return env.map_knowledge(mon.pos).cloud() != CLOUD_MEPHITIC;
+}
+
 targeter_boulder::targeter_boulder(const actor* caster, int boulder_hp)
     : targeter_beam(caster, LOS_MAX_RANGE, ZAP_IOOD, SPELL_BOULDER, 0, 0, 0),
       hp(boulder_hp)
@@ -2334,13 +2348,16 @@ bool targeter_gavotte::set_aim(coord_def a)
     if (!valid_aim(a))
         return false;
 
-    bolt tempbeam = beam;
-    tempbeam.target = a;
-    tempbeam.aimed_at_spot = false;
-    tempbeam.range = you.is_stationary() || you.stasis() ? 0 : GAVOTTE_DISTANCE;
-    tempbeam.path_taken.clear();
-    tempbeam.fire();
-    path_taken = tempbeam.path_taken;
+    if (!you.is_stationary() && !you.stasis())
+    {
+        bolt tempbeam = beam;
+        tempbeam.target = a;
+        tempbeam.aimed_at_spot = false;
+        tempbeam.range = GAVOTTE_DISTANCE;
+        tempbeam.path_taken.clear();
+        tempbeam.fire();
+        path_taken = tempbeam.path_taken;
+    }
 
     vector<monster*> affected = gavotte_affected_monsters(a - you.pos());
     for (monster* mon : affected)

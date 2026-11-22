@@ -1177,8 +1177,8 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     if (me.duration >= INFINITE_DURATION)
         return false;
 
-    // Gozag-incited haste/berserk is permanent.
-    if ((en == ENCH_HASTE || en == ENCH_BERSERK)
+    // Gozag-given buffs are permanent.
+    if ((en == ENCH_HASTE || en == ENCH_BERSERK || en == ENCH_EMPOWERED_SPELLS)
         && has_ench(ENCH_GOZAG_INCITE))
     {
         return false;

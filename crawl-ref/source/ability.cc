@@ -690,7 +690,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Gozag
-        { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
+        { ABIL_GOZAG_PURCHASE_BLESSING, "Purchase Blessing",
             0, 0, 0, -1, {fail_basis::invo}, abflag::gold },
         { ABIL_GOZAG_CALL_MERCHANT, "Call Merchant",
             0, 0, 0, -1, {fail_basis::invo}, abflag::gold },
@@ -757,7 +757,7 @@ static vector<ability_def> &_get_ability_list()
 
         // Xom
         { ABIL_XOM_CHAOS_EISEGESIS, "Chaos Eisegesis",
-            0, 0, 0, -1, {fail_basis::xl}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
@@ -944,8 +944,8 @@ int get_gold_cost(ability_type ability)
     {
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_price_for_shop(true);
-    case ABIL_GOZAG_POTION_PETITION:
-        return GOZAG_POTION_PETITION_AMOUNT;
+    case ABIL_GOZAG_PURCHASE_BLESSING:
+        return GOZAG_PURCHASE_BLESSING_COST;
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
     default:
@@ -1053,10 +1053,6 @@ const string make_cost_description(ability_type ability)
         const int amount = get_gold_cost(ability);
         if (amount)
             ret += make_stringf(", %d Gold", amount);
-        else if (ability == ABIL_GOZAG_POTION_PETITION)
-            ret += ", Free";
-        else
-            ret += ", Gold";
     }
 
     if (abil.flags & abflag::sacrifice)
@@ -1120,8 +1116,6 @@ static const string _detailed_cost_description(ability_type ability)
         int gold_amount = get_gold_cost(ability);
         if (gold_amount)
             ret << gold_amount;
-        else if (ability == ABIL_GOZAG_POTION_PETITION)
-            ret << "free";
         else
             ret << "variable";
     }
@@ -2395,8 +2389,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_GOZAG_POTION_PETITION:
-        return gozag_setup_potion_petition(quiet);
+    case ABIL_GOZAG_PURCHASE_BLESSING:
+        return gozag_setup_purchase_blessing(quiet);
 
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_setup_call_merchant(quiet);
@@ -2428,15 +2422,21 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
 
+        const monster* ancestor = hepliaklqana_ancestor_mon();
         if (abil.ability != ABIL_HEPLIAKLQANA_RECALL)
         {
-            monster* ancestor = hepliaklqana_ancestor_mon();
             if (!ancestor || !you.can_see(*ancestor))
             {
                 if (!quiet)
                     mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
                 return false;
             }
+        }
+        else if (companions_are_adjacent())
+        {
+            if (!quiet)
+                mprf("%s is already by your side!", ancestor->name(DESC_THE).c_str());
+            return false;
         }
 
         return true;
@@ -2567,6 +2567,22 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+
+    case ABIL_BEOGH_RECALL_APOSTLES:
+    {
+        if (companions_are_adjacent())
+        {
+            if (!quiet)
+            {
+                if (get_num_apostles() > 1)
+                    mpr("Your apostles are already by your side.");
+                else
+                    mpr("Your apostle is already by your side.");
+            }
+            return false;
+        }
+        return true;
+    }
 
     case ABIL_BEOGH_BLOOD_FOR_BLOOD:
         if (you.duration[DUR_BLOOD_FOR_BLOOD])
@@ -2821,7 +2837,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_CHEIBRIADOS_DISTORTION:
     case ABIL_RU_DRAW_OUT_POWER:
-    case ABIL_GOZAG_POTION_PETITION:
+    case ABIL_GOZAG_PURCHASE_BLESSING:
     case ABIL_GOZAG_CALL_MERCHANT:
     case ABIL_HEPLIAKLQANA_RECALL:
     case ABIL_WU_JIAN_SERPENTS_LASH:
@@ -4077,8 +4093,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_DITHMENOS_PRIMORDIAL_NIGHTFALL:
         return dithmenos_nightfall(fail);
 
-    case ABIL_GOZAG_POTION_PETITION:
-        return run_ability_uncancel(UNC_POTION_PETITION, piety_cost, mp_cost,
+    case ABIL_GOZAG_PURCHASE_BLESSING:
+        return run_ability_uncancel(UNC_PURCHASE_BLESSING, piety_cost, mp_cost,
                                     hp_cost);
 
     case ABIL_GOZAG_CALL_MERCHANT:

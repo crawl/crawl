@@ -46,7 +46,7 @@ static void _monster_apply_noise(monster *mons,
 
 /// By default, what database lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
-    { S_SILENT,         "" },
+    { S_SILENT,         "__SILENT" }, // this needs a key to allow forced sounds
     { S_SHOUT,          "__SHOUT" },
     { S_BARK,           "__BARK" },
     { S_HOWL,           "__HOWL" },
@@ -74,6 +74,46 @@ static const map<shout_type, string> default_msg_keys = {
     { S_CAW,            "__CAW" },
     { S_LAUGH,          "__LAUGH" },
 };
+
+string get_says_type(shout_type shout)
+{
+    const string key = lookup(default_msg_keys, shout, "__BUGGY");
+
+    if (key == "__BUGGY")
+        return "buggily says";
+
+    string message = getShoutString(key, " says");
+
+    if (message.empty())
+    {
+        message = "says";
+        msg::streams(MSGCH_DIAGNOSTICS)
+            << "No says entry for default shout type '"
+            << key << "'" << endl;
+    }
+
+    return message;
+}
+
+string get_speaking_type(shout_type shout)
+{
+    const string key = lookup(default_msg_keys, shout, "__BUGGY");
+
+    if (key == "__BUGGY")
+        return "buggily speaking";
+
+    string message = getShoutString(key, " speaking");
+
+    if (message.empty())
+    {
+        message = "speaking";
+        msg::streams(MSGCH_DIAGNOSTICS)
+            << "No speaking entry for default shout type '"
+            << key << "'" << endl;
+    }
+
+    return message;
+}
 
 /**
  * What's the appropriate DB lookup key for a given monster's shouts?

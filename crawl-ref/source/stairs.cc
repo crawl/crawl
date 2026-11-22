@@ -266,6 +266,7 @@ static void _transit_xom_followers(level_id destination)
         {
             if (mons_is_xom_guardian(**mi))
             {
+                mi->flags |= MF_TAKING_STAIRS;
                 mi->set_transit(destination);
                 monster_die(**mi, KILL_RESET, NON_MONSTER);
             }

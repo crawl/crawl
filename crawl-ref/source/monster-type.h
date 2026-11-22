@@ -1044,6 +1044,7 @@ enum monster_type                      // env.mons[].type
     MONS_CASSANDRA,
     MONS_GOJI,
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
+    MONS_BOREAS,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1457,6 +1458,7 @@ enum monster_type                      // env.mons[].type
     MONS_HYPNOTAIL,
     MONS_MANNEQUIN,
     MONS_CHAOS_BATTLESHAPE,
+    MONS_BOREAS,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

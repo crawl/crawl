@@ -62,9 +62,9 @@ static bool _resume_uncancel(bool run_success_effect)
         succeeded = stack_five();
         ability = ABIL_NEMELEX_STACK_FIVE;
         break;
-    case UNC_POTION_PETITION:
-        succeeded = gozag_potion_petition();
-        ability = ABIL_GOZAG_POTION_PETITION;
+    case UNC_PURCHASE_BLESSING:
+        succeeded = gozag_purchase_blessing();
+        ability = ABIL_GOZAG_PURCHASE_BLESSING;
         break;
     case UNC_CALL_MERCHANT:
         succeeded = gozag_call_merchant();

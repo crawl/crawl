@@ -82,7 +82,7 @@ ENDMAP
 #########################################
 # Representatives of all player genuses, locked up.
 NAME:    kb_arrival_jail
-TAGS:    arrival no_monster_gen no_trap_gen
+TAGS:    arrival
 ORIENT:  west
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
@@ -111,10 +111,9 @@ KMONS:   X = djinni ; nothing
 KMONS:   Y = centaur ; nothing
 KMONS:   Z = oni ; nothing
 KMONS:   1 = goblin ; nothing
-SUBST:   - = ABCDEFGHIJKLMNOPQRSTUVWXYZ1
+SUBST:   ? = ABCDEFGHIJKLMNOPQRSTUVWXYZ1
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ1
-KPROP:   ABCDEFGHIJKLMNOPQRSTUVWXYZ1? = no_tele_into
-KMASK:   ABCDEFGHIJKLMNOPQRSTUVWXYZ1? = no_item_gen
+: display_closet_setup(_G, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1?")
 MAP
    ccccccccccccccccccccccccccccc
 ccccAcCcEcGcIcKcMcOcQcScUcWcYc1c

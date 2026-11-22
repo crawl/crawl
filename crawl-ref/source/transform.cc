@@ -67,8 +67,6 @@ constexpr int SLOTF(equipment_slot s) {
     return 1 << s;
 }
 
-static constexpr int EQF_NONE = 0;
-
 // Weapons and offhand items
 static constexpr int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
                                 | SLOTF(SLOT_WEAPON_OR_OFFHAND);
@@ -1456,7 +1454,7 @@ public:
     // HP of crystals
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(13).Scaling(12), skill));
+        return max(1, scaling_value(FormScaling().Base(13).Scaling(12), skill));
     }
 
     // Indomitable HP on fully charging. (...not really a 'chance')
@@ -1539,7 +1537,7 @@ public:
     // Rate of distilling mist potions
     int get_effect_chance(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(100).Scaling(70), skill));
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(50), skill));
     }
 
     // Duration multiplier for spewed clouds
@@ -1944,6 +1942,7 @@ bool transforming_is_unsafe(transformation which_trans)
 
     // Now check if there are any items that would break if we changed form in
     // this way.
+    const transformation old_form = you.form;
     unwind_var<player_equip_set> unwind_eq(you.equipment);
     unwind_var<transformation> unwind_default_form(you.default_form);
     unwind_var<transformation> unwind_form(you.form);
@@ -1952,6 +1951,11 @@ bool transforming_is_unsafe(transformation which_trans)
     you.form = which_trans;
 
     you.equipment.unmeld_all_equipment(true);
+
+    if (old_form == transformation::fortress_crab)
+        you.equipment.shift_twohander_to_slot(SLOT_OFFHAND);
+
+    you.equipment.update();
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
 
     // Pretend incompatible items fell away.
@@ -2188,7 +2192,7 @@ static void _on_enter_form(transformation which_trans)
 
     case transformation::mistmane:
         if (!you.props.exists(MISTMANE_POTION_PROGRESS_KEY))
-            you.props[MISTMANE_POTION_PROGRESS_KEY] = random_range(150, 350);
+            you.props[MISTMANE_POTION_PROGRESS_KEY] = random_range(350, 600);
         break;
 
     default:
@@ -3138,11 +3142,14 @@ bool jademantle_is_fully_charged()
 
 void mistmane_distill_potions(int tiles_explored)
 {
+    // Apply distillation rate modifier
+    tiles_explored = div_rand_round(tiles_explored * get_form()->get_effect_chance(), 100);
+
     int& remaining = you.props[MISTMANE_POTION_PROGRESS_KEY].get_int();
     while (tiles_explored >= remaining)
     {
         tiles_explored -= remaining;
-        remaining = random_range(150, 350);
+        remaining = random_range(350, 600);
 
         int count = 0;
         for (const item_def& inv : you.inv)

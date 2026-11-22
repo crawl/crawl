@@ -234,9 +234,8 @@ static passage_type _find_other_passage_side(coord_def& to)
 static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { blind_player(random_range(15, 20)); }, 4 },
     { [] { contaminate_player(1500 + random2avg(1800, 2), false); }, 4 },
-    { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
     { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
-    { [] { you.petrify(nullptr); }, 1 },
+    { [] { you.petrify(nullptr); }, 2 },
     { [] { you.increase_duration(DUR_LOWERED_WL, 5 + random2(15), 20,
                 "Your willpower is stripped away!"); }, 4 },
     { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
@@ -475,8 +474,8 @@ void trigger_trap(actor& triggerer)
             if (!you_trigger)
             {
                 mprf("%s %s!", triggerer.name(DESC_THE).c_str(),
-                mons_intel(*m) >= I_HUMAN ? "invokes an devourer's trap upon you" :
-                                            "sets off an devourer's trap");
+                mons_intel(*m) >= I_HUMAN ? "invokes a devourer's trap upon you" :
+                                            "sets off a devourer's trap");
             }
             flash_tile(you.pos(), YELLOW, 60, TILE_BOLT_DEFAULT_YELLOW);
             you.corrode(nullptr, "The trap's stomach acid", 6);

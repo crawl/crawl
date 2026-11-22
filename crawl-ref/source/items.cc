@@ -2310,9 +2310,15 @@ static int _assign_inventory_letter(item_def& item)
  * @param[in] item the item to be checked. Note that any references to this
  *                 item may be invalidated by the swap_inv_slots call!
  * @param quiet    If true, don't print a message about moving this item.
+ * @param newgame  If called on newgame setup, allow moving consumables from
+ *                 their current slots, even without an explicit
+ *                 consumable_shortcut set (in order for starting items to avoid
+ *                 using 'reserved' letters, which would have otherwise been
+ *                 ensued by _place_item_in_free_slot(), which newgame setup
+ *                 does not call).
  * @returns the new location of the item if it was moved, null otherwise.
  */
-item_def *auto_assign_item_slot(item_def& item, bool quiet)
+item_def *auto_assign_item_slot(item_def& item, bool quiet, bool newgame)
 {
     if (!item.defined())
         return nullptr;
@@ -2324,7 +2330,7 @@ item_def *auto_assign_item_slot(item_def& item, bool quiet)
     if (inventory_category_for(item) == INVENT_CONSUMABLE)
     {
         const short old_slot = item.slot;
-        item.slot = _letter_for_consumable(item, false);
+        item.slot = _letter_for_consumable(item, newgame);
 
         if (item.slot != old_slot && !quiet)
             mprf_nocap("%c -> %s", old_slot, item.name(DESC_INVENTORY).c_str());

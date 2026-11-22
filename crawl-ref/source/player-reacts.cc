@@ -516,7 +516,8 @@ static void _handle_xom_mannequins(int time_taken)
             for (int i = 0; i < mon_list.size(); ++i)
             {
                 mgen_data mg = mgen_data(MONS_MANNEQUIN, BEH_COPY, you.pos(),
-                                          MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE)
+                                          MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE,
+                                          GOD_XOM)
                          .set_summoned(&you, MON_SUMM_XOM_MANNEQUIN, 0, false)
                          .set_range(1, LOS_RADIUS);
                 mg.base_type = static_cast<monster_type>(mon_list[i].get_int());
@@ -682,6 +683,8 @@ void player_reacts_to_monsters()
 
     _handle_hoarding();
 
+    xom_check_floor_lock();
+
     you.props.erase(PYROMANIA_TRIGGERED_KEY);
     you.shouted_pos.reset();
 
@@ -824,8 +827,8 @@ static void _handle_trickster_decay(int delay)
 
     int& stacks = you.props[TRICKSTER_POW_KEY].get_int();
 
-    // Decay at a rate of ~1 AC per 30 aut.
-    const int reduction = div_rand_round(3, delay);
+    // Decay at a rate of 0.8 AC per turn.
+    const int reduction = delay * 8;
     stacks -= reduction;
     if (stacks <= 0)
     {
@@ -1194,7 +1197,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        mprf(MSGCH_DURATION, "You feel your defences recover.");
         you.duration[DUR_MEDUSA_COOLDOWN] = 0;
     }
 
@@ -1209,6 +1212,10 @@ static void _decrement_durations()
 
     if (you.has_mutation(MUT_TRICKSTER))
         _handle_trickster_decay(delay);
+
+    if (you.duration[DUR_STUMBLING])
+        if (--you.duration[DUR_STUMBLING] <= 0)
+            you.redraw_evasion = true;
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)

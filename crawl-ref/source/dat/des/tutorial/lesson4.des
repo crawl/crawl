@@ -5,7 +5,6 @@
 # TODO:
 #  * trigger when trying to walk into a cloud
 #  * trigger on "might hit yourself" prompt
-#  * potion of experience gives too much skills - find another way for Meph?
 #
 {{
 crawl_require("dlua/tutorial.lua")
@@ -32,13 +31,11 @@ DESC:    Lesson 4: Magic and Spellcasting
 ORDER:   4
 ORIENT:  encompass
 KFEAT:   ABCDEFG = .
-# TODO: pad g here was for spell hunger, what else could go here?
 COLOUR:  ABCDEFGdef = lightblue
 FTILE:   ABCDEFGdef = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart&mephitic_cloud title:Introductory_Spellcasting owner:player
 ITEM:    ring of magical power
 ITEM:    ring of wizardry
-# TODO: g was rations for spell hunger, replace with something more modern
 MONS:    training dummy ; stone q:20
 MONS:    bat zombie, goblin zombie
 MONS:    rat, goblin
@@ -80,9 +77,9 @@ xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx..xxxxxxx
 xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxxDxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8...xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...8.xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..8..xxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxExxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx

@@ -905,6 +905,8 @@ Zola
 _arabic_female_name_
 Amala
 
+Ashraqat
+
 Ara
 
 Atia
@@ -926,8 +928,6 @@ Oma
 
 Qitarah
 
-Rabi
-
 Rana
 
 Shunnareh
@@ -948,9 +948,9 @@ Bozena
 
 Bozidara
 
-Dagmar
-
 Dusana
+
+Jadwiga
 
 Libusa
 
@@ -1065,7 +1065,13 @@ _bland_female_name_
 
 Abby
 
+Anne
+
 Babs
+
+Bea
+
+Becky
 
 Betsy
 
@@ -1075,7 +1081,11 @@ Carrie
 
 Deb
 
+Edith
+
 Emma
+
+Ethel
 
 Gertrude
 
@@ -1085,19 +1095,35 @@ Janice
 
 Jen
 
+Jill
+
 Joan
+
+Kim
+
+Lynn
 
 Mia
 
+Nell
+
+Peg
+
 Sue
+
+Tiffany
 
 Vera
 %%%%
 _bland_male_name_
 
+Al
+
 Bill
 
 Bob
+
+Bud
 
 Cal
 
@@ -1109,21 +1135,39 @@ Doug
 
 George
 
+Ike
+
+Jack
+
 Jeff
 
 Jim
+
+John
 
 Larry
 
 Mack
 
+Max
+
+Mike
+
 Ned
 
+Norm
+
+Paul
+
 Pete
+
+Phil
 
 Steve
 
 Tim
+
+Tom
 %%%%
 _cantonese_female_name_
 
@@ -1621,9 +1665,9 @@ Sachi
 
 Sarina
 
-Tae
-
 Tamao
+
+Tsukiko
 
 Umi
 
@@ -1649,8 +1693,6 @@ Daichi
 
 Daisaku
 
-Eiko
-
 Eitaro
 
 Fumito
@@ -1670,6 +1712,8 @@ Haruki
 Hayata
 
 Hidetaka
+
+Hikaru
 
 Hisao
 

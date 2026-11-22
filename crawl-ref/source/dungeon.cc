@@ -5173,6 +5173,11 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
             && is_unrandom_artefact(item))
         {
             item.flags |= ISFLAG_CHAOTIC;
+
+            // Without this, the armour won't actually get the artprop properly
+            // until the next time the save is loaded. This is a little icky...
+            if (item.base_type == OBJ_ARMOUR)
+                artefact_set_property(item, ARTP_CHAOS_GUARD, 1);
         }
         // We need to manually add the artprop here (to the already rolled item)
         else if (item.base_type == OBJ_TALISMANS && is_artefact(item))

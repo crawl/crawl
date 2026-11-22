@@ -147,15 +147,13 @@ static void _announce_monsters(string announcement, vector<coord_def> &visible,
                                bool none_visible)
 {
     mprf(MSGCH_WARN, "%s!%s", announcement.c_str(),
-         none_visible && !you.gave_invis_clear_prompt
+         none_visible
 #ifdef USE_TILE_WEB
             ? " (Press *t to temporarily disregard this.)"
 #else
             ? " (Press Ctrl+T to temporarily disregard this.)"
 #endif
             : "");
-    if (none_visible)
-        you.gave_invis_clear_prompt = true;
 
     if (Options.use_animations & UA_MONSTER_IN_SIGHT)
     {

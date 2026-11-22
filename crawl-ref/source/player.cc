@@ -851,6 +851,16 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
         if ((last_move_flags & MV_DELIBERATE) && !(last_move_flags & MV_TRANSLOCATION))
             player_did_deliberate_movement();
+
+        if (you.has_bane(BANE_STUMBLING))
+        {
+            // This duration is in player turns, not aut. This means it will
+            // last for the rest of the current turn, still be displayed on the
+            // UI at the start of the player's next turn, and then be removed at
+            // the end of it.
+            you.duration[DUR_STUMBLING] = you.turn_is_over ? 1 : 2;
+            you.redraw_evasion = true;
+        }
     }
 
     // Assuming that entering the same square means coming from above (flight)
@@ -1845,8 +1855,8 @@ int player_spec_death()
 {
     int sd = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
-        sd += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
+        sd += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
@@ -1861,8 +1871,8 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_FIRE))
-        sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_FIRE))
+        sf += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
@@ -1879,8 +1889,8 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_COLD))
-        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_COLD))
+        sc += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
 
@@ -1897,8 +1907,8 @@ int player_spec_earth()
     int se = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_EARTH))
-        se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_EARTH))
+        se += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     se += you.wearing_ego(OBJ_ARMOUR, SPARM_EARTH);
 
@@ -1915,8 +1925,8 @@ int player_spec_air()
     int sa = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_AIR))
-        sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_AIR))
+        sa += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sa += you.wearing_ego(OBJ_ARMOUR, SPARM_AIR);
 
@@ -1932,8 +1942,8 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_CONJURATION))
-        sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_CONJURATION))
+        sc += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
 
@@ -1965,15 +1975,15 @@ int player_spec_alchemy()
 {
     int sp = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
-        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+    if (int staff = you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
+        sp += staff + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sp += you.wearing_jewellery(AMU_CHEMISTRY);
 
     sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
 
     if (you.unrand_equipped(UNRAND_OLGREB))
-        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
+        sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     return sp;
 }
@@ -2188,7 +2198,7 @@ bool player_acrobatic()
 
 void update_acrobat_status()
 {
-    if (!player_acrobatic() && !you.has_bane(BANE_STUMBLING))
+    if (!player_acrobatic())
         return;
 
     // Acrobat duration goes slightly into the next turn, giving the
@@ -2323,9 +2333,8 @@ static int _player_temporary_evasion_modifiers()
     if (acrobat_boost_active())
         evbonus += 15;
 
-    // Bane of stumbling triggers on the same conditions as acrobat (thus
-    // sharing its timer).
-    if (you.has_bane(BANE_STUMBLING) && you.duration[DUR_ACROBAT])
+    // Bane of stumbling is active on any turn you move or are moved.
+    if (you.duration[DUR_STUMBLING])
         evbonus -= 25;
 
     if (you.duration[DUR_VERTIGO])
@@ -2970,22 +2979,22 @@ void apply_exp()
         you.attribute[ATTR_EVOL_XP] -= exp_gained;
 
     // modified experience due to sprint inflation
-    unsigned int skill_xp = exp_gained;
+    unsigned int scaled_xp = exp_gained;
     if (crawl_state.game_is_sprint())
-        skill_xp = sprint_modify_exp(skill_xp);
+        scaled_xp = sprint_modify_exp(scaled_xp);
 
     // xp-gated effects that use sprint inflation
-    _recharge_xp_evokers(skill_xp);
-    _reduce_abyss_xp_timer(skill_xp);
-    _handle_hp_drain(skill_xp);
-    _handle_banes(skill_xp);
-    _handle_ostracism(skill_xp);
-    _handle_breath_recharge(skill_xp);
-    _handle_cacophony_recharge(skill_xp);
-    _handle_batform_recharge(skill_xp);
-    _handle_watery_grave_recharge(skill_xp);
+    _recharge_xp_evokers(scaled_xp);
+    _reduce_abyss_xp_timer(scaled_xp);
+    _handle_hp_drain(scaled_xp);
+    _handle_banes(scaled_xp);
+    _handle_ostracism(scaled_xp);
+    _handle_breath_recharge(scaled_xp);
+    _handle_cacophony_recharge(scaled_xp);
+    _handle_batform_recharge(scaled_xp);
+    _handle_watery_grave_recharge(scaled_xp);
 
-    _handle_xom_blessing(skill_xp);
+    _handle_xom_blessing(scaled_xp);
 
     _log_form_xp(exp_gained);
 
@@ -3002,11 +3011,11 @@ void apply_exp()
     else
         you.experience += exp_gained;
 
-    you.exp_available += 10 * skill_xp;
+    gain_skill_experience(10 * scaled_xp);
 
     train_skills();
     while (check_selected_skills()
-           && you.exp_available >= calc_skill_cost(you.skill_cost_level))
+           && you.skill_points_available > 0)
     {
         train_skills();
     }
@@ -4799,7 +4808,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     const bool was_fatal = poison_is_lethal();
 
     if (player_res_poison() < 0)
-        amount *= 2;
+        amount = amount * 3 / 2;
 
     // TODO: support being poisoned by monsters wearing "harm (ha)
     if (you.extra_harm())
@@ -5717,7 +5726,6 @@ player::player()
     hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
     experience       = 0;
-    total_experience = 0;
     experience_level = 1;
     experience_pool  = 0;
     gold             = 0;
@@ -5774,7 +5782,9 @@ player::player()
     skill_menu_view = SKM_NONE;
 
     skill_cost_level = 1;
-    exp_available = 0;
+    skill_exp_available = 0;
+    skill_exp_spent = 0;
+    skill_points_available = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5940,8 +5950,6 @@ player::player()
     wind_category_inc.init(false);
     prevailing_wind = -1;
     gave_wind_change_warning = false;
-
-    gave_invis_clear_prompt = false;
 
     reset_escaped_death();
     on_current_level    = true;
@@ -6885,7 +6893,7 @@ int player::armour_class_scaled(int scale) const
         AC += 100 * player_icemail_armour_class();
 
     if (has_mutation(MUT_TRICKSTER))
-        AC += 100 * trickster_bonus();
+        AC += trickster_bonus();
 
     if (duration[DUR_FIERY_ARMOUR])
         AC += 700;
@@ -6907,7 +6915,7 @@ int player::armour_class_scaled(int scale) const
     }
 
     if (you.props.exists(PASSWALL_ARMOUR_KEY))
-        AC += you.props[PASSWALL_ARMOUR_KEY].get_int() * 100;
+        AC += you.props[PASSWALL_ARMOUR_KEY].get_int();
 
     if (you.duration[DUR_PHALANX_BARRIER])
         AC += you.props[PHALANX_BARRIER_POWER_KEY].get_int();
@@ -7412,31 +7420,34 @@ int player::res_blind() const
         return 0;
 }
 
-int player::willpower() const
+int player::willpower(bool items) const
 {
-    return player_willpower();
+    return player_willpower(true, items);
 }
 
-int player_willpower(bool include_temp)
+int player_willpower(bool include_temp, bool items)
 {
     if (include_temp && you.form == transformation::slaughter)
         return WILL_INVULN;
 
-    if (you.unrand_equipped(UNRAND_FOLLY))
+    if (items && you.unrand_equipped(UNRAND_FOLLY))
         return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 
-    // randarts and dragon armour
-    rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
+    if (items)
+    {
+        // randarts and dragon armour
+        rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER);
 
-    // ego armours
-    rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
+        // ego armours
+        rm += WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_WILLPOWER);
 
-    rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
+        rm -= 2 * WL_PIP * you.wearing_ego(OBJ_ARMOUR, SPARM_GUILE);
 
-    // rings of willpower
-    rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+        // rings of willpower
+        rm += WL_PIP * you.wearing_jewellery(RING_WILLPOWER);
+    }
 
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
@@ -7710,10 +7721,18 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
  */
 bool player::resists_dislodge(string event) const
 {
-    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+    if (!you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS)
+        && !you.duration[DUR_FORTRESS_BLAST_TIMER])
+    {
         return false;
+    }
     if (!event.empty())
-        mprf("Your boots keep you from %s.", event.c_str());
+    {
+        if (you.unrand_equipped(UNRAND_MOUNTAIN_BOOTS))
+            mprf("Your boots keep you from %s.", event.c_str());
+        else
+            mprf("Your magic anchors you in place.");
+    }
     return true;
 }
 
@@ -9694,9 +9713,10 @@ bool ench_triggers_trickster(enchant_type ench)
     }
 }
 
+// The max AC Trickster can give (multiplied by 100)
 static int _trickster_max_boost()
 {
-    return 6 + you.experience_level * 4 / 5;
+    return (6 + you.experience_level * 4 / 5) * 100;
 }
 
 // Increment AC boost when applying a negative status effect to a monster.
@@ -9711,7 +9731,7 @@ void trickster_trigger(const monster& victim, enchant_type ench)
         return;
     }
 
-    const int min_bonus = 3 + you.experience_level / 6;
+    const int min_bonus = (3 + you.experience_level / 6) * 100;
 
     if (!you.props.exists(TRICKSTER_POW_KEY))
     {
@@ -9724,23 +9744,28 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     int& bonus = you.props[TRICKSTER_POW_KEY].get_int();
     if (bonus < min_bonus)
         bonus = min_bonus;
-    else if (bonus >= 15)
-        bonus += random2(2);
+    // Make it harder to increase the AC bonus, the more bonus you already have
+    // (down to 0.33 AC per debuff when approaching the max bonus)
     else
-        bonus += 1;
+    {
+        const int delta = _trickster_max_boost() - min_bonus;
+        bonus += 100 - min(67, max(0, (bonus - min_bonus) * 100 / delta));
+    }
 
-    const int max = _trickster_max_boost() + 10;
+    // The bonus AC can exceed the max bonus internally to make it decay slower
+    // when highly stacked (but the AC is still capped at _trickster_max_boost())
+    const int max = _trickster_max_boost() + 1000;
     if (bonus > max)
         bonus = max;
 
     // Give a few turns before the effect starts to decay.
-    if (you.duration[DUR_TRICKSTER_GRACE] < 60)
-        you.duration[DUR_TRICKSTER_GRACE] = random_range(60, 90);
+    if (you.duration[DUR_TRICKSTER_GRACE] < 50)
+        you.duration[DUR_TRICKSTER_GRACE] = random_range(50, 80);
 
     you.redraw_armour_class = true;
 }
 
-// Returns the current AC bonus from Trickster
+// Returns the current AC bonus from Trickster (multiplied by 100)
 int trickster_bonus()
 {
     if (!you.props.exists(TRICKSTER_POW_KEY))
