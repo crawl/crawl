@@ -978,9 +978,22 @@ LUAFN(mi_get_monster_at)
     monster* m = &env.mons[env.mgrid(p)];
     if (!you.aware_of(*m))
         return 0;
-    monster_info mi = *env.map_knowledge(p).monsterinfo();
-    lua_push_moninf(ls, &mi);
-    return 1;
+    monster_info *mi = env.map_knowledge(p).monsterinfo();
+    // If the map knowledge is up to date, return that. If not (very possible,
+    // because this can be called at essentially any time), and we can see the
+    // monster, build a new monsterinfo from it.
+    if (mi && mi->mid == m->mid)
+    {
+        lua_push_moninf(ls, mi);
+        return 1;
+    }
+    if (you.can_see(*m))
+    {
+        monster_info mi_fresh(m);
+        lua_push_moninf(ls, &mi_fresh);
+        return 1;
+    }
+    return 0;
 }
 
 static const struct luaL_Reg mon_lib[] =
