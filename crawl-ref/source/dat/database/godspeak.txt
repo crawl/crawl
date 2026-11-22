@@ -1520,6 +1520,257 @@ w:40
 
 w:5
 "Everything deserves to die!"
+
+
+##############################################
+# God pray messages - these appear when you pray at the altar of a god you already worship
+##############################################
+
+
+%%%%
+_player_arms_
+
+{{
+if you.race() == "Felid" and you.mutation('missing a hand')>0 then
+        return "paw"
+elseif you.race() == "Felid" and you.mutation('missing a hand')==0 then
+    return "paws"
+elseif you.race() == "Octopode" and you.mutation('missing a hand')>0 then
+    return "tentacle"
+elseif you.race() == "Octopode" and you.mutation('missing a hand')==0 then
+    return "tentacles"
+elseif you.race() == "Formicid" then
+    return "limbs"
+elseif you.race() == "Coglin" and you.mutation('missing a hand')>0 then
+    return "graspers"
+elseif you.race() == "Coglin" and you.mutation('missing a hand')==0 then
+    return "grasper"
+elseif you.mutation('missing a hand')>0 then
+    return "arm"
+elseif you.mutation('missing a hand')==0 then
+    return "arms"
+end
+}}
+
+
+%%%%
+_player_finger_
+
+{{
+if you.race() == "Felid" then
+        return "paw"
+elseif you.race() == "Octopode" then
+    return "tentacle"
+else
+    return "finger"
+end
+}}
+
+%%%%
+_player_blood_
+
+{{
+if you.race() == "Gargoyle" then
+        return "stone dust"
+elseif you.race() == "Djinni" then
+        return "flame"
+elseif you.race() == "Revenant" or you.race() == "Poltergeist" or you.race() == "Mummy" or you.race() == "Vine Stalker" then
+    return "ichor"
+else
+    return "blood"
+end
+}}
+
+
+%%%%
+_player_eyes_
+
+{{
+if you.mutation('missing an eye')==0 then
+        return "eyes"
+elseif you.mutation('missing an eye')>0 then
+        return "eye"
+end
+}}
+
+%%%%
+Ashenzari pray
+
+You meditate on the difference between things seen and unseen.
+
+You pray to Ashenzari for the [foresight|insight] to see through [the lies of this world|trickery|treachery].
+
+You pray to Ashenzari to clear your mind of distractions.
+
+w:1
+You try to imagine Ashenzari shackled to the sky, but only give yourself a headache.
+
+%%%%
+Beogh pray
+
+You shout a glorious oath of loyalty to all orcs, as orcs often do.
+
+%%%%
+Cheibriados pray
+
+You meditate at the altar for what feels like an eternity.
+
+%%%%
+Dithmenos pray
+
+You close your @_player_eyes_@ for a moment and bask in ultimate shadow.
+
+You assemble an umbral puppet from the shadows of the altar, and it scurries into the darkness.
+
+%%%%
+Elyvilon pray
+You pray that the [sick|dying] find peace in Elyvilon's embrace.
+
+You offer a prayer of comfort for the [weak|downtrodden|helpless] to Elyvilon.
+
+%%%%
+Fedhas pray
+
+You prepare [a salad|a smoothie|an infusion|a fermentation] of [dried|fresh|pickled|salted|spiced|chopped|diced|minced|sautéd] [apple|apricot|banana|choko|grape|orange|strawberry|rambutan|lemon|sultana|lychee] [seeds|rinds|pulp|flesh] and [dried|fresh|pickled|salted|spiced|chopped|diced|minced|sautéd] [apple|apricot|banana|choko|grape|orange|strawberry|rambutan|lemon|sultana|lychee] [seeds|rinds|pulp|flesh] to nourish the altar's blossoming flora.
+
+%%%%
+Gozag pray
+
+You take a moment to reverently tally your expenditures.
+
+You take a moment to contemplate the divine mathematics of compound interest.
+
+%%%%
+Hepliaklqana pray
+
+You utter a prayer of thanks to your ancestors.
+
+You commune with your ancestor spirits for a moment.
+
+%%%%
+Ignis pray
+
+You light a votive candle to Ignis.
+
+%%%%
+Jiyva pray
+
+You commune with the quivering altar for a brief moment.
+
+You plunge your @_player_arms_@ into the gelatinous altar, and feel a connection to every slime in the dungeon.
+
+%%%%
+Kikubaaqudgha pray
+
+You offer up the sacrifice of a small insect in devotion to Kikubaaqudgha.
+
+You trace in the dust near the altar a sigil mocking life itself.
+
+%%%%
+Lugonu pray
+
+You etch a sigil of the Abyss into a bare corner of the altar.
+
+In the palace of your own mind, you construct a mental pillar of corruption in devotion to Lugonu.
+
+w:1
+You gaze into the altar... and the altar gazes back!
+
+%%%%
+Makhleb pray
+
+You prick your @_player_finger_@. The altar greedily devours the morsel of @_player_blood_@.
+
+%%%%
+Nemelex Xobeh pray
+
+You deal out a card from the altar's deck. It's [Degeneration. Unlucky...|The Orb, the target of your quest.|Pain, something your future holds an abandunce of.|The Storm. Perhaps a sign of turbulence to come.|Vitriol, the emotion the denizens of this place feel for you.|Wild Magic, the lifeblood of creation and luck.|The Cloud. An omen of storms to come?|The Elixir. Lucky!|Exile, your fate until you retrieve The Orb...|The Tomb. Dare you venture there?|Velocity. A reminder to hurry, perhaps.|The Dance. The essence of luck and gambling, a churn of fortune and disfavor one must always ride.|The Elements. A card that represents the fundamental forces that clash to create the world.|The Illusion, a reflection of the joke of reality and its perception.|The Swarm, a representation of the profundity of life that fills the world.|The Pentagram. A reminder that dark forces swirl far below the ground.|The Rangers. A reminder that somewhere in the world, our friends are thinking of us.|Swine. Unlucky...|Torment. Unlucky...|Wraith. Unlucky...|Wrath. Unlucky...]
+
+%%%%
+Okawaru pray
+
+You pray to Okawaru for strength in your coming battles.
+
+You sing an [epic|glorious|rousing|joyous] hymn of battle in Okawaru's name.
+
+# Qazlal is handled in god-prayer.cc if-else statements
+
+%%%%
+Ru pray
+
+You take a moment to contemplate the [folly|absurdity|falsity] of creation.
+
+w:1
+You close your @_player_eyes_@. For a moment, the world falls away from you, then returns.
+
+%%%%
+Sif Muna pray
+
+You close your @_player_eyes_@ to contemplate the secrets of the arcane.
+
+You pray to Sif Muna for focus in your magical studies.
+
+w:1
+You try to show off a [spell|cantrip] in front of the altar, but [you fumble the motions|you forget the words].
+
+w:1
+You imagine yourself peering through the shelves of Sif Muna's library. The thought makes you [weep from envy|dizzy with excitement].
+
+# Trog is handled in god-prayer.cc if-else statements
+
+%%%%
+The Shining One pray
+
+You sing a hymn in honour of The Shining One's everlasting [radiance|righteousness|glory].
+
+You pray to The Shining One for victory over the [forces|servants|minions] of evil.
+
+%%%%
+Uskayaw pray
+
+You feel divinely inspired to strike a dramatic pose.
+
+%%%%
+Vehumet pray
+
+You beseech Vehumet for the power to [annihilate|obliterate|destroy|blow up|rend apart] your foes.
+
+w:1
+You imagine the world bathed in hellfire. A beautiful sight!
+
+w:1
+You pray to Vehumet: "Come, end. Come quickly."
+
+# Wu Jian is handled in god-prayer.cc if-else statements
+
+%%%%
+Xom pray
+
+You mumble a word of thanks. In the distance, you hear Xom's maniacal laughter.
+
+%%%%
+Yredelemnul pray
+
+You swear [a blasphemous|an unholy|a dark] oath to serve Yredelemnul in life and undeath.
+
+w:1
+You confess your deepest, darkest hatreds to the altar. You sense approval.
+
+w:1
+For a second, you see a vision of a conquering army sweeping the land, with yourself at its head...
+
+%%%%
+Zin pray
+
+You recite a passage on [temperance|prudence|courage|frugality|chastity|acceptance|cleanliness|dignity|fairness|honesty|humility|integrity|justice|loyalty|moderation|modesty|orderliness|patience|perseverance|self-discipline|tact|preparedness|reliability|sincerity|tenaciousness|thankfulness|tolerance|truthfulness|unity|wisdom|fiscal responsibility] from the [books of the Law|Axioms of Law].
+
+You cleanse your @_player_arms_@, and thank Zin for bringing hygiene to @player_genus@kind.
+
+You pray that others would [know their place before|keep themselves pure before|pay their proper tithes to] Zin.
+
+w:1
+You reverently sprinkle a few droplets of water onto the altar, to keep it pure from corruption.
+
 %%%%
 ######################################
 # Welcome messages on game restoration
