@@ -1609,9 +1609,9 @@ Reading this scroll while waiting for a teleportation will instead cancel it.
 scroll of torment
 
 A scroll that calls on the powers of darkness to inflict great pain on any
-nearby creature — including the reader! This halves the resilience of all
-living creatures and cuts down all holy creature resilence by about a third,
-although it is never directly fatal.
+nearby creature — including the reader! This halves the HP of all living
+creatures and cuts down all holy creature HP by about a third, although it is
+never directly fatal.
 %%%%
 scroll of vulnerability
 
