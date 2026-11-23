@@ -545,8 +545,9 @@ zugefügt und ihre Bewegungsgeschwindigkeit für kurze Zeit verlangsamt wird.
 an airy dragon vein
 
 Eine freiliegende Ley-Linie der Luftmagie. Man kann sie aktivieren, indem man
-darauf tritt, wodurch die 4 am weitesten entfernten Gegner von einem
-schneidenden Wind getroffen werden.
+darauf tritt, wodurch die 3 am weitesten entfernten Gegner von einem
+schneidenden Wind getroffen werden. Anders als bei den anderen Adern, wird der
+Schaden nicht durch Entfernung reduziert.
 %%%%
 ########################################################################
 ### Branch entrances and exits

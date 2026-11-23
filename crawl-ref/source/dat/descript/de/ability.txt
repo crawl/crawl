@@ -306,8 +306,7 @@ verstärken. Beide Gaben können nur einmal erhalten werden.
 # Yredelemnul
 Recall Undead Harvest ability
 
-Ruft deine untoten Mitstreiter von irgendwo im Kerker in deine unmittelbare
-Umgebung zurück.
+Ruft deine untoten Mitstreiter von irgendwo im Kerker an deine Seite zurück.
 %%%%
 Light the Black Torch ability
 
@@ -656,8 +655,7 @@ gegen einen anderen Apostel einzusetzen.
 %%%%
 Recall Apostles ability
 
-Ruft deine orkischen Apostel von überall im Kerker in deine unmittelbare
-Umgebung zurück.
+Ruft deine orkischen Apostel von überall im Kerker an deine Seite zurück.
 %%%%
 Dismiss Apostle ability
 
@@ -1043,7 +1041,7 @@ erhöht. Der Gesamtanstieg hängt von der Höhe deiner Spende ab.
 # Hepliaklqana
 Recall Ancestor ability
 
-Ruft deinen Ahnen von irgendwo im Kerker in deine unmittelbare Umgebung zurück.
+Ruft deinen Ahnen von irgendwo im Kerker an deine Seite zurück.
 %%%%
 Idealise ability
 

@@ -77,8 +77,8 @@ dem Schlachtfeld zu verschaffen.
 %%%%
 Hunter
 
-Jäger tragen einen Kurzbogen, leichte Rüstung und eine Schriftrolle der
-Schmetterlinge.
+Jäger tragen einen Kurzbogen, leichte Rüstung, zwei Schriftrollen des Giftes und
+eine Schriftrolle der Schmetterlinge.
 %%%%
 Hexslinger
 
