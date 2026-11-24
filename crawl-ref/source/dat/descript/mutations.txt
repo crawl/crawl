@@ -1050,7 +1050,7 @@ becomes empowered to fire at multiple foes at once.
 %%%%
 East Wind's embodiment mutation
 
-Whenever you Rampage, you regain a small percentage of your maxmimum MP and
+Whenever you Rampage, you regain a small percentage of your maximum MP and
 unleash a bitter wind that makes all enemies within 2 spaces of you Exposed,
 increasing the damage they take from non-attack sources by 35% and also their
 chance to be hit or affected by them.
