@@ -42,6 +42,6 @@ void do_trap_effects();
 level_id generic_shaft_dest(level_id place);
 
 int       trap_rate_for_place();
-dungeon_feature_type random_trap_for_place(bool dispersal_ok = true);
+dungeon_feature_type random_trap_for_place();
 
 void place_webs(int num);

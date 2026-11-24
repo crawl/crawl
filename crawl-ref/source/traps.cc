@@ -917,7 +917,7 @@ int trap_rate_for_place()
  *                            May be NUM_TRAPS, if no traps were valid.
  */
 
-dungeon_feature_type random_trap_for_place(bool dispersal_ok)
+dungeon_feature_type random_trap_for_place()
 {
     // zot traps are Very Special.
     // very common in zot...
@@ -950,7 +950,7 @@ dungeon_feature_type random_trap_for_place(bool dispersal_ok)
 
     const pair<dungeon_feature_type, int> trap_weights[] =
     {
-        { DNGN_TRAP_DISPERSAL, dispersal_ok && tele_ok  ? 4 : 0},
+        { DNGN_TRAP_DISPERSAL, tele_ok      ? 4 : 0},
         { DNGN_TRAP_TELEPORT,  tele_ok      ? 5 : 0},
         { DNGN_TRAP_SHAFT,     shaft_ok     ? 4 : 0},
         { DNGN_TRAP_ALARM,     alarm_ok     ? 5 : 0},
