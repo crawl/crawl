@@ -2485,8 +2485,18 @@ void map_def::load()
         throw map_load_exception(
                 make_stringf("Map inf is invalid: %s", name.c_str()));
     }
-    inf.advance(cache_offset);
-    read_full(inf);
+    inf.set_safe_read(true);
+    try
+    {
+        inf.advance(cache_offset);
+        read_full(inf);
+    }
+    catch (const short_read_exception&)
+    {
+        throw map_load_exception(make_stringf(
+            "Des cache file %s is truncated (map: %s)",
+            loadfile.c_str(), name.c_str()));
+    }
 
     index_only = false;
 }

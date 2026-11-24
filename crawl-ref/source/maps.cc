@@ -1289,6 +1289,7 @@ static bool verify_file_version(const string &file, time_t mtime)
     try
     {
         reader inf(fp);
+        inf.set_safe_read(true);
         const auto version = get_save_version(inf);
         const auto major = version.major, minor = version.minor;
         const int8_t word = unmarshallByte(inf);
@@ -1320,9 +1321,51 @@ static bool _load_map_index(const string& cache, const string &base,
                             time_t mtime)
 {
     // If there's a global prelude, load that first.
-    if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
+    const string luxfile = base + ".lux";
+    if (FILE *fp = fopen_u(luxfile.c_str(), "rb"))
+    {
+        try
+        {
+            reader inf(fp, TAG_MINOR_VERSION);
+            inf.set_safe_read(true);
+            const auto version = get_save_version(inf);
+            const auto major = version.major, minor = version.minor;
+            int8_t word = unmarshallByte(inf);
+            int64_t t = unmarshallSigned(inf);
+            if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
+                || word != WORD_LEN || t != mtime)
+            {
+                fclose(fp);
+                return false;
+            }
+
+#if TAG_MAJOR_VERSION == 34
+            // Throw out des cache with bytecode generated under Lua 5.1.
+            if (minor < TAG_MINOR_LUA_5_4)
+                return false;
+
+#endif
+            lc_global_prelude.read(inf);
+        }
+        catch (const short_read_exception&)
+        {
+            end(1, false, "Des cache file %s is truncated", luxfile.c_str());
+        }
+        fclose(fp);
+
+        global_preludes.push_back(lc_global_prelude);
+    }
+
+    const string idxfile = base + ".idx";
+    FILE* fp = fopen_u(idxfile.c_str(), "rb");
+    if (!fp)
+        end(1, true, "Unable to read %s", idxfile.c_str());
+
+    try
     {
         reader inf(fp, TAG_MINOR_VERSION);
+        inf.set_safe_read(true);
+        // Re-check version, might have been modified in the meantime.
         const auto version = get_save_version(inf);
         const auto major = version.major, minor = version.minor;
         int8_t word = unmarshallByte(inf);
@@ -1337,49 +1380,25 @@ static bool _load_map_index(const string& cache, const string &base,
         // Throw out des cache with bytecode generated under Lua 5.1.
         if (minor < TAG_MINOR_LUA_5_4)
             return false;
-
 #endif
-        lc_global_prelude.read(inf);
-        fclose(fp);
+        const int nmaps = unmarshallShort(inf);
+        const int nexist = vdefs.size();
+        vdefs.resize(nexist + nmaps, map_def());
+        for (int i = 0; i < nmaps; ++i)
+        {
+            map_def &vdef(vdefs[nexist + i]);
+            vdef.read_index(inf);
+            vdef.description = unmarshallString(inf);
+            vdef.order = unmarshallInt(inf);
 
-        global_preludes.push_back(lc_global_prelude);
+            vdef.set_file(cache);
+            lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
+            vdef.place_loaded_from.clear();
+        }
     }
-
-    FILE* fp = fopen_u((base + ".idx").c_str(), "rb");
-    if (!fp)
-        end(1, true, "Unable to read %s", (base + ".idx").c_str());
-
-    reader inf(fp, TAG_MINOR_VERSION);
-    // Re-check version, might have been modified in the meantime.
-    const auto version = get_save_version(inf);
-    const auto major = version.major, minor = version.minor;
-    int8_t word = unmarshallByte(inf);
-    int64_t t = unmarshallSigned(inf);
-    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
-        || word != WORD_LEN || t != mtime)
+    catch (const short_read_exception&)
     {
-        return false;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    // Throw out des cache with bytecode generated under Lua 5.1.
-    if (minor < TAG_MINOR_LUA_5_4)
-        return false;
-
-#endif
-    const int nmaps = unmarshallShort(inf);
-    const int nexist = vdefs.size();
-    vdefs.resize(nexist + nmaps, map_def());
-    for (int i = 0; i < nmaps; ++i)
-    {
-        map_def &vdef(vdefs[nexist + i]);
-        vdef.read_index(inf);
-        vdef.description = unmarshallString(inf);
-        vdef.order = unmarshallInt(inf);
-
-        vdef.set_file(cache);
-        lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
-        vdef.place_loaded_from.clear();
+        end(1, false, "Des cache file %s is truncated", idxfile.c_str());
     }
     fclose(fp);
 
