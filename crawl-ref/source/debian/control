@@ -7,6 +7,7 @@ Build-Depends:
  advancecomp,
  bison,
  debhelper-compat (= 13),
+ dh-sequence-cruft,
  flex,
  fonts-dejavu-core,
  libfreetype6-dev,
