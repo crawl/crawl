@@ -2,7 +2,7 @@ enum: vision
 equivalent_mons: player
 talisman: vision
 skill: {min: 0, max: 7}
-special_damage: 1d4+(9/7)
+special_damage: 1d3+(7/8)
 special_damage_name: Glimmer Dmg
 int: 3
 melds: [gloves, helmet, ring]
