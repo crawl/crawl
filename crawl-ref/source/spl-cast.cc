@@ -1380,9 +1380,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>();
     case SPELL_INFESTATION:
-        return make_unique<targeter_smite>(&you, range, 2, 2, true, false, true,
-                                           [](const coord_def& p) -> bool {
-                                              return you.pos() != p; });
+        return make_unique<targeter_infestation>(range);
     case SPELL_PASSWALL:
         return make_unique<targeter_passwall>(range);
     case SPELL_DIG:
