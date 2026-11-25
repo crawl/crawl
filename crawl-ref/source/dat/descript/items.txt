@@ -1568,7 +1568,7 @@ A prank scroll that creates a loud noise when read.
 %%%%
 scroll of plinking
 
-A scroll that causes a flurry of pebbles to continuously pelt nearby ceatures
+A scroll that causes a flurry of pebbles to continuously pelt nearby creatures
 over several turns, doing minimal damage. As the effect ends, slightly more
 unusual detritus may be thrown at them, impairing or distracting them in some
 way for a short period of time.
