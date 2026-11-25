@@ -4459,7 +4459,9 @@ void bolt::affect_player()
     if (origin_spell == SPELL_THROW_BARBS && final_dam > 0)
         barb_player(random_range(4, 8), 4);
 
-    if (origin_spell == SPELL_GRAVE_CLAW && !you.unrand_equipped(UNRAND_SLICK_SLIPPERS))
+    if (origin_spell == SPELL_GRAVE_CLAW
+        && !you.unrand_equipped(UNRAND_SLICK_SLIPPERS)
+        && !you.is_insubstantial())
     {
         mpr("You are skewered in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(2, 4));
@@ -5366,7 +5368,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         simple_monster_message(*mon, " is empowered.");
     }
 
-    if (origin_spell == SPELL_GRAVE_CLAW && !mon->has_ench(ENCH_BOUND))
+    if (origin_spell == SPELL_GRAVE_CLAW
+        && !mon->has_ench(ENCH_BOUND)
+        && !mon->is_insubstantial())
     {
         simple_monster_message(*mon, " is pinned in place!");
         mon->add_ench(mon_enchant(ENCH_BOUND, agent(), random_range(2, 4) * BASELINE_DELAY));
