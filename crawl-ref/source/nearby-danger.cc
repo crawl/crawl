@@ -357,7 +357,9 @@ static void _monster_threat_values(double *general, double *highest,
             continue;
 
         const int xp = exp_value(**mi);
-        const double log_xp = log((double)xp);
+        const double log_xp = xp == 0 ? 0
+                              : xp == 1 ? 0.25 // Arbitrarily less than log(2), but > 0
+                              : log((double)xp);
         sum += log_xp;
         if (xp > highest_xp)
         {
