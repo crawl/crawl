@@ -398,6 +398,7 @@ static void _annihilation_explode_setup(monster& globe, bolt& beam)
 
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.name = "annihilating " + beam.get_short_name();
+    beam.animate = true;
 }
 
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
