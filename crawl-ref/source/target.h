@@ -584,6 +584,14 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_infestation : public targeter_smite
+{
+public:
+    targeter_infestation(int r);
+    aff_type is_affected(coord_def loc) override;
+    bool affects_monster(const monster_info& mon) override;
+};
+
 class targeter_mephitic : public targeter_beam
 {
 public:

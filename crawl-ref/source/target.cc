@@ -2028,6 +2028,23 @@ bool targeter_poisonous_vapours::valid_aim(coord_def a)
     return true;
 }
 
+targeter_infestation::targeter_infestation(int r)
+    : targeter_smite(&you, r, 2, 2, true, false, true)
+{
+}
+
+aff_type targeter_infestation::is_affected(coord_def loc)
+{
+    if (loc == agent->pos())
+        return AFF_NO;
+    return targeter_smite::is_affected(loc);
+}
+
+bool targeter_infestation::affects_monster(const monster_info& mon)
+{
+    return mon.attitude != ATT_FRIENDLY && !mon.is(MB_INFESTATION);
+}
+
 targeter_mephitic::targeter_mephitic(const actor* caster, int r, int pow)
     : targeter_beam(caster, r, ZAP_MEPHITIC, SPELL_MEPHITIC_CLOUD, pow,
                     pow >= 100 ? 1 : 0, 1)
