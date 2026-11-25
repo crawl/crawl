@@ -3150,7 +3150,6 @@ bool read(item_def* scroll, dist *target)
         const string reason = you.no_tele_reason();
         if (!reason.empty())
         {
-            mpr(pre_succ_msg);
             mpr(reason);
             break;
         }
