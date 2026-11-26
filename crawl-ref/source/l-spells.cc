@@ -109,19 +109,22 @@ LUAFN(l_spells_min_range)
  *
  * This uses player knowledge, assuming that unknown squares are empty. The
  * beam will exclude the source. If it stops at a monster, it will include that
- * monster. If it stops at a wall, it will not include it (unless it has a
- * monster in it and the beam is non-digging).
+ * monster position. If it stops at a wall, it will not include it (unless it
+ * has a monster in it and the beam is non-digging).
  *
  * @tparam int x coordinate of the ray destination, in player coordinates
  * @tparam int y coordinate of the ray destination, in player coordinates
  * @tparam[opt=0] int x_src coordinate of ray source, in player coordinates
  * @tparam[opt=0] int y_src coordinate of ray source, in player coordinates
- * @tparam[opt=true] boolean piercing if true, the beam pierces monsters and
- * the player.
- * @tparam[opt=false] boolean digging if true, the beam pierces diggable walls.
- * @treturn table a table of {x,y} of the path the ray will take, in
- * player coordinates. Empty if either source or destination is unknown or if
- * they are equal.
+ * @tparam[opt=0] int type The type of beam to use: 0 for non-piercing, 1 for
+ * actor piercing, or 2 for digging.
+ * @tparam[opt=true] boolean at_target If true, have the beam path never go
+ * past the target. Otherwise, if the beam isn't blocked, it can continue past
+ * the target up to the max range of player LOS radius.
+ * @treturn table a table of {x,y} of the path the ray will take, in player
+ * coordinates. Empty if the source and destination are either equal or farther
+ * apart than player LOS radius. Also empty if either source or destination is
+ * outside of known map bounds or is unknown.
  * @function beam_path
  */
 LUAFN(l_spells_beam_path)
@@ -136,16 +139,32 @@ LUAFN(l_spells_beam_path)
     s.y = lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : 0;
     coord_def src = player2grid(s);
 
-    bool piercing = true;
-    if (lua_isboolean(ls, 5))
-        piercing = lua_toboolean(ls, 5);
+    int type = 0;
+    if (lua_isnumber(ls, 5))
+    {
+        int t = lua_tointeger(ls, 5);
+        if (t >= 0 && t <= 2)
+            type = t;
+    }
+    bool piercing = false, digging = false;
+    if (type == 1)
+        piercing = true;
+    else if (type == 2)
+    {
+        piercing = true;
+        digging = true;
+    }
 
-    bool digging = false;
+    bool at_target = true;
     if (lua_isboolean(ls, 6))
-        digging = lua_toboolean(ls, 6);
+        at_target = lua_toboolean(ls, 6);
 
+    const int max_range = get_los_radius();
     lua_newtable(ls);
-    if (!map_bounds(aim) || !map_bounds(src) || src == aim
+    if (src == aim
+        || src.distance_from(aim) > max_range
+        || !in_known_map_bounds(aim)
+        || !in_known_map_bounds(src)
         || !env.map_knowledge(src).known()
         || !env.map_knowledge(aim).known())
     {
@@ -162,17 +181,17 @@ LUAFN(l_spells_beam_path)
     ray.advance();
 
     int index = 0;
-    while (map_bounds(ray.pos()))
+    while (in_known_map_bounds(ray.pos()) && index < max_range)
     {
         const coord_def p = ray.pos();
         const map_cell &cell = env.map_knowledge(p);
         const dungeon_feature_type feat =
             cell.known() ? cell.feat() : DNGN_UNSEEN;
-        const bool known_solid = feat != DNGN_UNSEEN && feat_is_solid(feat);
-        const bool known_undiggable = known_solid && !feat_is_diggable(feat);
+        const bool blocked = feat != DNGN_UNSEEN
+            && feat_is_solid(feat)
+            && (!digging || !feat_is_diggable(feat));
         const bool known_mons = cell.monsterinfo() != nullptr;
         const bool known_actor = known_mons || p == you.pos();
-        const bool blocked = known_solid && (!digging || known_undiggable);
         const bool wall_mons = blocked && known_mons && !digging;
 
         // Terminate before a solid square, unless there's a monster in it.
@@ -188,11 +207,12 @@ LUAFN(l_spells_beam_path)
         lua_rawseti(ls, -2, ++index);
 
         // Add a monster (or player) square but go no further.
-        if (wall_mons || (!piercing && known_actor))
+        if (wall_mons || !piercing && known_actor)
             break;
 
-        if (p == aim)
+        if (at_target && p == aim)
             break;
+
         ray.advance();
     }
     return 1;
