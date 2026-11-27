@@ -234,6 +234,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // Cast only by way of _treasure_goblin_evade(), in mon-abil.cc.
+    {  MST_TREASURE_GOBLIN,
+      {
+       { SPELL_GRASPING_ROOTS, 0, MON_SPELL_NATURAL },
+       { SPELL_HASTY_PASSAGE, 0, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_IRONBOUND_MECHANIST,
       {
        { SPELL_PHALANX_BEETLE, 35, MON_SPELL_WIZARD },

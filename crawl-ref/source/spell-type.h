@@ -669,5 +669,6 @@ enum spell_type : int
     SPELL_ICE_THORNS,
     SPELL_SIROCCO,
     SPELL_PLINKING,         // Dummy spell for scroll of plinking
+    SPELL_HASTY_PASSAGE,
     NUM_SPELLS
 };

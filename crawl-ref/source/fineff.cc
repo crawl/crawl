@@ -13,10 +13,13 @@
 #include "attitude-change.h"
 #include "beam.h"
 #include "bloodspatter.h"
+#include "branch.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "death-curse.h"
 #include "delay.h" // stop_delay
+#include "dgn-event.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -29,6 +32,8 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "map-knowledge.h"
+#include "mapmark.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -41,6 +46,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "movement.h"
+#include "notes.h"
 #include "ouch.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -680,6 +686,19 @@ protected:
     bool mergeable(const final_effect&) const override { return true; }
 };
 
+class trove_portal_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    trove_portal_fineff(const coord_def& pos)
+        : final_effect(nullptr, nullptr, pos)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+};
+
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
 
@@ -929,6 +948,11 @@ void schedule_ephemeral_weapon_end(item_def& wpn)
 void schedule_disguise_fineff()
 {
     _schedule_final_effect(new disguise_fineff());
+}
+
+void schedule_trove_portal_fineff(const coord_def& pos)
+{
+    _schedule_final_effect(new trove_portal_fineff(pos));
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -2156,6 +2180,119 @@ void ephemeral_weapon_end_fineff::fire()
 void disguise_fineff::fire()
 {
     xom_disguise_self();
+}
+
+/**
+ * Can a new portal be put at the given spot without spoiling what's there?
+ *
+ * @param p         The position in question.
+ * @param strict    Whether to insist on plain floor, rather than accepting
+ *                  anything that isn't important (shallow water, say).
+ */
+static bool _trove_portal_fits(const coord_def& p, bool strict)
+{
+    if (!in_bounds(p) || is_temp_terrain(p)
+        || env.markers.find(p, MAT_ANY)
+        || dungeon_events.has_listeners_at(p))
+    {
+        return false;
+    }
+
+    const dungeon_feature_type feat = env.grid(p);
+    if (strict)
+        return feat == DNGN_FLOOR;
+
+    return feat_has_solid_floor(feat) && !feat_is_critical(feat)
+           && !feat_is_trap(feat) && !feat_is_door(feat);
+}
+
+/**
+ * Leave a portal to a treasure trove at (or as near as possible to) the spot
+ * where a treasure goblin was slain. Unlike the portals found lying around
+ * the Dungeon, this one charges no toll: its late owner never paid one.
+ */
+void trove_portal_fineff::fire()
+{
+    // Some game modes don't have troves at all.
+    if (crawl_state.game_is_arena() || brdepth[BRANCH_TROVE] < 1
+        || !in_bounds(posn))
+    {
+        return;
+    }
+
+    // Wherever the goblin died is somewhere the player can get to, so use
+    // that spot if at all possible, and otherwise the nearest floor to it.
+    coord_def where;
+    if (_trove_portal_fits(posn, false))
+        where = posn;
+
+    for (const bool strict : { true, false })
+    {
+        if (!where.origin())
+            break;
+
+        for (distance_iterator di(posn, true, true, LOS_RADIUS); di; ++di)
+        {
+            if (_trove_portal_fits(*di, strict)
+                && cell_see_cell(posn, *di, LOS_SOLID))
+            {
+                where = *di;
+                break;
+            }
+        }
+    }
+
+    // Troves can only be reached from the Dungeon proper.
+    if (where.origin() || !player_in_connected_branch())
+    {
+        if (you.see_cell(posn))
+        {
+            mpr("A portal flickers in the air, fails to take hold here, and "
+                "is gone.");
+        }
+        return;
+    }
+
+    map_marker *marker = nullptr;
+    try
+    {
+        marker = map_marker::parse_marker("lua_mapless:free_trove_marker()");
+    }
+    catch (const bad_map_marker &err)
+    {
+        mprf(MSGCH_ERROR, "Bad trove portal marker: %s", err.what());
+    }
+
+    if (!marker)
+        return;
+
+    // The marker needs to be in place before the portal, so that the portal
+    // is described correctly as soon as it is seen.
+    marker->pos = where;
+    env.markers.add(marker);
+    env.markers.activate_markers_at(where);
+    env.markers.clear_need_activate();
+
+    dungeon_terrain_changed(where, DNGN_ENTER_TROVE, false, true);
+
+    if (you.see_cell(where))
+    {
+        mpr("The portal by which the treasure goblin meant to leave tears "
+            "open, and stays open!");
+    }
+    else
+    {
+        // Make sure that the player can find a portal that an ally (or a
+        // lingering wound) has earned for them out of sight.
+        update_terrain_knowledge(where);
+        set_terrain_mapped(where);
+        seen_notable_thing(DNGN_ENTER_TROVE, where);
+        mpr("You sense a portal tear open, and stay open!");
+    }
+
+    take_note(Note(NOTE_MESSAGE, 0, 0,
+                   "Slew a treasure goblin, leaving a trove portal open"),
+              true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

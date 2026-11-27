@@ -1306,6 +1306,7 @@ grunn MONS_GRUNN
 %sdir mon/humanoids
 %rim 0
 goblin MONS_GOBLIN
+treasure_goblin MONS_TREASURE_GOBLIN
 %rim 1
 hobgoblin MONS_HOBGOBLIN
 %rim 0

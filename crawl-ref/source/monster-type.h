@@ -435,6 +435,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOBLIN,
     MONS_HOBGOBLIN,
 #if TAG_MAJOR_VERSION > 34
+    MONS_TREASURE_GOBLIN,
     MONS_GOBLIN_RIDER,
     MONS_IRONBOUND_MECHANIST,
 #endif
@@ -1459,6 +1460,7 @@ enum monster_type                      // env.mons[].type
     MONS_MANNEQUIN,
     MONS_CHAOS_BATTLESHAPE,
     MONS_BOREAS,
+    MONS_TREASURE_GOBLIN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

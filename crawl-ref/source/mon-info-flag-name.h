@@ -168,4 +168,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_DIVINE_SHIELD, "divine shielded", "divinely shielded", "divine shielded"},
     { MB_GUARDIAN, "guardian", "your guardian", "guardian"},
     { MB_MAYBE_FAKE, "maybe fake", "maybe fake", "maybe fake"},
+    { MB_OPENING_PORTAL, "opening a portal", "opening a portal", "opening portals"},
+    { MB_WANTS_OUT, "looking for a way out", "looking for a way out", "looking for a way out"},
+    { MB_ABOUT_TO_ESCAPE, "about to escape", "about to escape", "about to escape"},
 };

@@ -156,6 +156,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_PHASE_SHIFT,     MB_PHASE_SHIFT },
     { ENCH_DIVINE_SHIELD,   MB_DIVINE_SHIELD },
     { ENCH_HALL_OF_MIRRORS, MB_MAYBE_FAKE },
+    { ENCH_OPENING_PORTAL,  MB_OPENING_PORTAL },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -917,6 +918,12 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*m))
         mb.set(MB_HATCHING);
+
+    if (m->type == MONS_TREASURE_GOBLIN && treasure_goblin_wants_out(*m))
+    {
+        mb.set(treasure_goblin_about_to_leave(*m) ? MB_ABOUT_TO_ESCAPE
+                                                  : MB_WANTS_OUT);
+    }
 
     if (m->damage_immune(&you))
         mb.set(MB_PLAYER_DAMAGE_IMMUNE);

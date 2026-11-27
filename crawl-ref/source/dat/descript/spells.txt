@@ -988,6 +988,13 @@ Haste spell
 
 Speeds the actions of the caster.
 %%%%
+Hasty Passage spell
+
+Opens a passage of Golubria beneath the caster, which is carried at once to
+somewhere nearby, out of sight of its foe if possible. In its haste the caster
+leaves the gateway it used standing open behind it for a short time, and others
+may follow it through.
+%%%%
 Haunt spell
 
 Calls wraiths and ghosts to haunt the caster's target. They will only attack

@@ -202,15 +202,34 @@ enum class passage_type
     none,
 };
 
+/// Who made the passage of Golubria at this spot? (Nobody, for the player's.)
+static mid_t _passage_maker(const coord_def& pos)
+{
+    for (map_marker *marker : env.markers.get_markers_at(pos,
+                                                          MAT_TERRAIN_CHANGE))
+    {
+        const auto* tmarker =
+            dynamic_cast<map_terrain_change_marker*>(marker);
+        if (tmarker && tmarker->change_type == TERRAIN_CHANGE_GOLUBRIA)
+            return tmarker->source_mid;
+    }
+
+    return MID_NOBODY;
+}
+
 static passage_type _find_other_passage_side(coord_def& to)
 {
     vector<coord_def> clear_passages;
     bool has_blocks = false;
 
+    // A monster's passages lead only to each other, not to the player's.
+    const mid_t maker = _passage_maker(to);
+
     vector<coord_def> all_passages;
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
     {
-        if (env.grid(*ri) == DNGN_PASSAGE_OF_GOLUBRIA)
+        if (env.grid(*ri) == DNGN_PASSAGE_OF_GOLUBRIA
+            && _passage_maker(*ri) == maker)
         {
             if (*ri != to)
             {

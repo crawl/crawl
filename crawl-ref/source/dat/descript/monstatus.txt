@@ -4,6 +4,11 @@ ablaze with memories monstatus
 This creature has temporarily gained the ability to cast specific spells.
 It will lose access to them again once sufficiently injured.
 %%%%
+about to escape monstatus
+
+This creature has all but found its moment. Unless it is wounded first, it
+will stop in the next few turns to open a portal out of the dungeon.
+%%%%
 about to teleport monstatus
 
 After a short delay, this creature will be teleported to somewhere else on the
@@ -354,6 +359,13 @@ This creature has been lightly drained, somewhat lowering the accuracy of their
 melee attacks, the power of their spells and special attack properties, and
 making them slightly more vulnerable to many status effects.
 %%%%
+looking for a way out monstatus
+
+This creature means to leave the dungeon for good. Once it has gone a short
+while without being wounded it will stop to open a portal, and a few turns
+after that it will be gone. Wounding it puts this off, but not for ever: before
+long it will leave no matter what is done to it.
+%%%%
 lost in madness monstatus
 
 This creature has been driven to madness by the power of Zin. It will never again
@@ -424,6 +436,12 @@ not watching you monstatus
 This creature has been briefly distracted by something else.
 
 [[low-tier stab monstatus]]
+%%%%
+opening a portal monstatus
+
+This creature has stopped to tear open a portal, and will escape through it for
+good in a few turns. Wounding it will usually spoil the attempt and send it
+running again, as will anything else that keeps it from acting.
 %%%%
 out of phase monstatus
 

@@ -5188,6 +5188,12 @@ bool monster::can_polymorph() const
     if (type == MONS_ORB_GUARDIAN)
         return false;
 
+    // A polymorphed treasure goblin would stop running away, and would no
+    // longer leave its portal behind when killed, so the wand would be an
+    // easy way to waste one (or, were its origin tracked, to cheat one).
+    if (type == MONS_TREASURE_GOBLIN)
+        return false;
+
     return can_mutate();
 }
 
@@ -6175,6 +6181,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
     if (!alive())
         return;
+
+    if (type == MONS_TREASURE_GOBLIN && damage > 0)
+        treasure_goblin_wounded(*this, oppressor, ktype, flavour);
 
     if (!mons_is_tentacle_or_tentacle_segment(type)
         && has_ench(ENCH_INNER_FLAME) && oppressor && damage)

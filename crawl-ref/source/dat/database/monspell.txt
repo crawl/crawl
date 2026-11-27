@@ -148,9 +148,17 @@ Grasping Roots natural cast
 
 @The_monster@ runs its roots beneath @target@!
 %%%%
+Grasping Roots treasure goblin cast
+
+@The_monster@ flings a fistful of stolen seeds @at@ @target@!
+%%%%
 Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
+%%%%
+Hasty Passage cast
+
+@The_monster@ tears open a passage of Golubria and dives through!
 %%%%
 Hellfire Court cast
 

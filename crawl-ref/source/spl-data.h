@@ -1284,6 +1284,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HASTY_PASSAGE, "Hasty Passage",
+    spschool::translocation,
+    spflag::escape | spflag::monster | spflag::selfench,
+    4,
+    0,
+    -1, -1,
+    0,
+    TILEG_PASSAGE_OF_GOLUBRIA,
+},
+
+{
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
     spschool::conjuration | spschool::alchemy,
     spflag::target | spflag::not_self | spflag::no_ghost,

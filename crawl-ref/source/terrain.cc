@@ -2227,6 +2227,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
     unsigned short newfeat_flv = 0;
     unsigned short newfeat_flv_idx = 0;
     int colour = BLACK;
+    // The player's passages of Golubria have no source; a monster's do.
+    bool passage_is_yours = true;
 
     for (map_marker *marker : env.markers.get_markers_at(pos, MAT_TERRAIN_CHANGE))
     {
@@ -2235,6 +2237,11 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
 
         if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
         {
+            if (tmarker->change_type == TERRAIN_CHANGE_GOLUBRIA
+                && tmarker->source_mid != MID_NOBODY)
+            {
+                passage_is_yours = false;
+            }
             if (tmarker->colour != BLACK)
                 colour = tmarker->colour;
             if (!newfeat)
@@ -2267,7 +2274,10 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
     if (env.grid(pos) == DNGN_PASSAGE_OF_GOLUBRIA && expire)
     {
         if (you.see_cell(pos))
-            mpr("Your passage of Golubria closes with a snap!");
+        {
+            mprf("%s passage of Golubria closes with a snap!",
+                 passage_is_yours ? "Your" : "The");
+        }
         else
             mprf(MSGCH_SOUND, "You hear a snapping sound.");
         noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), pos);
