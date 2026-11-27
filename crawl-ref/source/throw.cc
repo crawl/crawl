@@ -770,7 +770,7 @@ static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
 vector<coord_def> get_salvo_targets(const coord_def& orig_target, int num_targets,
                                     int max_range, beam_type flavour)
 {
-    mid_t primary;
+    mid_t primary = 0;
     vector<coord_def> targs;
 
     // Add primary target from the originating shot.
