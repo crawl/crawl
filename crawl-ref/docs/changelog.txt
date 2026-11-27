@@ -1,6 +1,5 @@
-Stone Soup 0.35 (through 0.35-a0-1622-ea936a0fb2)
-
---------------------------------------------------
+Stone Soup 0.35 (through 0.35-b1-18-g793157aa9e)
+------------------------------------------------
 
 Highlights
 ----------
@@ -456,6 +455,12 @@ Tiles
   Lobon's realm.
 * Spectral monster tiles have been changed and updated, now covering even more
   monsters than any previous derived undead type.
+
+Lua
+---
+* A spells.beam_path() function replaces spells.path() that relies only on
+  player map knowledge. The new function can return a beam path for three types
+  of beams: non-piercing, piercing, and digging.
 
 Stone Soup 0.34.1 (20260314)
 ----------------------------
