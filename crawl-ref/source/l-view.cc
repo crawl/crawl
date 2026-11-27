@@ -401,6 +401,119 @@ LUAFN(view_update_monsters)
     return 0;
 }
 
+/*** What path would a beam aimed at (x,y) take?
+ *
+ * This uses player knowledge, assuming that unknown squares are empty. The
+ * beam will exclude the source. If it stops at a monster, it will include that
+ * monster position. If it stops at a wall, it will not include it (unless it
+ * has a monster in it and the beam is non-digging).
+ *
+ * @tparam int x coordinate of the ray destination, in player coordinates
+ * @tparam int y coordinate of the ray destination, in player coordinates
+ * @tparam[opt=0] int x_src coordinate of ray source, in player coordinates
+ * @tparam[opt=0] int y_src coordinate of ray source, in player coordinates
+ * @tparam[opt=0] int type The type of beam to use: 0 for non-piercing, 1 for
+ * actor piercing, or 2 for digging.
+ * @tparam[opt=true] boolean at_target If true, have the beam path never go
+ * past the target. Otherwise, if the beam isn't blocked, it can continue past
+ * the target up to the max range of player LOS radius.
+ * @treturn table a table of {x,y} of the path the ray will take, in player
+ * coordinates. Empty if the source and destination are either equal or farther
+ * apart than player LOS radius. Also empty if either source or destination is
+ * outside of known map bounds or is unknown.
+ * @function beam_path
+ */
+LUAFN(view_beam_path)
+{
+    coord_def a;
+    a.x = luaL_safe_checkint(ls, 1);
+    a.y = luaL_safe_checkint(ls, 2);
+    coord_def aim = player2grid(a);
+
+    coord_def s;
+    s.x = lua_isnumber(ls, 3) ? lua_tointeger(ls, 3) : 0;
+    s.y = lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : 0;
+    coord_def src = player2grid(s);
+
+    int type = 0;
+    if (lua_isnumber(ls, 5))
+    {
+        int t = lua_tointeger(ls, 5);
+        if (t >= 0 && t <= 2)
+            type = t;
+    }
+    bool piercing = false, digging = false;
+    if (type == 1)
+        piercing = true;
+    else if (type == 2)
+    {
+        piercing = true;
+        digging = true;
+    }
+
+    bool at_target = true;
+    if (lua_isboolean(ls, 6))
+        at_target = lua_toboolean(ls, 6);
+
+    const int max_range = get_los_radius();
+    lua_newtable(ls);
+    if (src == aim
+        || src.distance_from(aim) > max_range
+        || !in_known_map_bounds(aim)
+        || !in_known_map_bounds(src)
+        || !env.map_knowledge(src).known()
+        || !env.map_knowledge(aim).known())
+    {
+        return 1;
+    }
+
+    // mirrors bolt::choose_ray with player knowledge.
+    ray_def ray;
+    if (!find_ray(src, aim, ray, opc_map_solid_see)
+        && !find_ray(src, aim, ray, opc_map_default))
+    {
+        fallback_ray(src, aim, ray);
+    }
+    ray.advance();
+
+    int index = 0;
+    while (in_known_map_bounds(ray.pos()) && index < max_range)
+    {
+        const coord_def p = ray.pos();
+        const map_cell &cell = env.map_knowledge(p);
+        const dungeon_feature_type feat =
+            cell.known() ? cell.feat() : DNGN_UNSEEN;
+        const bool blocked = feat != DNGN_UNSEEN
+            && feat_is_solid(feat)
+            && (!digging || !feat_is_diggable(feat));
+        const bool known_mons = cell.monsterinfo() != nullptr;
+        const bool known_actor = known_mons || p == you.pos();
+        const bool wall_mons = blocked && known_mons && !digging;
+
+        // Terminate before a solid square, unless there's a monster in it.
+        if (blocked && !wall_mons)
+            break;
+
+        const coord_def pp = grid2player(p);
+        lua_createtable(ls, 2, 0);
+        lua_pushinteger(ls, pp.x);
+        lua_rawseti(ls, -2, 1);
+        lua_pushinteger(ls, pp.y);
+        lua_rawseti(ls, -2, 2);
+        lua_rawseti(ls, -2, ++index);
+
+        // Add a monster (or player) square but go no further.
+        if (wall_mons || !piercing && known_actor)
+            break;
+
+        if (at_target && p == aim)
+            break;
+
+        ray.advance();
+    }
+    return 1;
+}
+
 static const struct luaL_Reg view_lib[] =
 {
     { "feature_at", view_feature_at },
@@ -416,6 +529,7 @@ static const struct luaL_Reg view_lib[] =
     { "cell_see_cell_solid_see", view_cell_see_cell_solid_see },
     { "in_known_map_bounds", view_in_known_map_bounds },
     { "get_map", view_get_map },
+    { "beam_path", view_beam_path},
 
     { "update_monsters", view_update_monsters },
 

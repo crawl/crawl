@@ -458,9 +458,9 @@ Tiles
 
 Lua
 ---
-* A spells.beam_path() function replaces spells.path() that relies only on
-  player map knowledge. The new function can return a beam path for three types
-  of beams: non-piercing, piercing, and digging.
+* A view.beam_path() function replaces spells.path(). The new function relies
+  only on player map knowledge and can return a beam path for three types of
+  beams: non-piercing, piercing, and digging.
 
 Stone Soup 0.34.1 (20260314)
 ----------------------------
