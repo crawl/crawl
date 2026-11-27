@@ -49,4 +49,6 @@ enum explore_stop_options
     ES_TRANSPORTER               = 0x10000,
     ES_RUNELIGHT                 = 0x20000,
     ES_MUTATION_CATALYST         = 0x40000,
+    ES_TRAP                      = 0x80000,
+
 };
