@@ -803,10 +803,10 @@ static const weapon_def Weapon_prop[] =
 
     { WPN_SLING,             "sling",               7,  0, 14,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE,
-        DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
+        DAMV_NON_MELEE, 8, 0, 15, RANGED_BRANDS },
     { WPN_HAND_CANNON,       "hand cannon",      16,  3, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE,
-        DAMV_NON_MELEE, 0, 24, 270, {
+        DAMV_NON_MELEE, 0, 17, 270, {
             // Hand cannons appear late, so encourage use by reducing
             // SPWPN_NORMAL weight relative to other ranged weapons.
             { SPWPN_NORMAL,        15 },
@@ -828,16 +828,16 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 8, 0, 30, RANGED_BRANDS },
     { WPN_ORCBOW,            "orcbow",             11, -3, 15,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS,
-        DAMV_NON_MELEE, 8, 20, 40, RANGED_BRANDS },
+        DAMV_NON_MELEE, 8, 25, 40, RANGED_BRANDS },
     { WPN_ARBALEST,          "arbalest",           16, -2, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS,
-        DAMV_NON_MELEE, 5, 20, 75, RANGED_BRANDS },
+        DAMV_NON_MELEE, 5, 25, 75, RANGED_BRANDS },
     { WPN_LONGBOW,           "longbow",            14,  0, 17,
         SK_RANGED_WEAPONS,   SIZE_MEDIUM, NUM_SIZE_LEVELS,
-        DAMV_NON_MELEE, 2, 13, 110, RANGED_BRANDS },
+        DAMV_NON_MELEE, 2, 17, 110, RANGED_BRANDS },
     { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 23,
         SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS,
-        DAMV_NON_MELEE, 0, 13, 200, RANGED_BRANDS },
+        DAMV_NON_MELEE, 0, 17, 200, RANGED_BRANDS },
 
 };
 
