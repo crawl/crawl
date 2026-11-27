@@ -30,6 +30,7 @@
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "random.h"
 #include "religion.h"
@@ -682,8 +683,11 @@ bool skills_being_trained()
 // If not, go to the skill menu and return true.
 bool check_selected_skills()
 {
-    if (skills_being_trained())
+    if (you.should_retrain)
+        you.should_retrain = false;
+    else if (skills_being_trained())
         return false;
+
     if (!trainable_skills())
     {
         if (!you.received_noskill_warning)
@@ -1621,6 +1625,8 @@ static int _train(skill_type exsk, int max_cost, bool simu)
             mprf("You have finished your manual of %s and %stoss it away.",
                  skill_name(exsk),
                  exsk == SK_THROWING ? "skilfully " : "");
+            if (Options.reskill_after_manuals)
+                you.should_retrain = true;
         }
     }
     int cost = skill_inc;

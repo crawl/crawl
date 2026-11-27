@@ -277,7 +277,7 @@ public:
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
     /// manuals
     FixedVector<unsigned int, NUM_SKILLS>  skill_manual_points;
-
+    bool should_retrain = false; ///< signal retraining when manual is done
 
     bool auto_training;
     list<skill_type> exercises;     ///< recent practise events

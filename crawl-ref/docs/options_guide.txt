@@ -1607,6 +1607,10 @@ show_paged_inventory = true
         pages (gear, potions, scrolls, and evocable items) in the same way
         that the 'd'rop menu does.
 
+reskill_after_manuals = false
+        If set to true, the skill menu will be displayed after a manual is
+        finished.
+
 3-h     Message and Display Enhancements.
 ------------------------------------------
 
