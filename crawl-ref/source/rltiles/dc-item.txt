@@ -640,6 +640,7 @@ orb_randart3
 orb_randart4
 
 buckler1 ARM_BUCKLER
+buckler1_ench ARM_BUCKLER_ENCH
 %enchant_variation ARM_BUCKLER shiny runed glowing
 buckler2 ARM_BUCKLER_MAGIC
 %enchant_variation ARM_BUCKLER randart
@@ -649,12 +650,14 @@ buckler3 ARM_BUCKLER_RANDART
 buckler_spriggan ARM_BUCKLER_SPRIGGAN
 
 kite_shield1 ARM_KITE_SHIELD
+kite_shield1_ench ARM_KITE_SHIELD_ENCH
 %enchant_variation ARM_KITE_SHIELD shiny runed glowing
 kite_shield2 ARM_KITE_SHIELD_MAGIC
 %enchant_variation ARM_KITE_SHIELD randart
 kite_shield3 ARM_KITE_SHIELD_RANDART
 
 tower_shield1 ARM_TOWER_SHIELD
+tower_shield1_ench ARM_TOWER_SHIELD_ENCH
 %enchant_variation ARM_TOWER_SHIELD shiny runed glowing
 tower_shield2 ARM_TOWER_SHIELD_MAGIC
 %enchant_variation ARM_TOWER_SHIELD randart
@@ -717,6 +720,7 @@ helmet_art3
 glove1 ARM_GLOVES
 %enchant_variation ARM_GLOVES shiny
 glove2 ARM_GLOVES_SHINY
+%syn ARM_GLOVES_ENCH
 %enchant_variation ARM_GLOVES runed
 glove3 ARM_GLOVES_RUNED
 %enchant_variation ARM_GLOVES glowing
@@ -726,11 +730,17 @@ glove5 ARM_GLOVES_RANDART
 
 ###### BOOTS
 %rim 1
+%weight 10
 boots1 ARM_BOOTS
 boots2
+%weight 4
+boots3
+%weight 10
 %enchant_variation ARM_BOOTS shiny runed glowing
 boots_ego1 ARM_BOOTS_MAGIC
 boots_ego2
+%weight 4
+boots_ego3
 %enchant_variation ARM_BOOTS randart
 boots_art1 ARM_BOOTS_RANDART
 boots_art2
