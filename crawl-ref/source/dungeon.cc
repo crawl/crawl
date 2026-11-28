@@ -3703,6 +3703,17 @@ static bool _builder_normal()
     return true;
 }
 
+static bool _trap_needs_stair_proximity(dungeon_feature_type type)
+{
+    if (type == DNGN_TRAP_TELEPORT_PERMANENT || type == DNGN_TRAP_TELEPORT
+        || type == DNGN_TRAP_SHAFT)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 static void _place_traps()
 {
     int num_traps = random2avg(2 * trap_rate_for_place(), 2);
@@ -3720,6 +3731,15 @@ static void _place_traps()
 
     for (int i = 0; i < num_traps; i++)
     {
+        const dungeon_feature_type type = random_trap_for_place();
+        const bool needs_stair_proximity = _trap_needs_stair_proximity(type);
+
+        if (type == DNGN_FLOOR)
+        {
+            dprf("failed to find a trap type to place");
+            break;
+        }
+
         coord_def pos;
 
         int tries;
@@ -3727,30 +3747,43 @@ static void _place_traps()
         {
             pos.x = random2(GXM);
             pos.y = random2(GYM);
+
             // Don't place random traps under vault monsters; if a vault
             // wants this they have to request it specifically.
-            if (in_bounds(pos)
-                && env.grid(pos) == DNGN_FLOOR
-                && !map_masked(pos, MMT_NO_TRAP)
-                && env.mgrid(pos) == NON_MONSTER)
+            if (!in_bounds(pos) || env.grid(pos) != DNGN_FLOOR
+                || map_masked(pos, MMT_NO_TRAP) || env.mgrid(pos) != NON_MONSTER)
             {
-                break;
+                continue;
             }
+
+            // Don't place dispersal traps in opaque vaults, they won't
+            // be later checked for connectivity and we might break them.
+            if (map_masked(pos, MMT_OPAQUE) && type == DNGN_TRAP_DISPERSAL)
+                continue;
+
+            // Place non-teleport non-shaft traps near stairs.
+            if (needs_stair_proximity)
+            {
+                bool has_prox = false;
+                for (radius_iterator ri(pos, 6, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+                {
+                    if (feat_is_stair(env.grid(*ri)) && !feat_is_escape_hatch(env.grid(*ri)))
+                    {
+                        has_prox = true;
+                        break;
+                    }
+                }
+                if (!has_prox)
+                    continue;
+            }
+
+            break;
         }
 
         if (tries == 200)
         {
-            dprf("tried %d times to place a trap & gave up", tries);
+            mprf("tried %d times to place a trap & gave up", tries);
             break;
-        }
-
-        // Don't place dispersal traps in opaque vaults, they won't
-        // be later checked for connectivity and we might break them.
-        const dungeon_feature_type type = random_trap_for_place(!map_masked(pos, MMT_OPAQUE));
-        if (type == DNGN_FLOOR)
-        {
-            dprf("failed to find a trap type to place");
-            continue;
         }
 
         env.grid(pos) = type;
